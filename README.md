@@ -1,5 +1,6 @@
 # MeridianDB
-A state-of-the-art serverless, AI-first agent collaboration platform, powered by Cloudflare workers and integrated with solutions like D1, KV storage, Vectorize and R2. 
+
+A state-of-the-art serverless, AI-first federated vector-graph database that enables agent collaboration through fine-grained memory-sharing access and takes agent collaboration and personalization to another level by enabling continuous learning, powered by Cloudflare workers and integrated with solutions like D1, KV storage, Vectorize, and R2. Hono, React, and software engineering wizardry.
 
 
 ## 🚀 Core Features
