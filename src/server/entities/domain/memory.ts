@@ -59,6 +59,7 @@ export interface MemoryRelationship extends BaseEntity {
     | "temporal_sequence"
     | "semantic_similarity"
     | "contextual_link";
+  readonly description: string;
   readonly strength: number; // 0-1
   readonly confidence: number; // 0-1
 }
