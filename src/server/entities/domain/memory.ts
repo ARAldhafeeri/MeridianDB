@@ -1,109 +1,162 @@
-import { ConsolidationStage } from ".";
-import { EmbeddingContext, MemoryEpisode } from "./vector";
+import { AccessLevel, MemoryStage } from ".";
+import { BaseEntity } from "./base";
 
 /**
- * Request to store memory episode of the AI agent.
+ * Core memory episode with explicit features (replaces complex graph)
+ */
+export interface MemoryEpisode extends BaseEntity {
+  // Basic identification
+  readonly agentId: string;
+  readonly organizationId: string;
+  readonly content: string;
+
+  // SEMANTIC FEATURES (derived from Vectorize preprocessing)
+  readonly semanticClusterId?: number;
+  readonly semanticDensity: number; // 0-1 cluster density
+  readonly conceptTags: string[]; // Extracted concepts
+
+  // TEMPORAL FEATURES
+  readonly recencyScore: number; // 0-1, decays over time
+  readonly accessFrequency: number;
+  readonly lastAccessedAt?: Date;
+
+  // CONTEXTUAL FEATURES
+  readonly environment: string; // 'coding', 'research', 'conversation'
+  readonly taskType: string; // 'problem_solving', 'learning', 'recall'
+  readonly goalCategory: string;
+
+  // BEHAVIORAL FEATURES
+  readonly retrievalSuccessRate: number; // 0-1
+  readonly utilizationScore: number; // 0-1
+
+  // IMPORTANCE SCORING (replaces complex consolidation)
+  readonly consolidatedImportance: number; // 0-1, grows with usage
+  readonly noveltyScore: number; // 1-0, decreases over time
+
+  readonly accessLevel: AccessLevel;
+  readonly stage: MemoryStage;
+}
+
+/**
+ * Semantic clusters for efficient grouping (minimal Vectorize usage)
+ */
+export interface SemanticCluster extends BaseEntity {
+  readonly agentId?: string; // null for cross-agent clusters
+  readonly organizationId: string;
+  readonly clusterCentroid: number[]; // From Vectorize
+  readonly memberCount: number;
+  readonly avgImportance: number;
+  readonly conceptSummary: string[];
+}
+
+/**
+ * Memory relationships (simplified from complex edges)
+ */
+export interface MemoryRelationship extends BaseEntity {
+  readonly sourceEpisodeId: string;
+  readonly targetEpisodeId: string;
+  readonly relationshipType:
+    | "temporal_sequence"
+    | "semantic_similarity"
+    | "contextual_link";
+  readonly strength: number; // 0-1
+  readonly confidence: number; // 0-1
+}
+
+/**
+ * Store new episode (simplified)
  */
 export interface StoreEpisodeRequest {
   readonly agentId: string;
   readonly content: string;
-  readonly context: EmbeddingContext;
-  readonly nodeIds?: string[];
-  readonly importance?: number;
-  readonly novelty?: number;
-  readonly utility?: number;
+  readonly environment: string;
+  readonly taskType: string;
+  readonly goalCategory?: string;
+  readonly context?: Record<string, unknown>;
+  readonly initialImportance?: number;
 }
 
 /**
- * Reterive memory request from the ai agent
+ * Memory retrieval (feature-based SQL)
  */
 export interface MemoryRetrievalRequest {
   readonly agentId: string;
-  readonly stage?: ConsolidationStage[];
-  readonly timeWindow?: number; // hours
-  readonly importanceMin?: number;
+  readonly query: string;
+  readonly featureWeights?: {
+    semantic?: number;
+    temporal?: number;
+    contextual?: number;
+    behavioral?: number;
+  };
+  readonly filters?: {
+    environment?: string;
+    taskType?: string;
+    minImportance?: number;
+    maxAge?: number;
+  };
   readonly limit?: number;
-  readonly includeContext?: boolean;
-  readonly sortBy?: "importance" | "novelty" | "utility" | "timestamp";
 }
 
-/**
- * Result of retrieving memory from the store.
- */
 export interface MemoryRetrievalResult {
-  readonly episodes: MemoryEpisode[];
-  readonly totalCount: number;
-  readonly aggregateMetrics: {
-    readonly avgImportance: number;
-    readonly avgNovelty: number;
-    readonly avgUtility: number;
+  readonly episodes: FeatureSearchResult[];
+  readonly totalMatches: number;
+  readonly queryAnalysis: {
+    readonly detectedEnvironment?: string;
+    readonly detectedTaskType?: string;
+    readonly semanticClusters: number[];
+  };
+  readonly performance: {
+    readonly queryTimeMs: number;
+    readonly indexesUsed: string[];
   };
 }
 
+export interface MemoryFilter {
+  readonly agentId?: string;
+  readonly organizationId?: string;
+  readonly stage?: MemoryStage[];
+  readonly environment?: string;
+  readonly taskType?: string;
+  readonly minImportance?: number;
+  readonly maxAge?: number;
+  readonly semanticClusterIds?: number[];
+}
+
 /**
- * analytics of agentic memory
+ * Multi-dimensional search (pure SQL)
  */
-export interface MemoryStatistics {
+export interface FeatureSearchRequest {
   readonly agentId: string;
-  readonly totalEpisodes: number;
-  readonly byStage: Record<ConsolidationStage, number>;
-  readonly memoryEfficiency: number;
-  readonly compressionRatio: number;
-  readonly accessFrequency: Record<string, number>;
-  readonly retentionCurve: Array<{ age: number; retention: number }>;
+  readonly query: string;
+  readonly organizationId: string;
+
+  // Feature weights for composite scoring
+  readonly semanticWeight: number; // 0-1
+  readonly temporalWeight: number; // 0-1
+  readonly contextualWeight: number; // 0-1
+  readonly behavioralWeight: number; // 0-1
+
+  // Query context for matching
+  readonly environment?: string;
+  readonly taskType?: string;
+  readonly goalCategory?: string;
+
+  // Filtering
+  readonly minImportance?: number;
+  readonly maxAge?: number; // hours
+  readonly excludeIds?: string[];
+  readonly limit: number;
+  readonly threshold?: number;
 }
 
-/**
- * Prune Memories
- */
-export interface PruneMemoriesRequest {
-  readonly agentId: string;
-  readonly strategy: "age" | "importance" | "utility" | "redundancy";
-  readonly threshold: number;
-  readonly dryRun?: boolean;
-  readonly preserveCount?: number;
-}
-
-/**
- * Prune result
- */
-export interface PruneResult {
-  readonly prunedCount: number;
-  readonly preservedCount: number;
-  readonly spaceSaved: number; // bytes
-  readonly affectedNodes: string[];
-}
-
-/**
- * Transfer memory from two agent source and target.
- */
-export interface MemoryTransferRequest {
-  readonly sourceAgentId: string;
-  readonly targetAgentId: string;
-  readonly memoryIds?: string[];
-  readonly transferType: "copy" | "move";
-  readonly preserveContext?: boolean;
-  readonly adaptToTarget?: boolean;
-}
-
-/**
- * The result of transfering the AI agent.
- */
-export interface TransferResult {
-  readonly transferredCount: number;
-  readonly adaptedCount: number;
-  readonly conflictCount: number;
-  readonly transferEfficiency: number;
-}
-
-/**
- * Recording access patterns.
- */
-export interface AccessPatterns {
-  readonly agentId: string;
-  readonly hotMemories: string[];
-  readonly coldMemories: string[];
-  readonly accessFrequency: Record<string, number>;
-  readonly temporalPatterns: Array<{ hour: number; accessCount: number }>;
-  readonly contextPatterns: Record<string, number>;
+export interface FeatureSearchResult {
+  readonly episode: MemoryEpisode;
+  readonly compositeScore: number;
+  readonly scoreBreakdown: {
+    readonly semantic: number;
+    readonly temporal: number;
+    readonly contextual: number;
+    readonly behavioral: number;
+  };
+  readonly explanation: string[];
 }

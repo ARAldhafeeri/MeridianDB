@@ -18,6 +18,4 @@ export interface AgentController {
   initialize(context: ControllerContext): Promise<Response>;
   // get status of the agent
   getStatus(context: ControllerContext): Promise<Response>;
-  // get analytics of the agent
-  getMetrics(context: ControllerContext): Promise<Response>;
 }

@@ -1,11 +1,16 @@
 import { ControllerContext } from "./context";
 
 export interface MemoryController {
+  // Episode operations
   storeEpisode(context: ControllerContext): Promise<Response>;
-  retrieveMemories(context: ControllerContext): Promise<Response>;
   searchMemories(context: ControllerContext): Promise<Response>;
+
+  // Management operations
+  consolidateMemories(context: ControllerContext): Promise<Response>;
   getStatistics(context: ControllerContext): Promise<Response>;
   pruneMemories(context: ControllerContext): Promise<Response>;
-  transferMemories(context: ControllerContext): Promise<Response>;
-  getAccessPatterns(context: ControllerContext): Promise<Response>;
+
+  // Cross-agent operations
+  shareKnowledge(context: ControllerContext): Promise<Response>;
+  getCrossAgentPatterns(context: ControllerContext): Promise<Response>;
 }
