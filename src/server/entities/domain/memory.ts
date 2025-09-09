@@ -50,21 +50,6 @@ export interface SemanticCluster extends BaseEntity {
 }
 
 /**
- * Memory relationships (simplified from complex edges)
- */
-export interface MemoryRelationship extends BaseEntity {
-  readonly sourceEpisodeId: string;
-  readonly targetEpisodeId: string;
-  readonly relationshipType:
-    | "temporal_sequence"
-    | "semantic_similarity"
-    | "contextual_link";
-  readonly description: string;
-  readonly strength: number; // 0-1
-  readonly confidence: number; // 0-1
-}
-
-/**
  * Store new episode (simplified)
  */
 export interface StoreEpisodeRequest {
