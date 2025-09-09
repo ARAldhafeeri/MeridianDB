@@ -1,4 +1,3 @@
-import { ConsolidationStage } from ".";
 import { BaseEntity } from "./base";
 
 /**
@@ -11,13 +10,6 @@ export interface VectorEmbedding extends BaseEntity {
   readonly model: string; // embedding model used
   readonly dimensions: number;
   readonly context: EmbeddingContext;
-  /**
-   * Stage of the consolidation of memory
-   */
-  readonly stage: ConsolidationStage;
-  readonly importance: number;
-  readonly accessCount: number;
-  readonly lastAccessedAt?: Date;
 }
 
 export interface EmbeddingContext {
@@ -42,6 +34,5 @@ export interface MemoryEpisode extends BaseEntity {
   readonly importance: number;
   readonly novelty: number;
   readonly utility: number;
-  readonly stage: ConsolidationStage;
   readonly consolidatedAt?: Date;
 }
