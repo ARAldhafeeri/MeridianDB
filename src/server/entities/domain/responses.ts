@@ -1,4 +1,3 @@
-import { GraphNode } from "./graph";
 import { VectorEmbedding } from "./vector";
 
 /**
@@ -16,26 +15,6 @@ export interface ApiError {
   readonly code: string;
   readonly message: string;
   readonly details?: Record<string, unknown>;
-}
-
-/**
- * Search result with scoring details
- */
-export interface SearchResult {
-  readonly node: GraphNode;
-  readonly vector?: VectorEmbedding;
-  readonly score: SimilarityScore;
-  readonly explanation: string[];
-  readonly relatedNodes?: GraphNode[];
-}
-
-export interface SimilarityScore {
-  readonly overall: number;
-  readonly semantic: number;
-  readonly temporal: number;
-  readonly contextual: number;
-  readonly behavioral: number;
-  readonly components: Record<string, number>;
 }
 
 /**
