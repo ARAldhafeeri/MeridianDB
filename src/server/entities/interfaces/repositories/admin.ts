@@ -1,11 +1,4 @@
-import { BaseEntity } from "../../domain/base";
+import { Admin } from "../../domain/admin";
+import { BaseRepository } from "./base";
 
-// simple admin entity
-export interface Admin extends BaseEntity {
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  // one-way password hash
-  salt: string;
-  hash: string;
-}
+export interface AdminRepository extends BaseRepository<Admin> {}

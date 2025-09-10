@@ -6,7 +6,7 @@
  * - Context-aware gates used by controllers
  */
 
-import { Admin } from "../repositories/admin";
+import { Admin } from "../../domain/admin";
 
 export interface AuthService {
   /**
