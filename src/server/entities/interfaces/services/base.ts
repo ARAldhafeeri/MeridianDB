@@ -14,10 +14,7 @@ export interface BaseService<
   /**
    * Create new entity with business validation
    */
-  create(
-    request: TCreateRequest,
-    context: ServiceContext
-  ): Promise<ServiceResult<T>>;
+  create(request: TCreateRequest): Promise<ServiceResult<T>>;
 
   /**
    * Get entity by ID with access control
@@ -29,40 +26,28 @@ export interface BaseService<
    */
   list(
     filter: TFilter,
-    pagination: PaginationParams,
-    context: ServiceContext
+    pagination: PaginationParams
   ): Promise<ServiceResult<PaginatedResponse<T>>>;
 
   /**
    * Update entity with validation
    */
-  update(
-    id: string,
-    request: TUpdateRequest,
-    context: ServiceContext
-  ): Promise<ServiceResult<T>>;
+  update(id: string, request: TUpdateRequest): Promise<ServiceResult<T>>;
 
   /**
    * Delete entity with cascade handling
    */
-  delete(id: string, context: ServiceContext): Promise<ServiceResult<boolean>>;
+  delete(id: string): Promise<ServiceResult<boolean>>;
 
   /**
    * Validate entity against business rules
    */
-  validate(
-    data: Partial<T>,
-    context: ServiceContext
-  ): Promise<ValidationResult>;
+  validate(data: Partial<T>): Promise<ValidationResult>;
 
   /**
    * Check access permissions
    */
-  checkAccess(
-    entityId: string,
-    action: string,
-    context: ServiceContext
-  ): Promise<boolean>;
+  checkAccess(entityId: string, action: string): Promise<boolean>;
 }
 
 export interface ServiceContext {

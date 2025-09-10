@@ -26,8 +26,7 @@ export interface AuthService {
    */
   authorizeRead(
     principal: { orgId?: string; agentId?: string; roles?: string[] },
-    resource: { orgId: string; resourceType: "node" | "edge" | "embedding" },
-    context?: any
+    resource: { orgId: string; resourceType: "node" | "edge" | "embedding" }
   ): Promise<boolean>;
 
   /**
@@ -35,8 +34,7 @@ export interface AuthService {
    */
   authorizeWrite(
     principal: { orgId?: string; agentId?: string; roles?: string[] },
-    action: { resourceType: string; orgId: string },
-    context?: any
+    action: { resourceType: string; orgId: string }
   ): Promise<boolean>;
 
   /**

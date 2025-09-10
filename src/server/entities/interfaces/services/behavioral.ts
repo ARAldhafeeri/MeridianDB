@@ -10,20 +10,17 @@ import {
 export interface BehavioralService {
   // Core feedback operations
   recordFeedback(
-    request: StoreBehavioralFeedbackRequest,
-    context: ServiceContext
+    request: StoreBehavioralFeedbackRequest
   ): Promise<ServiceResult<MemoryBehavioralFeedback>>;
 
   getFeedbackHistory(
     memoryEpisodeId: string,
-    agentId: string,
-    context: ServiceContext
+    agentId: string
   ): Promise<ServiceResult<MemoryBehavioralFeedback[]>>;
 
   // Decision tree management
   updateDecisionTree(
-    request: UpdateDecisionTreeRequest,
-    context: ServiceContext
+    request: UpdateDecisionTreeRequest
   ): Promise<ServiceResult<BehavioralDecisionNode>>;
 
   getDecisionPatterns(
@@ -35,7 +32,6 @@ export interface BehavioralService {
 
   // Human audit workflow
   submitAudit(
-    request: AuditFeedbackRequest,
-    context: ServiceContext
+    request: AuditFeedbackRequest
   ): Promise<ServiceResult<MemoryBehavioralFeedback>>;
 }

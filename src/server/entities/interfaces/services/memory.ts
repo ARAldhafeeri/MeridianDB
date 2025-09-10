@@ -15,31 +15,24 @@ import { ServiceContext, ServiceResult } from "./base";
 export interface MemoryService {
   // Core operations
   storeEpisode(
-    request: StoreEpisodeRequest,
-    context: ServiceContext
+    request: StoreEpisodeRequest
   ): Promise<ServiceResult<MemoryEpisode>>;
   retrieveMemories(
-    request: MemoryRetrievalRequest,
-    context: ServiceContext
+    request: MemoryRetrievalRequest
   ): Promise<ServiceResult<MemoryRetrievalResult>>;
 
   // Consolidation
   consolidateMemories(
-    request: ConsolidationRequest,
-    context: ServiceContext
+    request: ConsolidationRequest
   ): Promise<ServiceResult<ConsolidationResult>>;
 
   // Analytics
-  getStatistics(
-    agentId: string,
-    context: ServiceContext
-  ): Promise<ServiceResult<MemoryStatistics>>;
+  getStatistics(agentId: string): Promise<ServiceResult<MemoryStatistics>>;
 
   // Cross-agent sharing
   shareKnowledge(
     sourceAgentId: string,
     targetAgentId: string,
-    clusterIds: number[],
-    context: ServiceContext
+    clusterIds: number[]
   ): Promise<ServiceResult<number>>;
 }
