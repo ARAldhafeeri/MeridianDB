@@ -1,5 +1,3 @@
-import { ConsolidationStage } from ".";
-import { TimeSeriesData } from "./analytics";
 import { BaseEntity } from "./base";
 
 /**
@@ -85,80 +83,4 @@ export interface AgentFilter {
   readonly capabilities?: string[];
   readonly createdAfter?: Date;
   readonly createdBefore?: Date;
-}
-
-/**
- * Agent learning configuration
- */
-export interface LearningConfiguration {
-  /**
-   * the rate at which the ai agent learns at
-   */
-  readonly learningRate: number;
-  /**
-   * protecting old memories with threshold
-   * passing the threshold means older memories
-   * will be archieved
-   */
-  readonly stabilityThreshold: number;
-  /**
-   * the threshold at which the agent will
-   * stop receiving new memories.
-   */
-  readonly plasticityThreshold: number;
-  /**
-   * the rate at which the agent forget information
-   * not sure how we calculate this but it could be
-   * a number editable by the admin in the dashboard
-   * or via feedback from users that use the agent
-   */
-  readonly forgettingRate: number;
-}
-
-/**
- * intialize agent request.
- */
-export interface AgentInitializationResult {
-  readonly agentId: string;
-  readonly rootNodeId: string;
-  readonly contextVectorId: string;
-  readonly initialCapabilities: string[];
-}
-
-/**
- * agent metrices
- */
-export interface AgentMetrics {
-  readonly agentId: string;
-  readonly learningEfficiency: number;
-  readonly knowledgeRetention: number;
-  readonly adaptabilityScore: number;
-  readonly memoryUtilization: MemoryUtilization;
-  readonly performanceTrends: TimeSeriesData[];
-}
-
-/**
- * agent memory utilization
- */
-export interface MemoryUtilization {
-  readonly totalNodes: number;
-  readonly totalVectors: number;
-  readonly episodicMemory: number;
-  readonly consolidatedMemory: number;
-  readonly storageBytes: number;
-}
-
-/**
- * The status of the agent
- */
-export interface AgentStatus {
-  readonly agentId: string;
-  readonly isActive: boolean;
-  readonly currentTask?: string;
-  readonly learningStage: ConsolidationStage;
-  readonly lastActivity: Date;
-  readonly memoryPressure: number; // 0-1 scale
-  readonly consolidationQueue: number;
-  readonly errorRate: number;
-  readonly capabilities: string[];
 }
