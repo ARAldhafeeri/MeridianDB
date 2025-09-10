@@ -50,4 +50,10 @@ export interface AuthService {
    * inialize super admin based on config
    */
   initializeSuperAdmin(admin: Admin): Promise<boolean>;
+
+  /**
+   * get refresh token based on access token which is linked
+   * to agent and/or organization
+   */
+  getToken(accessToken: string): Promise<string>;
 }
