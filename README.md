@@ -102,21 +102,9 @@ Knowledge Ops   ← retrieval, insertion, sharing
 
 ---
 
-## 📅 Implementation Roadmap
+## Installing libraries 
 
-1. Core infra (auth, tenancy, storage)
-2. Graph engine + vector fusion
-3. Advanced contextual retrieval
-4. Continuous learning optimizations
-5. Cross-agent federation & analytics
+```
+npm install --legacy-peer-deps
 
----
-
-## 📊 Performance Targets
-
-* Query latency: **<100ms** simple, **<500ms** complex traversals
-* Scalability: **10k+ concurrent agents/org**
-* Storage efficiency: **80%+ compression**
-* Learning: **sub-second embedding updates**
-* Availability: **99.9% uptime, multi-region**
-
+```

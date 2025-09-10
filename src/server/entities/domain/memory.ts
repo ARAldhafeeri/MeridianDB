@@ -23,8 +23,8 @@ export interface MemoryEpisode extends BaseEntity {
   readonly lastAccessedAt?: Date;
   readonly noveltyScore: number; // 1-0, decreases over time
   // marked by human-in-loop true, recency is completly ignored, false, recency applies.
-  readonly factual: boolean;
-
+  readonly factual: boolean; // always included when true, disregard of recencyScore , default false
+  readonly irrelavent: boolean; // always disincluded when true disregard of recencyScore, default false
   // CONTEXTUAL FEATURES
   readonly environment: string; // 'coding', 'research', 'conversation'
   readonly task: string; // task description
