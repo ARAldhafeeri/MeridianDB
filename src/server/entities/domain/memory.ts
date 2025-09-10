@@ -18,7 +18,7 @@ export interface MemoryEpisode extends BaseEntity {
   // TEMPORAL FEATURES
   // 0-1, decays over time
   // updated every time the data the memory is acceessed.
-  readonly recencyScore: number; // decrease overtime 
+  readonly recencyScore: number; // decrease overtime
   readonly accessFrequency: number; // 0-1 grows with usage
   readonly lastAccessedAt?: Date;
   readonly noveltyScore: number; // 1-0, decreases over time
@@ -36,7 +36,6 @@ export interface MemoryEpisode extends BaseEntity {
   // memories will be used as part of decision tree
   // to decide the success or failure of the task
 
- 
   readonly accessLevel: AccessLevel;
   readonly stage: MemoryStage;
 }
@@ -80,9 +79,8 @@ export interface MemoryRetrievalRequest {
   };
   readonly filters?: {
     environment?: string;
-    taskType?: string;
-    minImportance?: number;
-    maxAge?: number;
+    task?: string;
+    extra?: string;
   };
   readonly limit?: number;
 }
