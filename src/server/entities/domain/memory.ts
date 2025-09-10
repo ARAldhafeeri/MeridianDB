@@ -13,26 +13,30 @@ export interface MemoryEpisode extends BaseEntity {
   // SEMANTIC FEATURES (derived from Vectorize preprocessing)
   readonly semanticClusterId?: number;
   readonly semanticDensity: number; // 0-1 cluster density
-  readonly conceptTags: string[]; // Extracted concepts
+  readonly conceptTags: string[]; // Extracted concepts ids
 
   // TEMPORAL FEATURES
-  readonly recencyScore: number; // 0-1, decays over time
-  readonly accessFrequency: number;
+  // 0-1, decays over time
+  // updated every time the data the memory is acceessed.
+  readonly recencyScore: number; // decrease overtime 
+  readonly accessFrequency: number; // 0-1 grows with usage
   readonly lastAccessedAt?: Date;
+  readonly noveltyScore: number; // 1-0, decreases over time
+  // marked by human-in-loop true, recency is completly ignored, false, recency applies.
+  readonly factual: boolean;
 
   // CONTEXTUAL FEATURES
   readonly environment: string; // 'coding', 'research', 'conversation'
-  readonly taskType: string; // 'problem_solving', 'learning', 'recall'
-  readonly goalCategory: string;
+  readonly task: string; // task description
+  readonly extra: string; // any extra details.
 
   // BEHAVIORAL FEATURES
-  readonly retrievalSuccessRate: number; // 0-1
-  readonly utilizationScore: number; // 0-1
+  // should be in an entity by itself
+  // it's feedback on memory not part of the memory
+  // memories will be used as part of decision tree
+  // to decide the success or failure of the task
 
-  // IMPORTANCE SCORING (replaces complex consolidation)
-  readonly consolidatedImportance: number; // 0-1, grows with usage
-  readonly noveltyScore: number; // 1-0, decreases over time
-
+ 
   readonly accessLevel: AccessLevel;
   readonly stage: MemoryStage;
 }
