@@ -1,4 +1,4 @@
-import { BaseService, ServiceContext, ServiceResult } from "./base";
+import { BaseService } from "./base";
 import {
   Agent,
   AgentFilter,
@@ -15,6 +15,4 @@ export interface AgentService
     CreateAgentRequest,
     UpdateAgentRequest,
     AgentFilter
-  > {
-
-  }
+  > {}
