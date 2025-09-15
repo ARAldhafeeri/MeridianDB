@@ -1,110 +1,123 @@
 # MeridianDB
 
-A state-of-the-art serverless, AI-first federated vector-graph database that enables agent collaboration through fine-grained memory-sharing access and takes agent collaboration and personalization to another level by enabling continuous learning, powered by Cloudflare workers and integrated with solutions like D1, KV storage, Vectorize, and R2. Hono, React, and software engineering wizardry.
+**MeridianDB** is an AI-first, serverless database that redefines retrieval for agents.
+It goes beyond traditional RAG pipelines with **temporal, contextual, and behavioral dimensions** — helping agents avoid catastrophic forgetting and strike the right balance between stability and plasticity.
 
+Built on **Cloudflare Workers**, **D1**, **Vectorize**, **KV**, **Queues**, **React**, **Hono**, and **R2** — MeridianDB is scalable, event-driven, and developer-friendly, optimized for the edge, cheap to run, all battries included out of the box.
+
+---
 
 ## 🚀 Core Features
 
-### 1. Knowledge Graph + Vector Fusion
+### 1. Multi-Dimensional Retrieval
 
-* Hybrid graph + embedding storage
-* Temporal decay & dynamic relevance scoring
-* Multi-dimensional similarity (semantic, temporal, contextual, behavioral)
+* **Semantic:** Normal Semantic search but with slightly over-fetching to allow for the other dimensions to refined retrieval beyond basic vector search.
+* **Temporal:** Data decays over time, supports factual/irrelevant tagging, and frequency weighting, vector results are filtered upon temporal features.
+* **Contextual:** Filters results based on task, environment, and developer-supplied context which is included in the response if semantic search hit the record.
+* **Behavioral:** Tracks retrieval’s effect on task success for continuous improvement, every time we log behavior success rate of retrieving such record is modified.
 
-### 2. Advanced Retrieval Engine
+### 2. Integrated Consistency Model
+Cloudflare victorize is huge design constraint since the whole database architecture is built on top of it. Victorize architectural depend on eventual consistency therefore the design of the federated db should follow: 
 
-* GraphRAG with path-weighted scoring
-* Drift detection & adaptive ranking
-* Cross-agent knowledge transfer
+* Queue-based writes ensure **eventual consistency** without manual orchestration.
+* Data is redundantly stored (Vector + D1) to preserve multidimensional context.
 
-### 3. Multi-Agent Continuous Learning
+### 3. Developer Experience
 
-* Real-time embedding updates
-* Federated learning across clusters
-* Memory consolidation & pruning
-* Personalization vector evolution
+* Simple API: `store`, `retrieve`, `log`.
+* Beyond Enhanced RAG users can use super-admin token to interact with the whole APIs of MeridianDB.
+* Built-in Operator UI for observability, data management, and debugging.
 
-### 4. Scalable Multi-Tenancy
+### 4. Cloudflare-Native Scalability
 
-* Org-level isolation with selective sharing
-* Agent identity & quota management
-* Cross-tenant graph federation
+* Global low-latency access.
+* Automatic retries, failover, and event-driven processing.
+* Cost-efficient, horizontally scalable architecture.
 
-### 5. Security & Authorization
+---
 
-* JWT with refresh token rotation
-* Granular CRUD + sharing rights
-* Contextual access gates
-* Full audit trails
+## 🏗️ Architecture
+
+```
+Human Clients + SDKs
+        │
+ Worker API Gateway
+        │
+   Write Queues ──► Workers ──► Vectorize + D1
+        │
+ Retrieval Engine ──► Multi-Dimensional Query
+        │
+ Behavioral Logging + Feedback Loop
+```
+
+* **No Graph Traversal:** Features are stored in **D1 columns** for performance and simplicity.
+* **SQL-Based Scoring:** Composite feature scoring (semantic, temporal, contextual, behavioral) performed in SQL for maximum scalability. And aim to improve the retreival accuracy. 
+
+---
+
+## ⚡ Benefits
+
+* **Consistency & Reliability** – Eliminates ghost embeddings and race conditions.
+* **Operational Simplicity** – One system, one SDK, no manual glue code.
+* **Continuous Improvement** – Built-in behavioral logging and feedback loops.
+* **Edge-Native Performance** – Runs on Cloudflare’s global network for millisecond latency.
+
+---
+
+## ⚠️ Limitations
+
+* Eventual consistency — reads may slightly lag behind writes.
+* Developers must supply contextual features (future iterations may auto-generate context).
+* Temporal decay requires periodic cleanup jobs.
+* Learning curve for new retrieval model (SDK minimizes complexity).
+* Optimized for Cloudflare ecosystem (tight coupling).
+* d1 have limit of 10 GB.
 
 ---
 
 ## 🛠 Tech Stack
 
-* **Cloudflare D1** → relational metadata, user/permissions
-* **Vectorize** → embeddings storage & retrieval
-* **KV** → session state, counters, real-time cache
-* **R2** → object storage for models, artifacts, backups
-* **Workers** → low-latency, edge-native compute
-
-**Optimizations**
-
-* Embedding quantization
-* Lazy graph loading
-* Predictive caching
-* Smart connection pooling
-* Batch vector ops
+* **Cloudflare D1** – Relational metadata & feature storage
+* **Vectorize** – Embedding storage & similarity search
+* **KV** – Session state, counters, cache
+* **R2** – Object storage for models, artifacts, backups
+* **Workers** – Edge-native compute for low-latency operations
+* **Full-stack Development**: With Hono, React, Vite.
 
 ---
 
-## 🏗 Architecture
+## 📦 Installation
 
-### Data Layer
-
-```
-Knowledge Graphs (D1)      Vector Embeddings (Vectorize)  
-Session Cache (KV)         Object Storage (R2)  
+```bash
+npm i
 ```
 
-### Processing Layer
+## 📦 Build
 
-```
-Query Engine  ← GraphRAG, ranking, adaptation  
-Learning Engine ← embedding updates, consolidation  
-```
-
-### API Layer
-
-```
-Agent Management ← auth, authz, multi-tenancy  
-Knowledge Ops   ← retrieval, insertion, sharing  
+```bash
+npm run build 
 ```
 
----
 
-## 🔑 Key Innovations
 
-1. **Contextual Similarity Fusion**
+## 📦 watch ts compiler
+Will run watch on all packages.
 
-   * Temporal weighting, interaction boosting, adaptive embedding spaces
-
-2. **Memory Consolidation Algorithm**
-
-   * Hierarchical clustering, retention policies, contextual forgetting
-
-3. **Predictive Graphs**
-
-   * Relationship prediction, temporal evolution, cross-domain bridges
-
-4. **Adaptive Authorization**
-
-   * Context-aware permissions, reputation systems, federated queries
-
----
-
-## Installing libraries 
-
+```bash
+npm run watch 
 ```
-npm install --legacy-peer-deps
 
+## 📦 Run dev environment
+Will run watch on all packages.
+
+```bash
+npm run dev
+```
+
+
+## 📦 Testing
+Will run watch on all packages.
+
+```bash
+npm run test
 ```
