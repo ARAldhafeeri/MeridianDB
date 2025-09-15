@@ -1,0 +1,24 @@
+name = "hono-react-app"
+main = "src/server/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+NODE_ENV = "development"
+
+[env.production]
+[env.production.vars]
+NODE_ENV = "production"
+
+# For serving static assets in production
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
+
+
+[build]
+command = "npm run build"
+
+# For development
+[dev]
+port = 8787

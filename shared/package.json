@@ -1,0 +1,13 @@
+{
+  "name": "meridiandb-shared",
+  "private": true,
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "**/*.d.ts",
+    "**/*.ts"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.json"
+  }
+}
