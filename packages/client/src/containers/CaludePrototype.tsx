@@ -1,11 +1,10 @@
 import '@ant-design/v5-patch-for-react-19';
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   Layout,
   Menu,
   Card,
-  Table,
   Button,
   Input,
   Select,
@@ -21,7 +20,6 @@ import {
   Row,
   Col,
   Tag,
-  Alert,
   DatePicker,
   Slider,
   Switch,
@@ -31,9 +29,6 @@ import {
   Breadcrumb,
   Dropdown,
   Tooltip,
-  Timeline,
-  Rate,
-  Divider,
 } from "antd";
 import type { MenuProps } from "antd";
 import {
@@ -50,8 +45,6 @@ import {
   EyeOutlined,
   FilterOutlined,
   DownloadOutlined,
-  ExclamationCircleOutlined,
-  CheckCircleOutlined,
 
   TrophyOutlined,
   HeartOutlined,
@@ -59,10 +52,6 @@ import {
 import {
   LineChart,
   Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -140,12 +129,6 @@ interface MemoryCardProps {
   memory: Memory;
 }
 
-interface RiskIndicatorProps {
-  risk: {
-    level: 'low' | 'medium' | 'high';
-    factors: Record<string, number>;
-  };
-}
 
 type PageKey = 'dashboard' | 'agents' | 'memory' | 'analytics' | 'settings';
 

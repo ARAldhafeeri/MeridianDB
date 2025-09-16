@@ -3,23 +3,23 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/*",
-    "types"
+    "packages/*"
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "npm run dev -w meridiandb-client",
     "dev:server": "npm run dev -w meridiandb-server",
-    "watch": "concurrently \"npm run watch -w meridiandb-client\" \"npm run watch -w meridiandb-server\"",
-    "build": "npm run build -w meridiandb-client && npm run build -w meridiandb-server",
+    "watch": "concurrently \"npm run watch -w meridiandb-client\" \"npm run watch -w meridiandb-server\" \"npm run watch -w shared\"",
+    "build": "npm run build -w shared && npm run build -w meridiandb-client && npm run build -w meridiandb-server",
+    "build:shared": "npm run build -w shared",
     "deploy": "npm run deploy -w meridiandb-server"
   },
   "devDependencies": {
-    "@rollup/rollup-win32-x64-msvc": "^4.50.1",
     "concurrently": "^8.2.2",
-    "wrangler": "^3.0.0"
+    "wrangler": "^3.0.0",
+    "@rollup/rollup-win32-x64-msvc": "^4.50.2"
+
   },
   "dependencies": {
-    "lightningcss": "^1.30.1"
   }
 }

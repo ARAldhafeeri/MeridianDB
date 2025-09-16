@@ -6,7 +6,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -16,7 +15,18 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
-
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "paths": {
+      "@shared/*": ["./packages/shared/src/*"],
+      "@client/*": ["./packages/client/src/*"],
+      "@server/*": ["./packages/server/src/*"]
+    }
   },
   "include": ["src/**/*", "*.ts"],
+ "references": [
+    {"path": "./packages/shared"},
+    {"path": "./packages/server"}
+  ]
 }

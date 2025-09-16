@@ -1,5 +1,3 @@
-import { VectorEmbedding } from "./vector";
-
 /**
  * Standard API response wrapper
  */

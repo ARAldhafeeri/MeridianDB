@@ -1,20 +1,19 @@
 {
   "name": "meridiandb-server",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify",
-    "build": "npm run build -w client && tsc --noEmit",
-    "watch": "tsc --noEmit --watch --preserveWatchOutput",
-    "build:server": "tsc && cp -r ../dist/client ./dist/",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "build": "tsc --build",
+    "deploy": "wrangler deploy",
+    "watch": "tsc --build --watch"
   },
   "dependencies": {
     "hono": "^4.9.6",
-    "shared": "../../shared"
+    "shared": "*"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.0.0",
-    "wrangler": "^4.4.0"
+    "@cloudflare/workers-types": "^4.20250913.0",
+    "typescript": "~5.8.3"
   }
 }

@@ -1,4 +1,4 @@
-import type { BaseEntity } from "./base";
+import { BaseEntity } from "./base";
 
 /**
  * AI Agent entity
@@ -72,15 +72,4 @@ export interface UpdateAgentRequest {
   readonly stabilityThreshold?: number;
   readonly contextWindow?: number;
   readonly metadata?: Record<string, unknown>;
-}
-
-/**
- * agent filter query parameters
- */
-export interface AgentFilter {
-  readonly name?: string;
-  readonly isActive?: boolean;
-  readonly capabilities?: string[];
-  readonly createdAfter?: Date;
-  readonly createdBefore?: Date;
 }

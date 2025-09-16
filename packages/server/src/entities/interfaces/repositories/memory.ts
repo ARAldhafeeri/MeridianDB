@@ -1,4 +1,3 @@
-import { MemoryStatistics } from "../../domain/analytics";
 import { BaseEntity } from "../../domain/base";
 import { ConsolidationRequest, PaginatedResponse } from "../../domain/dto";
 import {
@@ -42,7 +41,7 @@ export interface MemoryRepository {
   batchUpdateRecency(agentId: string, decayFactor: number): Promise<number>;
 
   // Analytics queries
-  getMemoryStatistics(agentId: string): Promise<MemoryStatistics>;
+  // getMemoryStatistics(agentId: string): Promise<MemoryStatistics>;
   // getCrossAgentPatterns(organizationId: string): Promise<any[]>;
 
   // // Cleanup operations

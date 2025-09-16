@@ -1,4 +1,3 @@
-import { MemoryStatistics } from "../entities/domain/analytics";
 import { BaseEntity } from "../entities/domain/base";
 import {
   ConsolidationRequest,
@@ -45,7 +44,7 @@ export interface MemoryRepository {
   batchUpdateRecency(agentId: string, decayFactor: number): Promise<number>;
 
   // Analytics queries
-  getMemoryStatistics(agentId: string): Promise<MemoryStatistics>;
+  // getMemoryStatistics(agentId: string): Promise<MemoryStatistics>;
   // getCrossAgentPatterns(organizationId: string): Promise<[]>;
 
   // // Cleanup operations

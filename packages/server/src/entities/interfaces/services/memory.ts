@@ -1,4 +1,3 @@
-import { MemoryStatistics } from "../../domain/analytics";
 import { ConsolidationRequest } from "../../domain/dto";
 import {
   MemoryRetrievalRequest,
@@ -7,7 +6,7 @@ import {
 } from "../../domain/memory";
 import { ConsolidationResult } from "../../domain/responses";
 import { MemoryEpisode } from "../../domain/vector";
-import { ServiceContext, ServiceResult } from "./base";
+import { ServiceResult } from "./base";
 
 /**
  * Memory service with tabular operations
@@ -27,7 +26,7 @@ export interface MemoryService {
   ): Promise<ServiceResult<ConsolidationResult>>;
 
   // Analytics
-  getStatistics(agentId: string): Promise<ServiceResult<MemoryStatistics>>;
+  // getStatistics(agentId: string): Promise<ServiceResult<MemoryStatistics>>;
 
   // Cross-agent sharing
   shareKnowledge(

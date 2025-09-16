@@ -1,4 +1,4 @@
-import { ServiceContext, ServiceResult } from "./base";
+import { ServiceResult } from "./base";
 import {
   StoreBehavioralFeedbackRequest,
   UpdateDecisionTreeRequest,
@@ -26,8 +26,7 @@ export interface BehavioralService {
   getDecisionPatterns(
     agentId: string,
     taskType?: string,
-    environment?: string,
-    context?: ServiceContext
+    environment?: string
   ): Promise<ServiceResult<BehavioralDecisionNode[]>>;
 
   // Human audit workflow
