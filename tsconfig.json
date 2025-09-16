@@ -8,7 +8,6 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
@@ -19,9 +18,7 @@
     "declaration": true,
     "declarationMap": true,
     "paths": {
-      "@shared/*": ["./packages/shared/src/*"],
-      "@client/*": ["./packages/client/src/*"],
-      "@server/*": ["./packages/server/src/*"]
+      "@meridiandb/shared": ["packages/shared/src"]
     }
   },
   "include": ["src/**/*", "*.ts"],

@@ -4,15 +4,16 @@
   "type": "module",
   "workspaces": [
     "packages/*"
+
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "dev:client": "npm run dev -w meridiandb-client",
-    "dev:server": "npm run dev -w meridiandb-server",
-    "watch": "concurrently \"npm run watch -w meridiandb-client\" \"npm run watch -w meridiandb-server\" \"npm run watch -w shared\"",
-    "build": "npm run build -w shared && npm run build -w meridiandb-client && npm run build -w meridiandb-server",
-    "build:shared": "npm run build -w shared",
-    "deploy": "npm run deploy -w meridiandb-server"
+    "dev:client": "npm run dev -w client",
+    "dev:server": "npm run dev -w server",
+    "watch": "concurrently \"npm run watch -w client\" \"npm run watch -w server\" \"npm run watch -w shared\"",
+    "build": "npm run build -w @meridiandb/shared && npm run build -w client && npm run build -w server",
+    "build:shared": "npm run build -w @meridiandb/shared",
+    "deploy": "npm run deploy -w server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

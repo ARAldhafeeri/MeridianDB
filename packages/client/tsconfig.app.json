@@ -3,9 +3,8 @@
   "compilerOptions": {
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "paths": {
-      "@shared/*": ["../shared/src/*"]
-    }
+    "outDir": "./dist",
+    "rootDir": "./src",
   },
   "include": ["src"]
 }

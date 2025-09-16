@@ -1,5 +1,5 @@
 {
-  "name": "meridiandb-server",
+  "name": "server",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,8 +9,9 @@
     "watch": "tsc --build --watch"
   },
   "dependencies": {
-    "hono": "^4.9.6"
-  },
+    "hono": "^4.9.6",
+    "@meridiandb/shared": "*"
+    },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250913.0",
     "typescript": "~5.8.3"

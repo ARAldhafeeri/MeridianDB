@@ -95,7 +95,7 @@ npm i
 ## 📦 Build
 
 ```bash
-npm run build 
+npm run build -w shared
 ```
 
 
