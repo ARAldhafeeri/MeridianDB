@@ -13,7 +13,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@/shared": ["../shared"]
     },
     "composite": true,
     "declaration": true,
@@ -23,5 +22,6 @@
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
+  "references": [{ "path": "../shared" }]
 
 }
