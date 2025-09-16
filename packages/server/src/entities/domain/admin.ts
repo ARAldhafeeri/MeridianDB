@@ -1,4 +1,4 @@
-import { BaseEntity } from "./base";
+import type { BaseEntity } from "./base";
 
 // simple admin entity
 export interface Admin extends BaseEntity {

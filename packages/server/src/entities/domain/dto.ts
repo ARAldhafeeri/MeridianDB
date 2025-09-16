@@ -1,5 +1,8 @@
-import { AccessLevel, SimilarityType } from ".";
-import { EmbeddingContext } from "./vector";
+import {
+  AccessLevel,
+  SimilarityType,
+} from "@meridiandb/shared/src/entities/enums";
+import { EmbeddingContext } from "@meridiandb/shared/src/entities/vectors";
 
 /**
  * Pagination parameters

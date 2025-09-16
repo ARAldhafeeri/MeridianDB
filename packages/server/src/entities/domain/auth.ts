@@ -1,20 +1,9 @@
-/**
- * JWT payload structure
- */
-interface JWTPayload {
-  orgId: string;
-  agentId?: string;
-  userId?: string;
-  roles: string[];
-  permissions: string[];
-  exp: number;
-  iat: number;
-}
+export type { JWTPayload } from "@meridiandb/shared/src/entities/auth";
 
 /**
  * Context-aware authorization parameters
  */
-interface AuthZParams {
+export interface AuthZParams {
   resourceType: string;
   resourceId?: string;
   action: string;
@@ -24,7 +13,7 @@ interface AuthZParams {
 /**
  * Federation sharing policy
  */
-interface SharingPolicy {
+export interface SharingPolicy {
   allowedRelations: string[];
   maxDepth: number;
   anonymization: {
