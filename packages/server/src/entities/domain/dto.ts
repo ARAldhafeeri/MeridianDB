@@ -2,7 +2,6 @@ import {
   AccessLevel,
   SimilarityType,
 } from "@meridiandb/shared/src/entities/enums";
-import { EmbeddingContext } from "@meridiandb/shared/src/entities/vectors";
 
 /**
  * Pagination parameters
@@ -64,7 +63,6 @@ export interface AdvancedSearchRequest {
   readonly behavioralWeight: number; // 0-1
   readonly limit: number;
   readonly threshold?: number;
-  readonly contextHints?: EmbeddingContext;
   readonly excludeIds?: string[];
   readonly organizationId: string;
   readonly agentId?: string;

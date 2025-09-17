@@ -1,24 +1,10 @@
-import { SemanticCluster } from "../../domain/memory";
+import { MemoryEpisode } from "../../domain/vector";
 
 /**
  * Minimal vector repository (Vectorize preprocessing only)
  */
 export interface SemanticClusterRepository {
   // Cluster management
-  findOrCreateCluster(
-    centroid: number[],
-    agentId?: string
-  ): Promise<SemanticCluster>;
-  findSimilarClusters(
-    centroid: number[],
-    threshold: number
-  ): Promise<SemanticCluster[]>;
-  updateClusterStats(clusterId: number): Promise<void>;
-
-  // Feature extraction for D1 storage
-  extractSemanticFeatures(content: string): Promise<{
-    clusterId: number;
-    density: number;
-    conceptTags: string[];
-  }>;
+  insertSemanticMemory(memory: MemoryEpisode): Promise<any>;
+  semanticSearch(query: number[]): Promise<any>;
 }

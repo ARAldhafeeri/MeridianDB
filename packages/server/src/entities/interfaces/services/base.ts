@@ -1,6 +1,9 @@
 import { BaseEntity } from "../../domain/base";
 import { PaginatedResponse, PaginationParams } from "../../domain/dto";
-
+import type {
+  ServiceResult,
+  ValidationResult,
+} from "@meridiandb/shared/src/entities/base";
 /**
  * Base service interface with common business logic patterns
  * All services should extend this for consistency
@@ -19,7 +22,7 @@ export interface BaseService<
   /**
    * Get entity by ID with access control
    */
-  getById(id: string, context: ServiceContext): Promise<ServiceResult<T>>;
+  getById(id: string): Promise<ServiceResult<T>>;
 
   /**
    * List entities with filtering and pagination
@@ -50,39 +53,7 @@ export interface BaseService<
   checkAccess(entityId: string, action: string): Promise<boolean>;
 }
 
-export interface ServiceContext {
-  readonly organizationId: string;
-  readonly agentId?: string;
-  readonly userId?: string;
-  readonly permissions: string[];
-  readonly requestId: string;
-  readonly timestamp: Date;
-}
-
-export interface ServiceResult<T = unknown> {
-  readonly success: boolean;
-  readonly data?: T;
-  readonly error?: ServiceError;
-  readonly warnings?: string[];
-  readonly metadata?: Record<string, unknown>;
-}
-
-export interface ServiceError {
-  readonly code: string;
-  readonly message: string;
-  readonly details?: Record<string, unknown>;
-  readonly retryable: boolean;
-}
-
-export interface ValidationResult {
-  readonly valid: boolean;
-  readonly errors: ValidationError[];
-  readonly warnings: string[];
-}
-
-export interface ValidationError {
-  readonly field: string;
-  readonly code: string;
-  readonly message: string;
-  readonly value?: unknown;
-}
+export type {
+  ServiceResult,
+  ValidationResult,
+} from "@meridiandb/shared/src/entities/base";
