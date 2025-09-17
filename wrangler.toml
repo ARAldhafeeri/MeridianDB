@@ -22,3 +22,7 @@ command = "npm run build"
 # For development
 [dev]
 port = 8787
+
+
+[site]
+bucket = "./dist/client"

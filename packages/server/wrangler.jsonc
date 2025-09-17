@@ -1,34 +1,33 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "server",
+  "name": "meridiandb",
   "main": "src/index.ts",
   "compatibility_date": "2025-09-11",
-  "pages_build_output_dir": "./dist" // for cloudflare pages main for workers
+  "pages_build_output_dir": "./dist", // for cloudflare pages main for workers
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },
-  // "kv_namespaces": [
-  //   {
-  //     "binding": "MY_KV_NAMESPACE",
-  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  //   }
-  // ],
-  // "r2_buckets": [
-  //   {
-  //     "binding": "MY_BUCKET",
-  //     "bucket_name": "my-bucket"
-  //   }
-  // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
-  //   }
-  // ],
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "6250555b48d041de9ab63c8efc78329e"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2_BUCKET",
+      "bucket_name": "meridiandb"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "D1",
+      "database_name": "meridiandb",
+      "database_id": "21b2d4dd-ba84-484f-9e3d-43120a77cac4"
+    }
+  ]
   // "ai": {
   //   "binding": "AI"
   // },
