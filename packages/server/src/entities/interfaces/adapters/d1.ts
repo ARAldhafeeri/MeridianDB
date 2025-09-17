@@ -18,10 +18,14 @@ export interface D1QueryResult {
 }
 
 /**
+ * Batched sql statements for Transactions in d1
+ */
+
+/**
  * Minimal D1 client interface used by repositories to execute SQL.
  * Implementations can be thin wrappers around Cloudflare D1 driver.
  */
-export interface D1Client {
+export interface ID1Client {
   /**
    * Execute a parameterized SQL query and return rows.
    * Implementations should honor targetLatencyMs hints where possible.
@@ -33,14 +37,11 @@ export interface D1Client {
   ): Promise<D1QueryResult>;
 
   /**
-   * Begin a transaction. Returns a transaction handle (opaque).
-   * The transaction handle type is left as 'any' to preserve adapter flexibility.
+   * Batched statements are SQL transactions ↗.
+   *  If a statement in the sequence fails,
+   * then an error is returned for that specific
+   * statement, and it aborts or rolls back the
+   * entire sequence.
    */
-  beginTransaction?(): Promise<any>;
-
-  /** Commit a transaction */
-  commitTransaction?(tx: any): Promise<void>;
-
-  /** Rollback transaction */
-  rollbackTransaction?(tx: any): Promise<void>;
+  runTransaction?(stmts: D1PreparedStatement[]): Promise<D1QueryResult>;
 }

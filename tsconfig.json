@@ -18,7 +18,9 @@
     "declaration": true,
     "declarationMap": true,
     "paths": {
-      "@meridiandb/shared": ["packages/shared/src"]
+      "@meridiandb/shared": ["packages/shared/src"],
+      "@meridiandb/server": ["packages/server/src"],
+      "@meridiandb/client": ["packages/client/src"]
     }
   },
   "include": ["src/**/*", "*.ts"],
