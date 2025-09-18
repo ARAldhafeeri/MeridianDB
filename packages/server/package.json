@@ -12,6 +12,7 @@
     "@meridiandb/shared": "*",
     "hono": "^4.9.6",
     "jsonwebtoken": "^9.0.2",
+    "sql-template-strings": "^2.2.2",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

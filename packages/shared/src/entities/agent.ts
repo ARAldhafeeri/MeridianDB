@@ -23,20 +23,21 @@ export interface Agent extends BaseEntity {
    * Can be described as word or full sentances.
    */
   readonly capabilities: string[];
+
   /**
-   * A number to configure the learning rate of the ai agent
-   * high number means the ai agent will learn fast
-   * low number will mean the ai agent will learn slow
-   * this will control the rate at which vectors are stored
-   * and their amount to strike good balance between
-   * palsticity and stability
-   */
-  readonly learningRate: number;
-  /**
+   * Temporal
    * protecting consolidated knowledge with thruhold
-   * related to temporal and archieving.
+   * related to temporal and archieving it's a decay factor 0-1
    */
   readonly stabilityThreshold: number;
+
+  /***
+   * Behavioral
+   * Success rate , memories surpass success rate
+   * will not be included within the results
+   */
+  readonly successRate: number;
+
   /**
    * allow the admin from the admin portal to enable
    * or disable the agent.

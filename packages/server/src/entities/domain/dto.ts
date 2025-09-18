@@ -23,10 +23,6 @@ export interface PaginatedResponse<T> {
     readonly page: number;
     readonly limit: number;
     readonly total: number;
-    readonly hasNext: boolean;
-    readonly hasPrev: boolean;
-    readonly nextCursor?: string;
-    readonly prevCursor?: string;
   };
 }
 
