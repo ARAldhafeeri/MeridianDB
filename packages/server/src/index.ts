@@ -4,17 +4,18 @@ import { cors } from "hono/cors";
 
 // Bindings
 type Bindings = {
-  D1: D1Database;
-  KV: KVNamespace;
-  R2_BUCKET: R2Bucket;
-  __STATIC_CONTENT?: any;
+  readonly D1: D1Database;
+  readonly KV: KVNamespace;
+  readonly R2_BUCKET: R2Bucket;
+  readonly __STATIC_CONTENT?: any;
 };
 
 // main app
 const app = new Hono<{ Bindings: Bindings }>();
 
-// Create a simple manifest object
-// const staticManifest = {};
+// production serving react app.
+// app.use('/static/*', serveStatic({ root: './frontend/dist' }));
+// app.get('/', serveStatic({ path: './frontend/dist/index.html' }));
 
 // Cross origin
 app.use(
@@ -104,4 +105,10 @@ app.get("/api/health", async (c) => {
   }
 });
 
-export default app;
+export default {
+  fetch: app.fetch,
+  // async queue(batch: any, env: Bindings) {
+  //    batch?.messages;
+  //   env.D1
+  // },
+};

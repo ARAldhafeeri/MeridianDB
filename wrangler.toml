@@ -12,7 +12,7 @@ NODE_ENV = "production"
 
 # For serving static assets in production
 [assets]
-directory = "./dist/client"
+directory = "./packages/client/dist"
 binding = "ASSETS"
 
 
