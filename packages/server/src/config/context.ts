@@ -8,7 +8,17 @@ export type Env = {
     readonly R2_BUCKET: R2Bucket;
     readonly __STATIC_CONTENT?: any;
   };
-  Variables: {};
+  Variables: {
+    JWT_SECRET: string;
+    AGENT_ID: string;
+    ORG_ID: string;
+  };
+};
+
+// used in set operations
+export const AppContextKeys = {
+  AGENT_ID: "AGENT_ID",
+  ORG_ID: "ORG_ID",
 };
 
 export const getD1 = () => {
@@ -27,7 +37,20 @@ export const getStaticContent = () => {
   return getContext<Env>().env.__STATIC_CONTENT;
 };
 
-// Utility function to get the entire environment
 export const getEnv = (): Env["Bindings"] => {
   return getContext<Env>().env;
+};
+
+// jwt
+export const getJWTSecret = (): string => {
+  return getContext<Env>().var.JWT_SECRET;
+};
+
+// app context
+export const getAgentId = (): string => {
+  return getContext<Env>().var.AGENT_ID;
+};
+
+export const getOrgId = (): string => {
+  return getContext<Env>().var.ORG_ID;
 };

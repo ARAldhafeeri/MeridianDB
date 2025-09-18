@@ -6,9 +6,9 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
+  "vars": {
+    "JWT_SECRET": "my-dev-secret",
+  },
   "kv_namespaces": [
     {
       "binding": "KV",
