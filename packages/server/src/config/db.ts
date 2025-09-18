@@ -1,6 +1,10 @@
 import { getD1 } from "./context";
 import { INDEXES, SCHEMAS, TABLES, TABLE_NAMES } from "./schemas";
 
+interface SchemaResult {
+  count: number;
+}
+
 /**
  * Check if all required tables exist
  * Fast check that short-circuits if any table is missing
@@ -10,20 +14,17 @@ const checkTablesExist = async (): Promise<boolean | null> => {
     const d1 = getD1();
 
     // Use a single query to check for all tables
-    const placeholders = TABLE_NAMES.map(() => "?").join(", ");
     const query = `
-      SELECT COUNT(*) as count 
-      FROM sqlite_master 
-      WHERE type = 'table' 
-      AND name IN (${placeholders})
-    `;
+    SELECT COUNT(*) as count FROM sqlite_schema 
+    WHERE type='table' AND name IN (${TABLE_NAMES.map(
+      (name) => `'${name}'`
+    ).join(", ")});
+  `;
 
-    const result = await d1
-      .prepare(query)
-      .bind(...TABLE_NAMES)
-      .first();
+    const result: SchemaResult | null = await d1.prepare(query).first();
 
-    return result && (result as any).count === TABLE_NAMES.length;
+    if (!result) return false;
+    return result.count === TABLE_NAMES.length;
   } catch (error) {
     console.error("Error checking table existence:", error);
     return false;
