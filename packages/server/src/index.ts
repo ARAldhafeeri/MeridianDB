@@ -1,17 +1,12 @@
 import { Hono } from "hono";
 // import { serveStatic } from "hono/cloudflare-workers";
 import { cors } from "hono/cors";
-
-// Bindings
-type Bindings = {
-  readonly D1: D1Database;
-  readonly KV: KVNamespace;
-  readonly R2_BUCKET: R2Bucket;
-  readonly __STATIC_CONTENT?: any;
-};
+import { contextStorage } from "hono/context-storage";
+import { Env } from "hono/types";
+import { getD1, getKV, getR2 } from "./config/context";
 
 // main app
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: Env }>();
 
 // production serving react app.
 // app.use('/static/*', serveStatic({ root: './frontend/dist' }));
@@ -26,6 +21,9 @@ app.use(
   })
 );
 
+// use context storage propagate context through async calls
+app.use(contextStorage());
+// usage getContext
 // Health check endpoint that tests all databases
 app.get("/api/health", async (c) => {
   const healthCheck = {
@@ -42,9 +40,9 @@ app.get("/api/health", async (c) => {
     // Test KV
     const kvStart = Date.now();
     try {
-      await c.env.KV.put("healthcheck", "test", { expirationTtl: 60 });
-      await c.env.KV.get("healthcheck");
-      await c.env.KV.delete("healthcheck");
+      await getKV().put("healthcheck", "test", { expirationTtl: 60 });
+      await getKV().get("healthcheck");
+      await getKV().delete("healthcheck");
       healthCheck.services.kv.status = "healthy";
       healthCheck.services.kv.latency = Date.now() - kvStart;
     } catch (error: any) {
@@ -56,7 +54,7 @@ app.get("/api/health", async (c) => {
     const r2Start = Date.now();
     try {
       // Try to list buckets to test connectivity
-      await c.env.R2_BUCKET.list({ limit: 1 });
+      await getR2().list({ limit: 1 });
       healthCheck.services.r2.status = "healthy";
       healthCheck.services.r2.latency = Date.now() - r2Start;
     } catch (error: any) {
@@ -68,7 +66,7 @@ app.get("/api/health", async (c) => {
     const d1Start = Date.now();
     try {
       // Simple query to test connectivity
-      const result = await c.env.D1.prepare("SELECT 1 as test").first();
+      const result = await getD1().prepare("SELECT 1 as test").first();
       if (result && result.test === 1) {
         healthCheck.services.d1.status = "healthy";
       } else {
@@ -105,6 +103,8 @@ app.get("/api/health", async (c) => {
   }
 });
 
+// queues may be removed from open source version design
+// barier of adoption as multiple users have free membership
 export default {
   fetch: app.fetch,
   // async queue(batch: any, env: Bindings) {
