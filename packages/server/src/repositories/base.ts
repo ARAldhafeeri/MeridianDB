@@ -1,417 +1,147 @@
-import { getD1, getOrgId } from "@/config/context";
-import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
+import { D1Client } from "../infrastructure/d1/connection";
+import { SQLiteColumn, SQLiteTable } from "drizzle-orm/sqlite-core";
+import { eq, and } from "drizzle-orm";
+import { v4 as uuidv4 } from "uuid";
 import { BaseRepository } from "@/entities/interfaces/repositories/base";
 import { BaseEntity } from "@meridiandb/shared/src/entities/base";
-import { SQL, SQLStatement } from "sql-template-strings";
+import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
 
-/**
- * Base D1 repository implementation with common CRUD operations
- * All D1 repositories should extend this for consistency
- */
-export abstract class D1BaseRepository<T extends BaseEntity, TFilter = object>
-  implements BaseRepository<T, TFilter>
+export abstract class DrizzleBaseRepository<
+  T extends BaseEntity,
+  TFilter = object
+> implements BaseRepository<T, TFilter>
 {
-  protected abstract tableName: string;
-  protected abstract schema: string;
+  protected abstract table: SQLiteTable;
+  protected abstract getIdColumn(): SQLiteColumn;
+  protected abstract getOrganizationColumn(): SQLiteColumn | null;
 
-  /**
-   * Convert entity to database row (remove BaseEntity fields)
-   */
-  protected abstract toRow(
-    entity: Omit<T, keyof BaseEntity> | Partial<Omit<T, keyof BaseEntity>>
-  ): Record<string, any>;
+  constructor(protected db: D1Client) {}
 
-  /**
-   * Convert database row to entity
-   */
-  protected abstract fromRow(row: any): T;
-
-  /**
-   * Build WHERE clause from filter
-   */
-  protected abstract buildWhereClause(filter: TFilter): SQLStatement;
-
-  /**
-   * Create a new entity
-   */
   async create(data: Omit<T, keyof BaseEntity>): Promise<T> {
-    const now = new Date().toISOString();
-    const orgId = getOrgId();
-
-    const row = {
-      ...this.toRow(data),
-      id: crypto.randomUUID(),
-      createdAt: now,
-      updatedAt: now,
-      ...(orgId && { organizationId: orgId }),
+    const entityData = {
+      ...data,
+      id: uuidv4(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      version: 1,
     };
 
-    const columns = Object.keys(row).join(", ");
-    const placeholders = Object.keys(row)
-      .map(() => "?")
-      .join(", ");
-    const values = Object.values(row);
+    // Type assertion is safe here as we're adding the required BaseEntity fields
+    const entity = entityData as unknown as T;
 
-    const query = `INSERT INTO ${this.tableName} (${columns}) VALUES (${placeholders}) RETURNING *`;
-
-    const result = await getD1()
-      .prepare(query)
-      .bind(...values)
-      .first();
-
-    if (!result) {
-      throw new Error("Failed to create entity");
-    }
-
-    return this.fromRow(result);
+    await this.db.insert(this.table).values(entityData);
+    return entity;
   }
 
-  /**
-   * Create multiple entities in batch
-   */
   async createMany(data: Omit<T, keyof BaseEntity>[]): Promise<T[]> {
-    if (data.length === 0) return [];
-
-    const now = new Date().toISOString();
-    const orgId = getOrgId();
-    const rows = data.map((item) => ({
-      ...this.toRow(item),
-      id: crypto.randomUUID(),
-      createdAt: now,
-      updatedAt: now,
-      ...(orgId && { organizationId: orgId }),
+    const entitiesData = data.map((item) => ({
+      ...item,
+      id: uuidv4(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      version: 1,
     }));
 
-    const columns = Object.keys(rows[0]).join(", ");
-    const placeholders = rows
-      .map(
-        () =>
-          `(${Object.keys(rows[0])
-            .map(() => "?")
-            .join(", ")})`
-      )
-      .join(", ");
+    // Type assertion is safe here as we're adding the required BaseEntity fields
+    const entities = entitiesData as unknown as T[];
 
-    const values = rows.flatMap((row) => Object.values(row));
-
-    const query = `
-      INSERT INTO ${this.tableName} (${columns}) 
-      VALUES ${placeholders} 
-      RETURNING *
-    `;
-
-    const result = await getD1()
-      .prepare(query)
-      .bind(...values)
-      .all();
-
-    if (!result.results) {
-      throw new Error("Failed to create entities");
-    }
-
-    return result.results.map((row) => this.fromRow(row));
+    await this.db.insert(this.table).values(entitiesData);
+    return entities;
   }
 
-  /**
-   * Find entity by ID
-   */
   async findById(id: string, organizationId?: string): Promise<T | null> {
-    const orgId = organizationId || getOrgId();
-    let query = `SELECT * FROM ${this.tableName} WHERE id = ?`;
-    const params: any[] = [id];
+    const idColumn = this.getIdColumn();
+    const orgColumn = this.getOrganizationColumn();
 
-    if (orgId) {
-      query += " AND organizationId = ?";
-      params.push(orgId);
+    const conditions = [eq(idColumn, id)];
+
+    if (organizationId && orgColumn) {
+      conditions.push(eq(orgColumn, organizationId));
     }
 
-    const result = await getD1()
-      .prepare(query)
-      .bind(...params)
-      .first();
+    const result = await this.db
+      .select()
+      .from(this.table)
+      .where(and(...conditions))
+      .limit(1);
 
-    return result ? this.fromRow(result) : null;
+    return (result[0] as T) || null;
   }
 
-  /**
-   * Find multiple entities by IDs
-   */
   async findByIds(ids: string[], organizationId?: string): Promise<T[]> {
-    if (ids.length === 0) return [];
-
-    const orgId = organizationId || getOrgId();
-    let query = `SELECT * FROM ${this.tableName} WHERE id IN (${ids
-      .map(() => "?")
-      .join(", ")})`;
-    const params: any[] = [...ids];
-
-    if (orgId) {
-      query += " AND organizationId = ?";
-      params.push(orgId);
+    // Implementation would use inArray operator
+    const results = [];
+    for (const id of ids) {
+      const item = await this.findById(id, organizationId);
+      if (item) results.push(item);
     }
-
-    const result = await getD1()
-      .prepare(query)
-      .bind(...params)
-      .all();
-
-    return result.results ? result.results.map((row) => this.fromRow(row)) : [];
+    return results;
   }
 
-  /**
-   * Find entities with filtering and pagination
-   */
-  async find(
+  abstract find(
     filter: TFilter,
     pagination?: PaginationParams
-  ): Promise<PaginatedResponse<T>> {
-    const whereClause = this.buildWhereClause(filter);
-    const orgId = getOrgId();
+  ): Promise<PaginatedResponse<T>>;
 
-    let query = SQL`SELECT * FROM ${this.tableName} WHERE `;
+  abstract findOne(filter: TFilter): Promise<T | null>;
 
-    if (orgId) {
-      query.append(SQL`organizationId = ${orgId} AND `);
-    }
-
-    query.append(whereClause);
-
-    // Count total
-    const countQuery = SQL`SELECT COUNT(*) as total FROM ${this.tableName} WHERE `;
-
-    if (orgId) {
-      countQuery.append(SQL`organizationId = ${orgId} AND `);
-    }
-
-    countQuery.append(whereClause);
-
-    const countResult = await getD1()
-      .prepare(countQuery.text)
-      .bind(...countQuery.values)
-      .first();
-    const total = countResult ? (countResult as any).total : 0;
-
-    // Apply pagination
-    if (pagination) {
-      const { page = 1, limit = 50 } = pagination;
-      const offset = (page - 1) * limit;
-
-      query.append(SQL` LIMIT ${limit} OFFSET ${offset}`);
-    }
-
-    query.append(SQL` ORDER BY createdAt DESC`);
-
-    const result = await getD1()
-      .prepare(query.text)
-      .bind(...query.values)
-      .all();
-    const items = result.results
-      ? result.results.map((row) => this.fromRow(row))
-      : [];
-
-    return {
-      data: items,
-      pagination: {
-        page: pagination?.page || 1,
-        limit: pagination?.limit || items.length,
-        total,
-      },
-    };
-  }
-
-  /**
-   * Find single entity matching filter
-   */
-  async findOne(filter: TFilter): Promise<T | null> {
-    const whereClause = this.buildWhereClause(filter);
-    const orgId = getOrgId();
-
-    let query = SQL`SELECT * FROM ${this.tableName} WHERE `;
-
-    if (orgId) {
-      query.append(SQL`organizationId = ${orgId} AND `);
-    }
-
-    query.append(whereClause);
-    query.append(SQL` LIMIT 1`);
-
-    const result = await getD1()
-      .prepare(query.text)
-      .bind(...query.values)
-      .first();
-
-    return result ? this.fromRow(result) : null;
-  }
-
-  /**
-   * Update entity by ID
-   */
   async update(
     id: string,
     data: Partial<Omit<T, keyof BaseEntity>>,
     organizationId?: string
   ): Promise<T> {
-    const orgId = organizationId || getOrgId();
-    const updateData = this.toRow(data);
-    const now = new Date().toISOString();
+    const updateData = {
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
 
-    const setClause = Object.keys(updateData)
-      .map((key) => `${key} = ?`)
-      .concat("updatedAt = ?")
-      .join(", ");
+    const idColumn = this.getIdColumn();
+    const orgColumn = this.getOrganizationColumn();
 
-    const values = [...Object.values(updateData), now];
+    const conditions = [eq(idColumn, id)];
 
-    let query = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-    values.push(id);
-
-    if (orgId) {
-      query += " AND organizationId = ?";
-      values.push(orgId);
+    if (organizationId && orgColumn) {
+      conditions.push(eq(orgColumn, organizationId));
     }
 
-    query += " RETURNING *";
+    await this.db
+      .update(this.table)
+      .set(updateData)
+      .where(and(...conditions));
 
-    const result = await getD1()
-      .prepare(query)
-      .bind(...values)
-      .first();
-
-    if (!result) {
-      throw new Error("Entity not found or update failed");
+    const updatedEntity = await this.findById(id, organizationId);
+    if (!updatedEntity) {
+      throw new Error(`Entity with id ${id} not found after update`);
     }
-
-    return this.fromRow(result);
+    return updatedEntity;
   }
 
-  /**
-   * Update multiple entities matching filter
-   */
-  async updateMany(
+  abstract updateMany(
     filter: TFilter,
     data: Partial<Omit<T, keyof BaseEntity>>
-  ): Promise<number> {
-    const whereClause = this.buildWhereClause(filter);
-    const orgId = getOrgId();
-    const updateData = this.toRow(data);
-    const now = new Date().toISOString();
+  ): Promise<number>;
 
-    const setClause = Object.keys(updateData)
-      .map((key) => `${key} = ?`)
-      .concat("updatedAt = ?")
-      .join(", ");
-
-    const values = [...Object.values(updateData), now];
-
-    let query = SQL`UPDATE ${this.tableName} SET ${setClause} WHERE `;
-
-    if (orgId) {
-      query.append(SQL`organizationId = ${orgId} AND `);
-    }
-
-    query.append(whereClause);
-
-    // Convert SQLStatement to regular query
-    const fullQuery = query.text.replace("${setClause}", setClause);
-    const allValues = [...values, ...query.values];
-
-    const result = await getD1()
-      .prepare(fullQuery)
-      .bind(...allValues)
-      .run();
-
-    return result.meta.changes || 0;
-  }
-
-  /**
-   * Delete entity by ID (soft delete preferred)
-   */
   async delete(id: string, organizationId?: string): Promise<boolean> {
-    const orgId = organizationId || getOrgId();
+    const idColumn = this.getIdColumn();
+    const orgColumn = this.getOrganizationColumn();
 
-    let query = `DELETE FROM ${this.tableName} WHERE id = ?`;
-    const params: any[] = [id];
+    const conditions = [eq(idColumn, id)];
 
-    if (orgId) {
-      query += " AND organizationId = ?";
-      params.push(orgId);
+    if (organizationId && orgColumn) {
+      conditions.push(eq(orgColumn, organizationId));
     }
 
-    const result = await getD1()
-      .prepare(query)
-      .bind(...params)
-      .run();
+    const result = await this.db.delete(this.table).where(and(...conditions));
 
-    return result.meta.changes > 0;
+    return result.success;
   }
 
-  /**
-   * Delete multiple entities matching filter
-   */
-  async deleteMany(filter: TFilter): Promise<number> {
-    const whereClause = this.buildWhereClause(filter);
-    const orgId = getOrgId();
+  abstract deleteMany(filter: TFilter): Promise<number>;
 
-    let query = SQL`DELETE FROM ${this.tableName} WHERE `;
+  abstract count(filter: TFilter): Promise<number>;
 
-    if (orgId) {
-      query.append(SQL`organizationId = ${orgId} AND `);
-    }
-
-    query.append(whereClause);
-
-    const result = await getD1()
-      .prepare(query.text)
-      .bind(...query.values)
-      .run();
-
-    return result.meta.changes || 0;
-  }
-
-  /**
-   * Count entities matching filter
-   */
-  async count(filter: TFilter): Promise<number> {
-    const whereClause = this.buildWhereClause(filter);
-    const orgId = getOrgId();
-
-    let query = SQL`SELECT COUNT(*) as count FROM ${this.tableName} WHERE `;
-
-    if (orgId) {
-      query.append(SQL`organizationId = ${orgId} AND `);
-    }
-
-    query.append(whereClause);
-
-    const result = await getD1()
-      .prepare(query.text)
-      .bind(...query.values)
-      .first();
-
-    return result ? (result as any).count : 0;
-  }
-
-  /**
-   * Check if entity exists
-   */
   async exists(id: string, organizationId?: string): Promise<boolean> {
-    const orgId = organizationId || getOrgId();
-
-    let query = `SELECT 1 FROM ${this.tableName} WHERE id = ?`;
-    const params: any[] = [id];
-
-    if (orgId) {
-      query += " AND organizationId = ?";
-      params.push(orgId);
-    }
-
-    query += " LIMIT 1";
-
-    const result = await getD1()
-      .prepare(query)
-      .bind(...params)
-      .first();
-
-    return !!result;
+    const item = await this.findById(id, organizationId);
+    return item !== null;
   }
 }

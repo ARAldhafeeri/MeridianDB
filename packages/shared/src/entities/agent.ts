@@ -79,6 +79,7 @@ export interface UpdateAgentRequest {
  * agent filter query parameters
  */
 export interface AgentFilter {
+  readonly organizationId?: string;
   readonly name?: string;
   readonly isActive?: boolean;
   readonly capabilities?: string[];

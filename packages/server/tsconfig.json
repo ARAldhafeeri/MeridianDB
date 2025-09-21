@@ -10,7 +10,7 @@
     "types": ["@cloudflare/workers-types"]
 
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/drizzle.config.ts"],
   "references": [
     { "path": "../shared" }
   ]

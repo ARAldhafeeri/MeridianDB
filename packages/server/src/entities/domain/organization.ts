@@ -1,4 +1,4 @@
 export type {
   Organization,
-  OrganizationQuotas,
+  OrganizationFilter,
 } from "@meridiandb/shared/src/entities/organization";

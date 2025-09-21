@@ -121,3 +121,18 @@ Will run watch on all packages.
 ```bash
 npm run test
 ```
+
+### Migrations
+7. migrations
+
+# Generate migrations from your schema
+
+npx drizzle-kit generate
+
+# Apply migrations to your D1 database (local)
+
+npx wrangler d1 execute meridiand1 --local --file=./drizzle/migrations/0000_purple_lilith.sql
+
+# Apply migrations in production
+
+npx wrangler d1 execute meridiand1 --file=./drizzle/migrations/0000_purple_lilith.sql

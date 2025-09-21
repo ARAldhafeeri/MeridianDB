@@ -9,4 +9,4 @@ import { BaseRepository } from "./base";
  * which it's name and details can be edited
  * then the admin can create more organizations.
  */
-export interface OrganizationRepository extends BaseRepository<Organization> {}
+export interface IOrganizationRepository extends BaseRepository<Organization> {}

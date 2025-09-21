@@ -13,8 +13,6 @@ export const SCHEMAS = {
     CREATE TABLE IF NOT EXISTS organizations (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
-      tier TEXT CHECK(tier IN ('free', 'pro', 'enterprise')),
-      quotas TEXT,
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL,
       version INTEGER DEFAULT 1

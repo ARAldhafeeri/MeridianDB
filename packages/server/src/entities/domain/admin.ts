@@ -9,3 +9,14 @@ export interface Admin extends BaseEntity {
   salt: string;
   hash: string;
 }
+
+export interface AdminFilter {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  createdAfter?: Date;
+  createdBefore?: Date;
+  updatedAfter?: Date;
+  updatedBefore?: Date;
+}
