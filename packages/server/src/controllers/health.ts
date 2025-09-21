@@ -1,4 +1,6 @@
 import { getD1, getKV, getR2 } from "@/config/context";
+import { getD1WithDrizzle } from "@/infrastructure/d1/connection";
+import { createContainer } from "@/infrastructure/d1/container";
 import { Context } from "hono";
 
 export const helathCheckController = async (c: Context) => {
@@ -10,6 +12,7 @@ export const helathCheckController = async (c: Context) => {
       r2: { status: "unknown", latency: 0, error: "" },
       d1: { status: "unknown", latency: 0, error: "" },
     },
+    container: false,
   };
 
   try {
@@ -62,6 +65,15 @@ export const helathCheckController = async (c: Context) => {
 
     if (unhealthyServices.length > 0) {
       healthCheck.status = "degraded";
+    }
+
+    // helath check container
+    try {
+      const container = createContainer(getD1WithDrizzle(getD1()));
+      await container.organizationService.list({}, {});
+      healthCheck.container = true;
+    } catch {
+      // handle container failure
     }
 
     return c.json(healthCheck);
