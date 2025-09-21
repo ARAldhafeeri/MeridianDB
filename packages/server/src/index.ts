@@ -6,6 +6,7 @@ import { Env } from "hono/types";
 import { ENDPOINTS } from "./config/routes";
 import { helathCheckController } from "./controllers/health";
 import { initDBSchemaOrGetStatusController } from "./controllers/init";
+import { organizationRoutes } from "./routes/organization";
 
 // main app
 const app = new Hono<{ Bindings: Env }>();
@@ -26,6 +27,10 @@ app.use(
 // use context storage propagate context through async calls
 app.use(contextStorage());
 // usage getContext
+
+// core entities
+// orgs
+app.route(ENDPOINTS.orgs, organizationRoutes);
 
 // init schema
 app.get(ENDPOINTS.init, initDBSchemaOrGetStatusController);

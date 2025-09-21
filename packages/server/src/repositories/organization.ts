@@ -1,14 +1,13 @@
-import { Organization } from "@meridiandb/shared/src/entities/organization";
+import {
+  Organization,
+  OrganizationFilter,
+} from "@meridiandb/shared/src/entities/organization";
 import { DrizzleBaseRepository } from "./base";
 import { organizations } from "@/infrastructure/d1/schema";
 import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
 import { like, count } from "drizzle-orm";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { BaseEntity } from "@/entities/domain/base"; // Make sure to import BaseEntity
-
-export interface OrganizationFilter {
-  name?: string;
-}
 
 export class OrganizationRepository extends DrizzleBaseRepository<
   Organization,

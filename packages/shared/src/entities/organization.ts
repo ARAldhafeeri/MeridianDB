@@ -8,5 +8,6 @@ export interface Organization extends BaseEntity {
 }
 
 export interface OrganizationFilter {
-  name: string;
+  name?: string;
+  id?: string;
 }

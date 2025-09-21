@@ -6,17 +6,19 @@
     "dev": "wrangler dev",
     "build": "tsc --build",
     "deploy": "wrangler deploy",
-    "watch": "tsc -b --watch", 
+    "watch": "tsc -b --watch",
     "db:up:local": "drizzle-kit up --config=./drizzle.config.json",
-		"db:generate": "drizzle-kit generate --config=./drizzle.config.json"
+    "db:generate": "drizzle-kit generate --config=./drizzle.config.json"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.3",
     "@meridiandb/shared": "*",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.9.6",
     "jsonwebtoken": "^9.0.2",
     "sql-template-strings": "^2.2.2",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250917.0",
