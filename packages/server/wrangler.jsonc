@@ -8,6 +8,8 @@
   ],
   "vars": {
     "JWT_SECRET": "my-dev-secret",
+    "ADMIN_EMAIL": "admin@admin.com",
+    "ADMIN_PASSWORD": "admin"
   },
   "kv_namespaces": [
     {

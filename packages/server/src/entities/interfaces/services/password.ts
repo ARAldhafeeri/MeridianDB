@@ -1,11 +1,10 @@
-export interface PasswordService {
+export interface IPasswordService {
   createPassword(password: string): Promise<CreatePasswordResponse>;
-  createHashedPassword(password: string, salt: string): Promise<string>;
   verifyPassword(
     password: string,
     hashedPassword: string,
     salt: string
-  ): Promise<string>;
+  ): Promise<boolean>;
 }
 
 export interface CreatePasswordResponse {

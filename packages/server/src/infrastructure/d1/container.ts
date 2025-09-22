@@ -3,10 +3,13 @@ import { AdminRepository } from "@/repositories/admin";
 import { AgentRepository } from "@/repositories/agent";
 import { MemoryEpisodeRepository } from "@/repositories/memory";
 import { OrganizationRepository } from "@/repositories/organization";
+import { AccessService } from "@/services/access";
 import { AdminService } from "@/services/admin";
 import { AgentService } from "@/services/agent";
+import AuthService from "@/services/auth";
 import { MemoryEpisodeService } from "@/services/memory";
 import { OrganizationService } from "@/services/organization";
+import { PasswordService } from "@/services/password";
 
 export const createContainer = (db: D1Client) => {
   // Private cached instances
@@ -19,6 +22,11 @@ export const createContainer = (db: D1Client) => {
   let _adminService: AdminService | null = null;
   let _agentService: AgentService | null = null;
   let _memoryEpisodeService: MemoryEpisodeService | null = null;
+
+  // auth
+  let _passwordService: PasswordService | null = null;
+  let _accessService: AccessService | null = null;
+  let _auth_service: AuthService | null = null;
 
   return {
     // Repository getters with lazy initialization
@@ -81,6 +89,30 @@ export const createContainer = (db: D1Client) => {
         );
       }
       return _memoryEpisodeService;
+    },
+    get passwordService(): PasswordService {
+      if (!_passwordService) {
+        _passwordService = new PasswordService();
+      }
+      return _passwordService;
+    },
+    get accessService(): AccessService {
+      if (!_accessService) {
+        _accessService = new AccessService();
+      }
+      return _accessService;
+    },
+
+    get authService(): AuthService {
+      if (!_auth_service) {
+        _auth_service = new AuthService(
+          this.adminService,
+          this.accessService,
+          this.passwordService,
+          this.organizationService
+        );
+      }
+      return _auth_service;
     },
 
     // Optional: Add a cleanup method for serverless environments

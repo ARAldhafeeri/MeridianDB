@@ -1,6 +1,7 @@
+import { IPasswordService } from "@/entities/interfaces/services/password";
 import crypto from "crypto";
 
-class PasswordService implements PasswordService {
+export class PasswordService implements IPasswordService {
   /**
    *
    * one-way password hashing and verifiction only user know its password
@@ -14,21 +15,6 @@ class PasswordService implements PasswordService {
     const hashedPassword = hmac.digest("hex");
 
     return { hashedPassword, salt };
-  }
-
-  /**
-   * create hashed password.
-   * @param password
-   * @param salt
-   * @returns
-   */
-  async createHashedPassword(password: string, salt: string) {
-    const hmac = crypto.createHmac("sha256", salt);
-
-    hmac.update(password);
-    const hashedPassword = hmac.digest("hex");
-
-    return hashedPassword;
   }
 
   /**

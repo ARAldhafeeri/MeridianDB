@@ -7,6 +7,8 @@ export type Env = {
     readonly KV: KVNamespace;
     readonly R2_BUCKET: R2Bucket;
     readonly __STATIC_CONTENT?: any;
+    ADMIN_EMAIL: string;
+    ADMIN_PASSWORD: string;
   };
   Variables: {
     JWT_SECRET: string;
@@ -19,6 +21,8 @@ export type Env = {
 export const AppContextKeys = {
   AGENT_ID: "AGENT_ID",
   ORG_ID: "ORG_ID",
+  ADMIN_EMAIL: "ADMIN_EMAIL",
+  ADMIN_PASSWORD: "ADMIN_PASSWORD",
 };
 
 export const getD1 = () => {
@@ -53,4 +57,14 @@ export const getAgentId = (): string => {
 
 export const getOrgId = (): string => {
   return getContext<Env>().var.ORG_ID;
+};
+
+// admin
+
+export const getAdminEmail = (): string => {
+  return getContext<Env>().env.ADMIN_EMAIL;
+};
+
+export const getAdminPassword = (): string => {
+  return getContext<Env>().env.ADMIN_PASSWORD;
 };

@@ -3,7 +3,7 @@ import { IAccessService } from "@/entities/interfaces/services/access";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 
-class AccessService implements IAccessService {
+export class AccessService implements IAccessService {
   generateToken(payload: any, expiresIn: string): string {
     // jsonwebtoken StringValue issue, default is 30d;
     const exp = (expiresIn as any) || "30d";

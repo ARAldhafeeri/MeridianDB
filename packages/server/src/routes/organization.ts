@@ -15,48 +15,47 @@ import { BULK_ROUTE, ID_ROUTE, ROOT_ROUTE } from "@/config/routes";
 
 const organizationRoutes = new Hono();
 
-// Create controller instance
-const container = createContainer(getD1WithDrizzle(getD1()));
-const organizationController = new OrganizationController(
-  container.organizationService
-);
+const getOrgController = (): OrganizationController => {
+  const container = createContainer(getD1WithDrizzle(getD1()));
+  return new OrganizationController(container.organizationService);
+};
 
 // Routes with Zod validation middleware
 organizationRoutes.post(
   ROOT_ROUTE,
   zValidator("json", organizationCreateSchema),
-  organizationController.create.bind(organizationController)
+  getOrgController().create
 );
 
 organizationRoutes.get(
   ROOT_ROUTE,
   zValidator("query", organizationFilterSchema),
-  organizationController.list.bind(organizationController)
+  getOrgController().list
 );
 
 organizationRoutes.get(
   ID_ROUTE,
   zValidator("param", idParamSchema),
-  organizationController.getById.bind(organizationController)
+  getOrgController().getById
 );
 
 organizationRoutes.put(
   ID_ROUTE,
   zValidator("param", idParamSchema),
   zValidator("json", organizationUpdateSchema),
-  organizationController.update.bind(organizationController)
+  getOrgController().update
 );
 
 organizationRoutes.delete(
   ID_ROUTE,
   zValidator("param", idParamSchema),
-  organizationController.delete.bind(organizationController)
+  getOrgController().delete
 );
 
 organizationRoutes.post(
   BULK_ROUTE,
   zValidator("json", organizationBulkCreateSchema),
-  organizationController.bulkCreate.bind(organizationController)
+  getOrgController().bulkCreate
 );
 
 export { organizationRoutes };

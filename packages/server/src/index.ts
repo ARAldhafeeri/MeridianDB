@@ -2,14 +2,14 @@ import { Hono } from "hono";
 // import { serveStatic } from "hono/cloudflare-workers";
 import { cors } from "hono/cors";
 import { contextStorage } from "hono/context-storage";
-import { Env } from "hono/types";
+import { Env } from "@/config/context";
 import { ENDPOINTS } from "./config/routes";
 import { helathCheckController } from "./controllers/health";
-import { initDBSchemaOrGetStatusController } from "./controllers/init";
-import { organizationRoutes } from "./routes/organization";
+// import { organizationRoutes } from "./routes/organization";
+import { authRoutes } from "./routes/auth";
 
 // main app
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<Env>();
 
 // production serving react app.
 // app.use('/static/*', serveStatic({ root: './frontend/dist' }));
@@ -28,12 +28,10 @@ app.use(
 app.use(contextStorage());
 // usage getContext
 
-// core entities
-// orgs
-app.route(ENDPOINTS.orgs, organizationRoutes);
+// core routes
+// app.route(ENDPOINTS.orgs, organizationRoutes);
+app.route(ENDPOINTS.auth, authRoutes);
 
-// init schema
-app.get(ENDPOINTS.init, initDBSchemaOrGetStatusController);
 // Health check endpoint that tests all databases
 app.get(ENDPOINTS.health, helathCheckController);
 

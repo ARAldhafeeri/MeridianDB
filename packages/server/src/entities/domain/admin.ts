@@ -4,6 +4,7 @@ import type { BaseEntity } from "./base";
 export interface Admin extends BaseEntity {
   firstName?: string;
   lastName?: string;
+  organizationId?: string;
   email: string;
   // one-way password hash
   salt: string;
