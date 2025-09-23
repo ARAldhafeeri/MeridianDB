@@ -32,6 +32,7 @@ export abstract class BaseServiceImpl<T extends BaseEntity, TFilter = object>
     if (!exists) {
       throw new Error(`Entity with id ${id} not found`);
     }
+
     return this.repository.update(id, request);
   }
 

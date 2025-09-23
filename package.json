@@ -15,7 +15,7 @@
     "build:shared": "npm run build -w @meridiandb/shared",
     "deploy": "npm run deploy -w server",
     "server:migrations": "npm run -w server db:generate",
-    "server:migrate:local": "npm run -w server db:up:local"
+    "server:migrate:local": "npm run -w server db:migrate:local"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

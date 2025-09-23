@@ -1,20 +1,13 @@
 import { Organization } from "@/entities/domain/organization";
 import { BaseControllerImpl } from "./base";
 import { OrganizationService } from "@/entities/interfaces/services/organization";
-
-// Define the filter type based on what we expect after removing pagination params
-interface OrganizationFilterParams {
-  name?: string;
-  email?: string;
-  createdAfter?: string;
-  createdBefore?: string;
-}
+import { OrganizationFilter } from "@/validators/organization";
 
 export class OrganizationController extends BaseControllerImpl<
   Organization,
-  OrganizationFilterParams
+  OrganizationFilter
 > {
-  constructor(organizationService: OrganizationService) {
-    super(organizationService);
+  constructor(service: OrganizationService) {
+    super(service);
   }
 }

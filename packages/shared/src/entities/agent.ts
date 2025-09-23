@@ -9,7 +9,7 @@ export interface Agent extends BaseEntity {
    * must be created before the agent is created. Used in multi
    * tenancy and federated access control
    */
-  readonly organizationId: string;
+  organizationId: string;
   /**
    * simple name for operators and admins to identify the agent with
    */
@@ -47,6 +47,11 @@ export interface Agent extends BaseEntity {
    * metadata of the ai agent.
    */
   readonly metadata: Record<string, unknown>;
+
+  /**
+   * access token
+   */
+  accessToken: string;
 }
 
 /**
@@ -58,7 +63,6 @@ export interface CreateAgentRequest {
   readonly capabilities: string[];
   readonly learningRate?: number;
   readonly stabilityThreshold?: number;
-  readonly contextWindow?: number;
   readonly metadata?: Record<string, unknown>;
 }
 
@@ -71,7 +75,6 @@ export interface UpdateAgentRequest {
   readonly capabilities?: string[];
   readonly learningRate?: number;
   readonly stabilityThreshold?: number;
-  readonly contextWindow?: number;
   readonly metadata?: Record<string, unknown>;
 }
 

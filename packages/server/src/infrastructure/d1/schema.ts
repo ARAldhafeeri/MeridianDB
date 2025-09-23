@@ -44,7 +44,7 @@ export const agents = sqliteTable(
   "agents",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id").notNull(),
+    organizationId: text("organizationId").notNull(),
     name: text("name").notNull(),
     description: text("description"),
     accessToken: text("accessToken"),

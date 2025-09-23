@@ -8,11 +8,13 @@
     "deploy": "wrangler deploy",
     "watch": "tsc -b --watch",
     "db:up:local": "drizzle-kit up --config=./drizzle.config.json",
+    "db:migrate:local": "drizzle-kit push --config=drizzle.config.json",
     "db:generate": "drizzle-kit generate --config=./drizzle.config.json"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.3",
     "@meridiandb/shared": "*",
+    "better-sqlite3": "^12.4.1",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.9.6",
     "jsonwebtoken": "^9.0.2",

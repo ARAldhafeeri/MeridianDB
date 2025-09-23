@@ -1,5 +1,7 @@
 {
   "out": "./drizzle/migrations",
   "schema": "./src/infrastructure/d1/schema.ts",
-  "dialect": "sqlite"
+  "dialect": "sqlite",
+  "url": "file:C:/Projects/MeridianDB/packages/server/.wrangler/state/v3/d1/miniflare-D1DatabaseObject/0d3f6bdde7b4008cd604855468567d7e57a221a374849b16a9bac93a545d4d93.sqlite"
+
 }

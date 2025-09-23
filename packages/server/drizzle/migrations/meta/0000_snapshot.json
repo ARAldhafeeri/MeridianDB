@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "ec9f4fe5-661c-4b06-977d-b4051531505c",
+  "id": "6ab9da12-9e73-4165-8ab9-a17cbbe3d0ba",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admins": {
@@ -14,22 +14,22 @@
           "notNull": true,
           "autoincrement": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "organizationId": {
+          "name": "organizationId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "first_name": {
-          "name": "first_name",
+        "firstName": {
+          "name": "firstName",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "last_name": {
-          "name": "last_name",
+        "lastName": {
+          "name": "lastName",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -56,15 +56,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -90,7 +90,7 @@
         "idx_admins_org": {
           "name": "idx_admins_org",
           "columns": [
-            "organization_id"
+            "organizationId"
           ],
           "isUnique": false
         }
@@ -101,7 +101,7 @@
           "tableFrom": "admins",
           "tableTo": "organizations",
           "columnsFrom": [
-            "organization_id"
+            "organizationId"
           ],
           "columnsTo": [
             "id"
@@ -124,8 +124,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "organizationId": {
+          "name": "organizationId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -145,47 +145,47 @@
           "notNull": false,
           "autoincrement": false
         },
-        "access_token": {
-          "name": "access_token",
+        "accessToken": {
+          "name": "accessToken",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "decay_factor": {
-          "name": "decay_factor",
+        "decayFactor": {
+          "name": "decayFactor",
           "type": "real",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": 1
         },
-        "failure_rate": {
-          "name": "failure_rate",
+        "failureRate": {
+          "name": "failureRate",
           "type": "real",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": 1
         },
-        "status": {
-          "name": "status",
-          "type": "text",
+        "isActive": {
+          "name": "isActive",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
-          "default": "'active'"
+          "default": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": "CURRENT_TIMESTAMP"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -205,7 +205,7 @@
         "idx_agents_org": {
           "name": "idx_agents_org",
           "columns": [
-            "organization_id"
+            "organizationId"
           ],
           "isUnique": false
         }
@@ -216,7 +216,7 @@
           "tableFrom": "agents",
           "tableTo": "organizations",
           "columnsFrom": [
-            "organization_id"
+            "organizationId"
           ],
           "columnsTo": [
             "id"
@@ -239,15 +239,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "agent_id": {
-          "name": "agent_id",
+        "agentId": {
+          "name": "agentId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "organizationId": {
+          "name": "organizationId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -260,46 +260,46 @@
           "notNull": true,
           "autoincrement": false
         },
-        "concept_tags": {
-          "name": "concept_tags",
+        "conceptTags": {
+          "name": "conceptTags",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "recency_score": {
-          "name": "recency_score",
+        "recencyScore": {
+          "name": "recencyScore",
           "type": "real",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": 1
         },
-        "access_frequency": {
-          "name": "access_frequency",
+        "accessFrequency": {
+          "name": "accessFrequency",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": 0
         },
-        "last_accessed_at": {
-          "name": "last_accessed_at",
+        "lastAccessedAt": {
+          "name": "lastAccessedAt",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "is_factual": {
-          "name": "is_factual",
+        "isFactual": {
+          "name": "isFactual",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": false
         },
-        "is_irrelevant": {
-          "name": "is_irrelevant",
+        "isIrrelevant": {
+          "name": "isIrrelevant",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -313,8 +313,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "task_type": {
-          "name": "task_type",
+        "taskType": {
+          "name": "taskType",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -327,8 +327,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "success_rate": {
-          "name": "success_rate",
+        "successRate": {
+          "name": "successRate",
           "type": "real",
           "primaryKey": false,
           "notNull": false,
@@ -351,16 +351,16 @@
           "autoincrement": false,
           "default": 0
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": "CURRENT_TIMESTAMP"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -380,29 +380,29 @@
         "idx_memory_agent_org": {
           "name": "idx_memory_agent_org",
           "columns": [
-            "agent_id",
-            "organization_id"
+            "agentId",
+            "organizationId"
           ],
           "isUnique": false
         },
         "idx_memory_recency": {
           "name": "idx_memory_recency",
           "columns": [
-            "recency_score"
+            "recencyScore"
           ],
           "isUnique": false
         },
         "idx_memory_access": {
           "name": "idx_memory_access",
           "columns": [
-            "access_frequency"
+            "accessFrequency"
           ],
           "isUnique": false
         },
         "idx_success_rate": {
           "name": "idx_success_rate",
           "columns": [
-            "success_rate"
+            "successRate"
           ],
           "isUnique": false
         }
@@ -413,7 +413,7 @@
           "tableFrom": "memory_episodes",
           "tableTo": "agents",
           "columnsFrom": [
-            "agent_id"
+            "agentId"
           ],
           "columnsTo": [
             "id"
@@ -426,7 +426,7 @@
           "tableFrom": "memory_episodes",
           "tableTo": "organizations",
           "columnsFrom": [
-            "organization_id"
+            "organizationId"
           ],
           "columnsTo": [
             "id"
@@ -456,16 +456,16 @@
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": "CURRENT_TIMESTAMP"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

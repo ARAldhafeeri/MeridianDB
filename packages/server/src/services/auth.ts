@@ -36,6 +36,7 @@ class AuthService implements IAuthService {
     const jwt = this.accessService.generateToken(
       {
         adminId: admin.id,
+        organizationId: admin.organizationId,
       },
       "1d"
     );
@@ -54,14 +55,24 @@ class AuthService implements IAuthService {
       password
     );
 
-    // create org
-    const org = await this.organizationService.create({
-      name: "",
+    // find first
+    const foundOrg = await this.organizationService.list({ name: "first" }, {});
+
+    let org;
+
+    if (foundOrg.data.length > 0) {
+      org = foundOrg.data[0];
+    }
+
+    org = await this.organizationService.create({
+      name: "first",
       id: uuidv4(),
       createdAt: new Date(),
       updatedAt: new Date(),
       version: 1,
     });
+
+    console.log("org id", org.id);
 
     const created = await this.adminService.create({
       email: email,
