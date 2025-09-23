@@ -9,9 +9,9 @@ export type Env = {
     readonly __STATIC_CONTENT?: any;
     ADMIN_EMAIL: string;
     ADMIN_PASSWORD: string;
+    JWT_SECRET: string;
   };
   Variables: {
-    JWT_SECRET: string;
     AGENT_ID: string;
     ORG_ID: string;
   };
@@ -47,7 +47,7 @@ export const getEnv = (): Env["Bindings"] => {
 
 // jwt
 export const getJWTSecret = (): string => {
-  return getContext<Env>().var.JWT_SECRET;
+  return getContext<Env>().env.JWT_SECRET;
 };
 
 // app context

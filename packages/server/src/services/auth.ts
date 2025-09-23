@@ -46,7 +46,6 @@ class AuthService implements IAuthService {
     // Use provided values or fall back to context (with fallback)
     const email = adminEmail || getAdminEmail();
     const password = adminPassword || getAdminPassword();
-    console.log("data", email, password);
     const found = await this.adminService.findByEmail(email);
     if (found) {
       return found;

@@ -52,7 +52,6 @@ export class AuthController implements IAuthController {
 
   async initSuperAdmin(context: ControllerContext): Promise<Response> {
     try {
-      console.log("vars", context.env);
       const adminEmail = context.env.ADMIN_EMAIL;
       const adminPassword = context.env.ADMIN_PASSWORD;
       await this.service.initSuperAdmin(adminEmail, adminPassword);
