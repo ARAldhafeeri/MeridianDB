@@ -2,9 +2,7 @@ import { AppContextKeys, getD1 } from "@/config/context";
 import { ControllerContext } from "@/entities/interfaces/controllers/context";
 import { getD1WithDrizzle } from "@/infrastructure/d1/connection";
 import { createContainer } from "@/infrastructure/d1/container";
-import { JWTPayload } from "@meridiandb/shared/src/entities/auth";
 import { Next } from "hono";
-import jsonwebtoken from "jsonwebtoken";
 
 const authenticationMiddleWare = async (c: ControllerContext, next: Next) => {
   try {
