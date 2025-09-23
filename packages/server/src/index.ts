@@ -5,7 +5,7 @@ import { contextStorage } from "hono/context-storage";
 import { Env } from "@/config/context";
 import { ENDPOINTS } from "./config/routes";
 import { helathCheckController } from "./controllers/health";
-// import { organizationRoutes } from "./routes/organization";
+import { organizationRoutes } from "./routes/organization";
 import { authRoutes } from "./routes/auth";
 
 // main app
@@ -29,7 +29,7 @@ app.use(contextStorage());
 // usage getContext
 
 // core routes
-// app.route(ENDPOINTS.orgs, organizationRoutes);
+app.route(ENDPOINTS.orgs, organizationRoutes);
 app.route(ENDPOINTS.auth, authRoutes);
 
 // Health check endpoint that tests all databases
