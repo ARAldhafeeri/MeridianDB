@@ -10,6 +10,8 @@ import VectorizeRepository from "@/repositories/vector";
 import { IMemoryService } from "@/entities/interfaces/services/memory";
 import { getAgentRequestContext } from "@/config/context";
 import { PaginatedResponse } from "@/entities/domain/dto";
+import { sql } from "drizzle-orm";
+import { memoryEpisodes } from "@/infrastructure/d1/schema";
 
 export class MemoryEpisodeService
   extends BaseServiceImpl<MemoryEpisode, MemoryEpisodeFilter>
@@ -124,49 +126,89 @@ export class MemoryEpisodeService
   }
 
   async searchSingleAgent(request: MemoryRetrievalResult) {
-    // get maches from vectorize
-    const queryEmbeddings =
-      await this.aiAdapter.getUserQueryVectorizeEmbeddings(request.query);
-
-    const matches = await this.vectorize.search(queryEmbeddings.data, {
-      agentId: getAgentRequestContext().agentId,
-    });
-
-    // no matches
-    if (matches.count === 0) {
-      return null;
-    }
-
-    // d1 result filters for  reterival temporal, behavioral , contextual
-    // with smart filtering semantic , contextual, beahvioral, temporal
-    return this.repository.find({
-      ids: matches.matches.map((match) => match.id),
-      stabilityThreshold: getAgentRequestContext().stabilityThreshold,
-      successRate: getAgentRequestContext().successRate,
-      agentId: getAgentRequestContext().agentId,
+    return this.searchMemories({
+      ...request,
+      filters: {
+        agentId: getAgentRequestContext().agentId,
+        stabilityThreshold: getAgentRequestContext().stabilityThreshold,
+        successRate: getAgentRequestContext().successRate,
+      },
     });
   }
 
-  async searchMultiAgentsMemory(
-    request: MemoryRetrievalResult
-  ): Promise<PaginatedResponse<MemoryEpisode> | null> {
-    // get maches from vectorize
-    const queryEmbeddings =
-      await this.aiAdapter.getUserQueryVectorizeEmbeddings(request.query);
-
-    const matches = await this.vectorize.search(queryEmbeddings.data);
-
-    // no matches
-    if (matches.count === 0) {
-      return null;
-    }
-
-    // d1 result filters for  reterival temporal, behavioral , contextual
-    // with smart filtering semantic , contextual, beahvioral, temporal
-    return this.repository.find({
-      ids: matches.matches.map((match) => match.id),
-      stabilityThreshold: getAgentRequestContext().stabilityThreshold,
-      successRate: getAgentRequestContext().successRate,
+  async searchMultiAgentsMemory(request: MemoryRetrievalResult) {
+    return this.searchMemories({
+      ...request,
+      filters: {
+        stabilityThreshold: getAgentRequestContext().stabilityThreshold,
+        successRate: getAgentRequestContext().successRate,
+      },
     });
+  }
+
+  private async searchMemories({
+    query,
+    filters,
+  }: {
+    query: string;
+    filters: MemoryEpisodeFilter;
+  }): Promise<PaginatedResponse<MemoryEpisode> | null> {
+    try {
+      // Get embeddings for the query
+      const queryEmbeddings =
+        await this.aiAdapter.getUserQueryVectorizeEmbeddings(query);
+
+      // Search vector database with optional agent filter
+      const searchOptions = filters.agentId ? { agentId: filters.agentId } : {};
+      const matches = await this.vectorize.search(
+        queryEmbeddings.data,
+        searchOptions
+      );
+
+      // No matches found
+      if (matches.count === 0) {
+        return null;
+      }
+
+      // Extract matched IDs for database retrieval
+      const matchedIds = matches.matches.map((match) => match.id);
+
+      // Find memories with smart filtering (semantic, contextual, behavioral, temporal)
+      const memories = await this.repository.find({
+        ids: matchedIds,
+        stabilityThreshold: filters.stabilityThreshold,
+        successRate: filters.successRate,
+        agentId: filters.agentId,
+      });
+
+      // Update access frequency for retrieved memories
+      if (memories?.data?.length > 0) {
+        await this.updateAccessFrequency(
+          memories.data.map((memory) => memory.id)
+        );
+      }
+
+      return memories;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private async updateAccessFrequency(memoryIds: string[]): Promise<void> {
+    if (!memoryIds.length) return;
+
+    try {
+      // Increment accessFrequency by 1 for each accessed memory
+      await this.repository.updateMany(
+        { ids: memoryIds },
+        {
+          accessFrequency:
+            sql`${memoryEpisodes.accessFrequency} + 1` as unknown as number,
+          lastAccessedAt: new Date(),
+        }
+      );
+    } catch (error) {
+      // Don't throw here - failing to update access frequency shouldn't break the search
+    }
   }
 }

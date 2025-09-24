@@ -1,3 +1,4 @@
+import { getTopK } from "@/config/context";
 import {
   IVictorizeRepository,
   VectorizeMetaDataFilter,
@@ -12,7 +13,7 @@ class VectorizeRepository implements IVictorizeRepository {
   ): Promise<VectorizeQueryResult> {
     if (filter) {
       return this.vectorize.query(query, {
-        topK: 3,
+        topK: getTopK(),
         filter: filter as any,
       });
     } else {
