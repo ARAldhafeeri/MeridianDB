@@ -19,8 +19,8 @@ export interface MemoryEpisode extends BaseEntity {
   readonly accessFrequency: number; // 0-1 grows with usage
   readonly lastAccessedAt?: Date;
   // marked by human-in-loop true, recency is completly ignored, false, recency applies.
-  readonly factual: boolean; // always included when true, disregard of recencyScore , default false
-  readonly irrelavent: boolean; // always disincluded when true disregard of recencyScore, default false
+  readonly isFactual: boolean; // always included when true, disregard of recencyScore , default false
+  readonly isIrrelevant: boolean; // always disincluded when true disregard of recencyScore, default false
   // CONTEXTUAL FEATURES
   readonly context: string;
 
@@ -62,8 +62,8 @@ export interface CreateMemoryEpisodeRequest {
   readonly accessFrequency: number; // 0-1 grows with usage
   readonly lastAccessedAt?: Date;
   // marked by human-in-loop true, recency is completly ignored, false, recency applies.
-  readonly factual: boolean; // always included when true, disregard of recencyScore , default false
-  readonly irrelavent: boolean; // always disincluded when true disregard of recencyScore, default false
+  readonly isFactual: boolean; // always included when true, disregard of recencyScore , default false
+  readonly isIrrelevant: boolean; // always disincluded when true disregard of recencyScore, default false
   // CONTEXTUAL FEATURES
   readonly context: string;
 
@@ -71,11 +71,11 @@ export interface CreateMemoryEpisodeRequest {
   // Simpilfied version of behavioral focusing on
   // the impact of the memory on the success or failure
   readonly successRate: number; // o-1 updated on behavioral log
-
+  positive: number;
+  negative: number;
   readonly accessLevel: AccessLevel;
   readonly stage: MemoryStage;
 }
-
 
 /**
  * create new episode
@@ -95,8 +95,8 @@ export interface UpdateMemoryEpisodeRequest {
   readonly accessFrequency?: number; // 0-1 grows with usage
   readonly lastAccessedAt?: Date;
   // marked by human-in-loop true, recency is completly ignored, false, recency applies.
-  readonly factual?: boolean; // always included when true, disregard of recencyScore , default false
-  readonly irrelavent?: boolean; // always disincluded when true disregard of recencyScore, default false
+  readonly isFactual?: boolean; // always included when true, disregard of recencyScore , default false
+  readonly isIrrelevant?: boolean; // always disincluded when true disregard of recencyScore, default false
   // CONTEXTUAL FEATURES
   readonly context?: string;
 
@@ -116,4 +116,16 @@ export interface MemoryFilter {}
  */
 export interface FeatureSearchRequest {
   readonly query: string;
+}
+
+export interface MemoryEpisodeFilter {
+  agentId?: string;
+  ids?: string[];
+  organizationId?: string;
+  environment?: "coding" | "research" | "conversation";
+  taskType?: "problem_solving" | "learning" | "recall";
+  isFactual?: boolean;
+  isIrrelevant?: boolean;
+  successRate?: number;
+  stabilityThreshold?: number;
 }

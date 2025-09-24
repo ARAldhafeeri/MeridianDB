@@ -10,10 +10,18 @@ export interface IVictorizeRepository {
   insert(memories: VectorizeVector[]): Promise<string>;
 
   /**
-   * Reterive results from vectorize.
+   * Reterive results from vectorize for single agent or shared memory.
+   * At memory service abstraction level two methods will use this
+   * one to reterieve memories for single agent.
+   * but single agent can reterieve multiple memories.
+   * enterprise version should implement federation and rbac.
    * @param query - embedded user query
+   * @param filter - optional fitler for single agent or multi-agent shared memory search
    */
-  search(query: number[]): Promise<VectorizeQueryResult>;
+  search(
+    query: number[],
+    filter?: VectorizeMetaDataFilter
+  ): Promise<VectorizeQueryResult>;
 }
 
 export interface VectorizeQueryResult {
@@ -25,4 +33,8 @@ export interface VectorizeQueryResult {
    * Retreived matches
    */
   matches: VectorizeMatch[];
+}
+
+export interface VectorizeMetaDataFilter {
+  agentId?: string;
 }

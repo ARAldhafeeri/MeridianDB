@@ -10,7 +10,8 @@
     "JWT_SECRET": "my-dev-secret",
     "ADMIN_EMAIL": "admin@admin.com",
     "ADMIN_PASSWORD": "admin",
-    "EMBEDDING_MODEL": "@cf/baai/bge-base-en-v1.5"
+    "EMBEDDING_MODEL": "@cf/baai/bge-base-en-v1.5",
+    "TOPK": 10
   },
   "kv_namespaces": [
     {

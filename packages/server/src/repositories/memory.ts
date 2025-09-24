@@ -1,24 +1,13 @@
 import { DrizzleBaseRepository } from "./base";
 import { memoryEpisodes } from "@/infrastructure/d1/schema";
 import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
-import { like, count, eq, and, gte, lte } from "drizzle-orm";
+import { inArray, count, eq, and, gte, lte, or } from "drizzle-orm";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { BaseEntity } from "@/entities/domain/base";
-import { MemoryEpisode } from "@meridiandb/shared/src/entities/memory";
-
-export interface MemoryEpisodeFilter {
-  agentId?: string;
-  organizationId?: string;
-  content?: string;
-  environment?: "coding" | "research" | "conversation";
-  taskType?: "problem_solving" | "learning" | "recall";
-  isFactual?: boolean;
-  isIrrelevant?: boolean;
-  minRecencyScore?: number;
-  maxRecencyScore?: number;
-  minSuccessRate?: number;
-  maxSuccessRate?: number;
-}
+import {
+  MemoryEpisode,
+  MemoryEpisodeFilter,
+} from "@meridiandb/shared/src/entities/memory";
 
 export class MemoryEpisodeRepository extends DrizzleBaseRepository<
   MemoryEpisode,
@@ -151,38 +140,38 @@ export class MemoryEpisodeRepository extends DrizzleBaseRepository<
   buildWhereConditions(filter: MemoryEpisodeFilter) {
     const conditions = [];
 
+    // base filters
     if (filter.agentId) {
       conditions.push(eq(memoryEpisodes.agentId, filter.agentId));
+    }
+    if (filter.ids) {
+      conditions.push(inArray(memoryEpisodes.id, filter.ids));
     }
     if (filter.organizationId) {
       conditions.push(eq(memoryEpisodes.organizationId, filter.organizationId));
     }
-    if (filter.content) {
-      conditions.push(like(memoryEpisodes.content, `%${filter.content}%`));
-    }
-    if (filter.environment) {
-      conditions.push(eq(memoryEpisodes.environment, filter.environment));
-    }
-    if (filter.taskType) {
-      conditions.push(eq(memoryEpisodes.taskType, filter.taskType));
-    }
-    if (typeof filter.isFactual === "boolean") {
-      conditions.push(eq(memoryEpisodes.isFactual, filter.isFactual));
-    }
+
     if (typeof filter.isIrrelevant === "boolean") {
-      conditions.push(eq(memoryEpisodes.isIrrelevant, filter.isIrrelevant));
+      // always exclude irrelevant data
+      conditions.push(eq(memoryEpisodes.isIrrelevant, false));
     }
-    if (filter.minRecencyScore !== undefined) {
-      conditions.push(gte(memoryEpisodes.recencyScore, filter.minRecencyScore));
+
+    // temporal with factual check
+    if (typeof filter.stabilityThreshold === "number") {
+      conditions.push(
+        or(
+          eq(memoryEpisodes.isFactual, true), // Include factual regardless of stability
+          and(
+            eq(memoryEpisodes.isFactual, false),
+            gte(memoryEpisodes.recencyScore, filter.stabilityThreshold)
+          )
+        )
+      );
     }
-    if (filter.maxRecencyScore !== undefined) {
-      conditions.push(lte(memoryEpisodes.recencyScore, filter.maxRecencyScore));
-    }
-    if (filter.minSuccessRate !== undefined) {
-      conditions.push(gte(memoryEpisodes.successRate, filter.minSuccessRate));
-    }
-    if (filter.maxSuccessRate !== undefined) {
-      conditions.push(lte(memoryEpisodes.successRate, filter.maxSuccessRate));
+
+    // behavioral success rate of using this memory
+    if (typeof filter.successRate === "number") {
+      conditions.push(gte(memoryEpisodes.successRate, filter.successRate));
     }
 
     return conditions;

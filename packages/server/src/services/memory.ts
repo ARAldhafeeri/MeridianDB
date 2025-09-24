@@ -1,15 +1,15 @@
 import {
   MemoryEpisode,
+  MemoryEpisodeFilter,
   MemoryRetrievalResult,
 } from "@meridiandb/shared/src/entities/memory";
 import { BaseServiceImpl } from "./base";
-import {
-  MemoryEpisodeFilter,
-  MemoryEpisodeRepository,
-} from "@/repositories/memory";
+import { MemoryEpisodeRepository } from "@/repositories/memory";
 import AiAdapter from "@/adapters/ai";
 import VectorizeRepository from "@/repositories/vector";
 import { IMemoryService } from "@/entities/interfaces/services/memory";
+import { getAgentRequestContext } from "@/config/context";
+import { PaginatedResponse } from "@/entities/domain/dto";
 
 export class MemoryEpisodeService
   extends BaseServiceImpl<MemoryEpisode, MemoryEpisodeFilter>
@@ -123,7 +123,50 @@ export class MemoryEpisodeService
     );
   }
 
-  async search(request: MemoryRetrievalResult) {
-    return this.repository.find({ content: request.query });
+  async searchSingleAgent(request: MemoryRetrievalResult) {
+    // get maches from vectorize
+    const queryEmbeddings =
+      await this.aiAdapter.getUserQueryVectorizeEmbeddings(request.query);
+
+    const matches = await this.vectorize.search(queryEmbeddings.data, {
+      agentId: getAgentRequestContext().agentId,
+    });
+
+    // no matches
+    if (matches.count === 0) {
+      return null;
+    }
+
+    // d1 result filters for  reterival temporal, behavioral , contextual
+    // with smart filtering semantic , contextual, beahvioral, temporal
+    return this.repository.find({
+      ids: matches.matches.map((match) => match.id),
+      stabilityThreshold: getAgentRequestContext().stabilityThreshold,
+      successRate: getAgentRequestContext().successRate,
+      agentId: getAgentRequestContext().agentId,
+    });
+  }
+
+  async searchMultiAgentsMemory(
+    request: MemoryRetrievalResult
+  ): Promise<PaginatedResponse<MemoryEpisode> | null> {
+    // get maches from vectorize
+    const queryEmbeddings =
+      await this.aiAdapter.getUserQueryVectorizeEmbeddings(request.query);
+
+    const matches = await this.vectorize.search(queryEmbeddings.data);
+
+    // no matches
+    if (matches.count === 0) {
+      return null;
+    }
+
+    // d1 result filters for  reterival temporal, behavioral , contextual
+    // with smart filtering semantic , contextual, beahvioral, temporal
+    return this.repository.find({
+      ids: matches.matches.map((match) => match.id),
+      stabilityThreshold: getAgentRequestContext().stabilityThreshold,
+      successRate: getAgentRequestContext().successRate,
+    });
   }
 }

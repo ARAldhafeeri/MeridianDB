@@ -8,7 +8,7 @@ import { PaginatedResponse } from "@/entities/domain/dto";
  */
 export interface IMemoryService extends BaseService<MemoryEpisode> {
   /**
-   * meridian-db retrieve operations:
+   * meridian-db retrieve operation for single agent ( results filtered by agentId):
    *  1. creates embeddings for the query.
    *  2. over-fetch results with configurable top-k from env variables.
    *  3. perform termpral, behavioral filtering
@@ -16,9 +16,22 @@ export interface IMemoryService extends BaseService<MemoryEpisode> {
    * @param request request to perform meridian-db retrieve operation
    *
    */
-  search(
+  searchSingleAgent(
     request: MemoryRetrievalRequest
-  ): Promise<PaginatedResponse<MemoryEpisode>>;
+  ): Promise<PaginatedResponse<MemoryEpisode> | null>;
+
+  /**
+   * meridian-db retrieve operation for multi agent:
+   *  1. creates embeddings for the query.
+   *  2. over-fetch results with configurable top-k from env variables.
+   *  3. perform termpral, behavioral filtering
+   *  4. return the results from d1.
+   * @param request request to perform meridian-db retrieve operation
+   *
+   */
+  searchMultiAgentsMemory(
+    request: MemoryRetrievalRequest
+  ): Promise<PaginatedResponse<MemoryEpisode> | null>;
 
   /**
    * atomic federated db upserts with two scenarios:

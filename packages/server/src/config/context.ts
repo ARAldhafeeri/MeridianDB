@@ -1,3 +1,4 @@
+import { AgentRequestContext } from "@/entities/domain/agent";
 import { getContext } from "hono/context-storage";
 
 // Bindings
@@ -8,8 +9,11 @@ export type Env = {
     readonly AI: Ai;
     readonly R2_BUCKET: R2Bucket;
     readonly __STATIC_CONTENT?: any;
+    // vectorize & ai
     readonly VECTORIZE: Vectorize;
     readonly EMBEDDING_MODEL: any;
+    readonly TOPK: number;
+    // admin , access
     readonly ADMIN_EMAIL: string;
     readonly ADMIN_PASSWORD: string;
     readonly JWT_SECRET: string;
@@ -17,6 +21,7 @@ export type Env = {
   Variables: {
     AGENT_ID: string;
     ORG_ID: string;
+    AGENT_REQUEST_CONTEXT: AgentRequestContext;
   };
 };
 
@@ -26,6 +31,7 @@ export const AppContextKeys = {
   ORG_ID: "ORG_ID",
   ADMIN_EMAIL: "ADMIN_EMAIL",
   ADMIN_PASSWORD: "ADMIN_PASSWORD",
+  AGENT_REQUEST_CONTEXT: "AGENT_REQUEST_CONTEXT",
 };
 
 export const getD1 = () => {
@@ -50,6 +56,10 @@ export const getAi = () => {
 
 export const getEmbeddingModelName = () => {
   return getContext<Env>().env.EMBEDDING_MODEL;
+};
+
+export const getTopK = () => {
+  return getContext<Env>().env.TOPK;
 };
 
 export const getStaticContent = () => {
@@ -82,4 +92,9 @@ export const getAdminEmail = (): string => {
 
 export const getAdminPassword = (): string => {
   return getContext<Env>().env.ADMIN_PASSWORD;
+};
+
+// agent
+export const getAgentRequestContext = (): AgentRequestContext => {
+  return getContext<Env>().var.AGENT_REQUEST_CONTEXT;
 };
