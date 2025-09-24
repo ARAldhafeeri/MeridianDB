@@ -5,11 +5,14 @@ export type Env = {
   Bindings: {
     readonly D1: D1Database;
     readonly KV: KVNamespace;
+    readonly AI: Ai;
     readonly R2_BUCKET: R2Bucket;
     readonly __STATIC_CONTENT?: any;
-    ADMIN_EMAIL: string;
-    ADMIN_PASSWORD: string;
-    JWT_SECRET: string;
+    readonly VECTORIZE: Vectorize;
+    readonly EMBEDDING_MODEL: any;
+    readonly ADMIN_EMAIL: string;
+    readonly ADMIN_PASSWORD: string;
+    readonly JWT_SECRET: string;
   };
   Variables: {
     AGENT_ID: string;
@@ -35,6 +38,18 @@ export const getKV = () => {
 
 export const getR2 = () => {
   return getContext<Env>().env.R2_BUCKET;
+};
+
+export const getVictorize = () => {
+  return getContext<Env>().env.VECTORIZE;
+};
+
+export const getAi = () => {
+  return getContext<Env>().env.AI;
+};
+
+export const getEmbeddingModelName = () => {
+  return getContext<Env>().env.EMBEDDING_MODEL;
 };
 
 export const getStaticContent = () => {

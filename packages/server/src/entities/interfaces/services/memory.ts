@@ -1,37 +1,15 @@
-import { ConsolidationRequest } from "../../domain/dto";
-import {
-  MemoryRetrievalRequest,
-  MemoryRetrievalResult,
-  StoreEpisodeRequest,
-} from "../../domain/memory";
-import { ConsolidationResult } from "../../domain/responses";
-import { MemoryEpisode } from "../../domain/vector";
-import { ServiceResult } from "./base";
+import { MemoryEpisode } from "@meridiandb/shared/src/entities/memory";
+import { MemoryRetrievalRequest } from "../../domain/memory";
+import { BaseService } from "./base";
 
 /**
  * Memory service with tabular operations
  */
-export interface MemoryService {
-  // Core operations
-  storeEpisode(
-    request: StoreEpisodeRequest
-  ): Promise<ServiceResult<MemoryEpisode>>;
-  retrieveMemories(
+export interface MemoryService extends BaseService<MemoryEpisode> {
+  sharedMemoryRetrieval(
     request: MemoryRetrievalRequest
-  ): Promise<ServiceResult<MemoryRetrievalResult>>;
-
-  // Consolidation
-  consolidateMemories(
-    request: ConsolidationRequest
-  ): Promise<ServiceResult<ConsolidationResult>>;
-
-  // Analytics
-  // getStatistics(agentId: string): Promise<ServiceResult<MemoryStatistics>>;
-
-  // Cross-agent sharing
-  shareKnowledge(
-    sourceAgentId: string,
-    targetAgentId: string,
-    clusterIds: number[]
-  ): Promise<ServiceResult<number>>;
+  ): Promise<MemoryEpisode[]>;
+  singleMemoryRetrieval(
+    request: MemoryRetrievalRequest
+  ): Promise<MemoryEpisode[]>;
 }

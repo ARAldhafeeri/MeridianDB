@@ -92,6 +92,8 @@ Human Clients + SDKs
 npm i
 ```
 
+
+
 ## 📦 Build
 
 ```bash
@@ -108,7 +110,10 @@ npm run watch
 ```
 
 ## 📦 Run dev environment
-Will run watch on all packages.
+Will run watch on all packages. But before hand make sure to create d1, vectorize, kv instances. 
+- https://developers.cloudflare.com/d1/
+- https://developers.cloudflare.com/vectorize/
+- https://developers.cloudflare.com/kv/
 
 ```bash
 npm run dev
@@ -116,7 +121,7 @@ npm run dev
 
 
 ## 📦 Testing
-Will run watch on all packages.
+Will run integration tests.
 
 ```bash
 npm run test
@@ -125,14 +130,19 @@ npm run test
 ### Migrations
 7. migrations
 
-# Generate migrations from your schema
+```
+npm run server:migrations
+```
 
-npx drizzle-kit generate
+```
+npm run server:migrate:local
+```
 
-# Apply migrations to your D1 database (local)
+# Deployment 
+```
+npx wrangler d1 execute meridiand1 --file=./drizzle/migrations/<your_migration_name>.sql
+```
 
-npx wrangler d1 execute meridiand1 --local --file=./drizzle/migrations/0000_purple_lilith.sql
-
-# Apply migrations in production
-
-npx wrangler d1 execute meridiand1 --file=./drizzle/migrations/0000_purple_lilith.sql
+```
+wrangler deploy
+```
