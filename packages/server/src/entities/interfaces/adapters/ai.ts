@@ -2,7 +2,7 @@ import { MemoryEpisode } from "@meridiandb/shared/src/entities/memory";
 
 export interface EmbeddingResponse {
   shape: number[];
-  data: number[][];
+  data: number[];
 }
 
 /**
