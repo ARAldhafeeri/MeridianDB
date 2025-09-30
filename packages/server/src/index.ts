@@ -37,12 +37,4 @@ app.route(ENDPOINTS.agents, agentRoutes);
 // Health check endpoint that tests all databases
 app.get(ENDPOINTS.health, helathCheckController);
 
-// queues may be removed from open source version design
-// barier of adoption as multiple users have free membership
-export default {
-  fetch: app.fetch,
-  // async queue(batch: any, env: Bindings) {
-  //    batch?.messages;
-  //   env.D1
-  // },
-};
+export default app;

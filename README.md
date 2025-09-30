@@ -86,13 +86,31 @@ Human Clients + SDKs
 
 ---
 
+## 📦 Pre-installation
+
+MeridianDB leverages queues to minimize **write-on-read** overhead when updating both temporal and behavioral feature events.
+We provide a lightweight distributed queue implementation using Cloudflare Workers:
+👉 [cfw-poor-man-queue](https://github.com/ARAldhafeeri/cfw-poor-man-queue)
+
+For maximum scalability, we recommend deploying the queues as **standalone workers**. Each can handle 1000 message per miniute easily. Such limit is by "free cloudflare workers plan", we built the queue for that purpose. Beyhond that you can use Cloudflare queues, our enterprise version uses [cloudflare-queues](https://developers.cloudflare.com/queues/). MeridianDB uses two primary queues:
+
+1. **Temporal Features Queue**
+   When the AI retrieves information from MeridianDB, attributes like frequency and recency are updated via messages published to this queue. These updates are then applied to temporal decay filtering.
+
+2. **Behavioral Features Queue**
+   This queue powers behavioral analysis. When you send responses to your users, you can log their feedback through the behavioral logging endpoint. Users may mark a response as a success or failure, which directly influences success rate filtering.
+
+Both **temporal** and **behavioral threshold filtering** are fully customizable from the **Admin Portal**.
+
+Development environment run both queues as standalone worker, in deployment as well we recommend this approach.
+
+---
+
 ## 📦 Installation
 
 ```bash
 npm i
 ```
-
-
 
 ## 📦 Build
 
