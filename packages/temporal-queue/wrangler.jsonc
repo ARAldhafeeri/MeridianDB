@@ -39,7 +39,7 @@
 		"BUFFER_FLUSH": "9", // flush buffer before hibernation 9s
 		"MESSAGE_LOAD_LIMIT": "100",
 		"WAL_STORAGE_NAME": "wal_temporal", // allow users to name the object in r2 for WAL
-		"DLQ_NAME": "dlq",  // allow users to  name dlq object in r2
+		"DLQ_NAME": "wal_dlq",  // allow users to  name dlq object in r2
 	},
   "migrations": [
     {
