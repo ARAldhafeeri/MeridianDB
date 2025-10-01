@@ -1,4 +1,3 @@
-import { DeadLetterQueueDurableObject } from "./DeadLetterQueueDurableObject";
 import {
   Environment,
   Message,
@@ -110,4 +109,4 @@ export default {
 };
 
 // Export the Durable Object class
-export { DeadLetterQueueDurableObject };
+export { DeadLetterQueueDurableObject } from "./DeadLetterQueueDurableObject";
