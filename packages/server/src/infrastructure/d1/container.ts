@@ -1,8 +1,11 @@
+import AiAdapter from "@/adapters/ai";
+import { getAi, getVictorize } from "@/config/context";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { AdminRepository } from "@/repositories/admin";
 import { AgentRepository } from "@/repositories/agent";
 import { MemoryEpisodeRepository } from "@/repositories/memory";
 import { OrganizationRepository } from "@/repositories/organization";
+import VectorizeRepository from "@/repositories/vector";
 import { AccessService } from "@/services/access";
 import { AdminService } from "@/services/admin";
 import { AgentService } from "@/services/agent";
@@ -27,6 +30,10 @@ export const createContainer = (db: D1Client) => {
   let _passwordService: PasswordService | null = null;
   let _accessService: AccessService | null = null;
   let _auth_service: AuthService | null = null;
+
+  // memories, ai, vectorize
+  let _aiAdapter: AiAdapter | null = null;
+  let _vectorize: VectorizeRepository | null = null;
 
   return {
     // Repository getters with lazy initialization
@@ -82,10 +89,26 @@ export const createContainer = (db: D1Client) => {
       return _agentService;
     },
 
+    get aiAdapter(): AiAdapter {
+      if (!_aiAdapter) {
+        _aiAdapter = new AiAdapter(getAi());
+      }
+      return _aiAdapter;
+    },
+
+    get vectorizeRepository(): VectorizeRepository {
+      if (!_vectorize) {
+        _vectorize = new VectorizeRepository(getVictorize());
+      }
+      return _vectorize;
+    },
+
     get memoryEpisodeService(): MemoryEpisodeService {
       if (!_memoryEpisodeService) {
         _memoryEpisodeService = new MemoryEpisodeService(
-          this.memoryEpisodeRepository
+          this.memoryEpisodeRepository,
+          this.aiAdapter,
+          this.vectorizeRepository
         );
       }
       return _memoryEpisodeService;

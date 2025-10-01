@@ -1,7 +1,7 @@
 import {
   MemoryEpisode,
   MemoryEpisodeFilter,
-  MemoryRetrievalResult,
+  MemoryRetrievalRequest,
 } from "@meridiandb/shared/src/entities/memory";
 import { BaseServiceImpl } from "./base";
 import { MemoryEpisodeRepository } from "@/repositories/memory";
@@ -125,7 +125,7 @@ export class MemoryEpisodeService
     );
   }
 
-  async searchSingleAgent(request: MemoryRetrievalResult) {
+  async searchSingleAgent(request: MemoryRetrievalRequest) {
     return this.searchMemories({
       ...request,
       filters: {
@@ -136,7 +136,7 @@ export class MemoryEpisodeService
     });
   }
 
-  async searchMultiAgentsMemory(request: MemoryRetrievalResult) {
+  async searchMultiAgentsMemory(request: MemoryRetrievalRequest) {
     return this.searchMemories({
       ...request,
       filters: {

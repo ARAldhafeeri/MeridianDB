@@ -36,7 +36,7 @@ export interface MemoryEpisode extends BaseEntity {
 /**
  * Memory retrieval (feature-based SQL)
  */
-export interface MemoryRetrievalResult {
+export interface MemoryRetrievalRequest {
   readonly query: string;
 }
 

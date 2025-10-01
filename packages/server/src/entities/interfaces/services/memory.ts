@@ -1,5 +1,7 @@
-import { MemoryEpisode } from "@meridiandb/shared/src/entities/memory";
-import { MemoryRetrievalRequest } from "../../domain/memory";
+import {
+  MemoryEpisode,
+  MemoryRetrievalRequest,
+} from "@meridiandb/shared/src/entities/memory";
 import { BaseService } from "./base";
 import { PaginatedResponse } from "@/entities/domain/dto";
 

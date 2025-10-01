@@ -9,13 +9,7 @@
 
 import { AgentFilter, CreateAgentRequest, UpdateAgentRequest } from "./agent";
 
-import {
-  MemoryRetrievalRequest,
-  MemoryRetrievalResult,
-  StoreEpisodeRequest,
-} from "./memory";
-
-import { MemoryEpisode } from "./vectors";
+import { MemoryEpisode, MemoryRetrievalRequest } from "./memory";
 
 import { ServiceResult } from "./base";
 /**
@@ -47,12 +41,10 @@ export interface MerdianDBClient {
 
   // Agent Memory Management
   // Core operations
-  storeEpisode(
-    data: StoreEpisodeRequest
-  ): Promise<ServiceResult<MemoryEpisode>>;
+  storeEpisode(data: MemoryEpisode): Promise<ServiceResult<MemoryEpisode>>;
   retrieveMemories(
     data: MemoryRetrievalRequest
-  ): Promise<ServiceResult<MemoryRetrievalResult>>;
+  ): Promise<ServiceResult<MemoryRetrievalRequest>>;
 
   // Cross-agent sharing
   shareKnowledge(
