@@ -38,6 +38,8 @@
 		"MAX_QUEUE_MEMORY": "64000000", // 64mb
 		"BUFFER_FLUSH": "9", // flush buffer before hibernation 9s
 		"MESSAGE_LOAD_LIMIT": "100",
+		"WAL_STORAGE_NAME": "wal_behavioral", // allow users to name the object in r2 for WAL
+		"DLQ_NAME": "dlq_behavioral",  // allow users to  name dlq object in r2
 	},
   "migrations": [
     {

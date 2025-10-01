@@ -4,7 +4,10 @@ import { getD1WithDrizzle } from "@/infrastructure/d1/connection";
 import { createContainer } from "@/infrastructure/d1/container";
 import { Next } from "hono";
 
-const authenticationMiddleWare = async (c: ControllerContext, next: Next) => {
+const authenticationMiddleWare: any = async (
+  c: ControllerContext,
+  next: Next
+) => {
   try {
     // Extract the authorization header
     const authorizationHeader = c.req.header("Authorization");

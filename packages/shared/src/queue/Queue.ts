@@ -385,7 +385,11 @@ export const createQueue = async (env: any): Promise<IQueue> => {
 
   const storage = new R2StorageAdapter(env.STORAGE);
   const payloadStorage = new PayloadStorage(storage);
-  const messageRepository = new MessageRepository(storage);
+  const messageRepository = new MessageRepository({
+    storage: storage,
+    walStorageName: env.WAL_STORAGE_NAME,
+    deadLetterQueueName: env.DLQ_NAME,
+  });
 
   const memoryManager = new MemoryManager(limits);
   const retryStrategy = new ExponentialBackoffStrategy();

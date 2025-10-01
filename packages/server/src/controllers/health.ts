@@ -3,7 +3,7 @@ import { getD1WithDrizzle } from "@/infrastructure/d1/connection";
 import { createContainer } from "@/infrastructure/d1/container";
 import { Context } from "hono";
 
-export const helathCheckController = async (c: Context) => {
+export const helathCheckController: any = async (c: Context) => {
   const healthCheck = {
     status: "healthy",
     timestamp: new Date().toISOString(),
