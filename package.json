@@ -7,7 +7,7 @@
 
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:temporal-queue\" \"npm run dev:behavioral-queue\"",
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
     "dev:temporal-queue": "npm run dev -w temporal-queue",

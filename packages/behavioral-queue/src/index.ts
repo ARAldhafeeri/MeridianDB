@@ -40,14 +40,6 @@ app.get("/poll", async (c: Context) => {
   return c.json(result);
 });
 
-app.post("/complete", async (c: Context) => {
-  const queueDO = await getQueue(c.env);
-  const { messageId } = await c.req.json();
-
-  const result = await (queueDO as any).complete({ messageId });
-  return c.json(result);
-});
-
 app.post("/fail", async (c: Context) => {
   const queueDO = await getQueue(c.env);
   const { messageId, error } = await c.req.json();
@@ -106,7 +98,10 @@ export default {
   ) => {
     const queueDO = await getQueue(env);
     console.log("scheduler run");
-    ctx.waitUntil((queueDO as any).runScheduledProcessing());
+    // Your custom handler for queue messages batch
+    const handler = (messages: Messages) => {};
+
+    ctx.waitUntil((queueDO as any).runScheduledProcessing(handler));
   },
 };
 

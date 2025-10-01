@@ -6,10 +6,8 @@ import { IMessageRepository } from "entities/interfaces/IMessageRepository";
 import { IPayloadStorage } from "entities/interfaces/IPayloadStorage";
 import { IRetryStrategy } from "entities/interfaces/IRetryStrategy";
 import { IStorage } from "entities/interfaces/IStorage";
-import { CompleteHandler } from "handlers.ts/CompleteHandler";
-import { FailHandler } from "handlers.ts/FailHandler";
-import { PollHandler } from "handlers.ts/PollHandler";
-import { PublishHandler } from "handlers.ts/PublishHandler";
+import { FailHandler } from "handlers/FailHandler";
+import { PublishHandler } from "handlers/PublishHandler";
 import { MemoryManager } from "memory/MemoryManager";
 import { calculateSize } from "payload";
 import { MessageRepository } from "repositories/MessageRepository";
@@ -19,7 +17,6 @@ import { PayloadStorage } from "storage/PayloadStorage";
 import { R2StorageAdapter } from "storage/R2StorageAdapter";
 import { QueueLimits } from "entities/domain/queue";
 import { IQueue } from "entities/interfaces/IQueue";
-
 export class Queue implements IQueue {
   private messages: Message[] = [];
   private processing = new Set<string>();
@@ -41,8 +38,6 @@ export class Queue implements IQueue {
     public batchProcessor: IBatchProcessor,
     public statsService: QueueStatsService,
     public publishHandler: PublishHandler,
-    public pollHandler: PollHandler,
-    public completeHandler: CompleteHandler,
     public failHandler: FailHandler
   ) {
     this.bufferSizeBytes = parseInt(env.BUFFER_SIZE || "67108864"); // 64MB default
@@ -53,6 +48,8 @@ export class Queue implements IQueue {
       maxRequestDuration: 25000,
       messageLoadLimit: parseInt(env.MESSAGE_LOAD_LIMIT),
       bufferFlush: parseInt(env.BUFFER_FLUSH || "9"),
+      maxRetry: parseInt(env.MAX_RETRIES || "3"),
+      retryDelay: parseInt(env.RETRY_DELAY_MS || "6000"),
     };
 
     this.setupFlushTimer();
@@ -137,42 +134,20 @@ export class Queue implements IQueue {
     );
 
     try {
+      const timestamp = Date.now();
+      const messagesLength = this.messages.length;
+
       // Create batches of up to 64MB each
-      const batches = this.createBatches(this.messages, 64 * 1024 * 1024);
-      console.log(`Created ${batches.length} batches for flushing`);
+      await this.messageRepository.saveMessagesBatch(this.messages);
 
-      // Save each batch as a single R2 object
-      for (let i = 0; i < batches.length; i++) {
-        const batch = batches[i];
-        const batchKey = `wal/batch_${Date.now()}_${i}.json`;
-
-        const batchData = {
-          batchId: batchKey,
-          timestamp: Date.now(),
-          messageCount: batch.messages.length,
-          totalSize: batch.totalSize,
-          messages: batch.messages,
-        };
-
-        await this.storage.put(batchKey, JSON.stringify(batchData));
-        console.log(
-          `Saved batch ${batchKey} with ${batch.messages.length} messages`
-        );
-      }
-
-      // Now save individual messages for normal operations
-      // This can be done in parallel for better performance
-      const savePromises = this.messages.map((message) =>
-        this.messageRepository.saveMessage(message)
-      );
-      await Promise.all(savePromises);
+      console.log(`Created ${messagesLength} batches for flushing`);
 
       // Reset buffer state
       this.currentBufferSize = 0;
       this.lastFlushTime = Date.now();
-
+      const duration = Date.now() - timestamp;
       console.log(
-        `Successfully flushed ${this.messages.length} messages in ${batches.length} batches`
+        `Successfully flushed ${this.messages.length} messages in ${messagesLength} batches. In ${duration} ms`
       );
 
       // clear messages
@@ -181,51 +156,6 @@ export class Queue implements IQueue {
       console.error(`Failed to flush buffer to R2:`, error);
       throw error;
     }
-  }
-
-  /**
-   * Create batches of messages where each batch is <= maxBatchSizeBytes
-   */
-  private createBatches(
-    messages: Message[],
-    maxBatchSizeBytes: number
-  ): Array<{
-    messages: Message[];
-    totalSize: number;
-  }> {
-    const batches: Array<{ messages: Message[]; totalSize: number }> = [];
-    let currentBatch: Message[] = [];
-    let currentBatchSize = 0;
-
-    for (const message of messages) {
-      const messageSize = message.size || 1024;
-
-      // If adding this message would exceed batch size, start new batch
-      if (
-        currentBatchSize + messageSize > maxBatchSizeBytes &&
-        currentBatch.length > 0
-      ) {
-        batches.push({
-          messages: [...currentBatch],
-          totalSize: currentBatchSize,
-        });
-        currentBatch = [];
-        currentBatchSize = 0;
-      }
-
-      currentBatch.push(message);
-      currentBatchSize += messageSize;
-    }
-
-    // Don't forget the last batch
-    if (currentBatch.length > 0) {
-      batches.push({
-        messages: currentBatch,
-        totalSize: currentBatchSize,
-      });
-    }
-
-    return batches;
   }
 
   /**
@@ -243,15 +173,15 @@ export class Queue implements IQueue {
   }
 
   /**
-   * Load messages and synchronize in-memory state
+   * Load messages
    */
   private async loadMessages(): Promise<void> {
     try {
       console.log("Loading messages from storage...");
-      const messages = await this.messageRepository.loadMessages(
+      const loaded = await this.messageRepository.loadMessages(
         this.limits.messageLoadLimit
       );
-      this.messages = [...messages];
+      this.messages = [...loaded.messages];
       this.processing.clear();
 
       // Recalculate buffer size from loaded messages
@@ -298,53 +228,18 @@ export class Queue implements IQueue {
   }
 
   /**
-   * Synchronized method to update a message
-   */
-  async updateMessage(message: Message): Promise<void> {
-    const index = this.messages.findIndex((msg) => msg.id === message.id);
-    if (index === -1) {
-      console.warn(`Message ${message.id} not found for update`);
-      return;
-    }
-
-    const oldMessage = this.messages[index];
-    const oldSize = oldMessage.size || 1024;
-    const newSize = message.size || 1024;
-
-    // Update buffer size if message size changed
-    if (oldSize !== newSize) {
-      this.currentBufferSize = this.currentBufferSize - oldSize + newSize;
-    }
-
-    this.messages[index] = { ...message };
-    await this.messageRepository.saveMessage(message);
-    console.log(
-      `Message ${message.id} updated. Buffer size: ${this.currentBufferSize} bytes`
-    );
-  }
-
-  /**
    * Get messages
    */
-  async getMessages(): Promise<Message[]> {
-    return this.messages;
-  }
+  async getPoll(limit: number, timeout: number): Promise<Message[]> {
+    const loadPromise = this.messageRepository.loadMessages(limit);
+    const timeoutPromise = new Promise<Message[]>((resolve) =>
+      setTimeout(() => resolve([]), timeout)
+    );
 
-  /**
-   * Get processing set
-   */
-  async getProcessing(): Promise<Set<string>> {
-    return new Set(this.processing);
-  }
-
-  async startProcessing(messageId: string): Promise<void> {
-    this.processing.add(messageId);
-    console.log(`Started processing message ${messageId}`);
-  }
-
-  async stopProcessing(messageId: string): Promise<void> {
-    this.processing.delete(messageId);
-    console.log(`Stopped processing message ${messageId}`);
+    return Promise.race([
+      loadPromise.then((result) => result.messages),
+      timeoutPromise,
+    ]);
   }
 
   async getQueueStats(): Promise<any> {
@@ -406,9 +301,11 @@ export class Queue implements IQueue {
     this.lastFlushTime = Date.now();
   }
 
-  async runScheduledProcessing(): Promise<void> {
+  async runScheduledProcessing(
+    handler: (messages: Message[]) => Promise<void> | void
+  ): Promise<void> {
     const startTime = Date.now();
-    const maxDuration = 25000;
+    const maxDuration = this.limits.maxRequestDuration; // 25000ms
 
     try {
       console.log("Running scheduled processing...");
@@ -418,54 +315,57 @@ export class Queue implements IQueue {
 
       let processedCount = 0;
       let errorCount = 0;
+      let retriedCount = 0;
 
-      while (Date.now() - startTime < maxDuration) {
-        const stats = await this.getQueueStats();
+      // Process batches for max duration which is 25s
+      // for cloudflare free plan
+      setTimeout(async () => {
+        // Get messages batches
+        const messages = await this.messageRepository.popBatch();
 
-        if (stats.availableMessages === 0) {
-          console.log("No more available messages");
-          break;
-        }
+        console.log(`Processing batch of ${messages.length} messages`);
 
-        const result = await this.pollHandler.handle(
-          {
-            limit: this.limits.maxBatchSize,
-            timeout: 5000,
-          },
-          Date.now()
-        );
-
-        if (!result.messages || result.messages.length === 0) {
-          break;
-        }
-
-        for (const message of result.messages) {
+        const messagePromises = messages.map(async (message) => {
           try {
-            await this.completeHandler.handle({ id: message.id }, Date.now());
+            // Handle if the message reached max retry
+            if (message.retries > this.limits.maxRetry) {
+              await this.messageRepository.moveToDLQ(
+                message,
+                "max retries reached"
+              );
+              return;
+            }
+
+            // Pass messages to custom handler
+            await handler(messages);
+
             processedCount++;
           } catch (error) {
-            console.error(`Message ${message.id} failed:`, error);
-            await this.failHandler.handle(
-              {
-                id: message.id,
-                error:
-                  error instanceof Error ? error.message : "Processing error",
-              },
-              Date.now()
+            console.error(
+              `Message ${message.id} failed (attempt ${
+                (message.retries || 0) + 1
+              }):`,
+              error
             );
-            errorCount++;
+
+            // Initialize retries if not present
+            const currentRetries = (message.retries || 0) + 1;
+            const updatedMessage = {
+              ...message,
+              retries: currentRetries,
+            };
+
+            // Handle error with retry logic
+            this.failHandler.handle(updatedMessage, (error as any).msg);
           }
-        }
+        });
 
-        if (Date.now() - startTime > maxDuration - 5000) {
-          break;
-        }
-      }
+        await Promise.allSettled(messagePromises);
+      }, maxDuration);
 
+      const duration = Date.now() - startTime;
       console.log(
-        `Processed: ${processedCount}, Errors: ${errorCount} in ${
-          Date.now() - startTime
-        }ms`
+        `Processed: ${processedCount}, Retried: ${retriedCount}, Failed (to DLQ): ${errorCount} in ${duration}ms`
       );
     } catch (error) {
       console.error("Scheduled processing error:", error);
@@ -484,6 +384,8 @@ export const createQueue = async (env: any): Promise<IQueue> => {
     maxRequestDuration: 25000,
     messageLoadLimit: parseInt(env.MESSAGE_LOAD_LIMIT || "100"),
     bufferFlush: parseInt(env.BUFFER_FLUSH || "9"),
+    maxRetry: parseInt(env.MAX_RETRIES || "3"),
+    retryDelay: parseInt(env.RETRY_DELAY_MS || "6000"),
   };
 
   const storage = new R2StorageAdapter(env.STORAGE);
@@ -504,8 +406,6 @@ export const createQueue = async (env: any): Promise<IQueue> => {
     batchProcessor,
     null as any,
     null as any,
-    null as any,
-    null as any,
     null as any
   );
 
@@ -516,19 +416,6 @@ export const createQueue = async (env: any): Promise<IQueue> => {
     memoryManager: memoryManager,
     payloadStorage: payloadStorage,
     messageRepository: messageRepository,
-  });
-
-  const pollHandler = new PollHandler(queue, {
-    batchProcessor: batchProcessor,
-    limits: limits,
-  });
-
-  const completeHandler = new CompleteHandler(queue, {
-    memoryManager: memoryManager,
-    payloadStorage: payloadStorage,
-    messageRepository: messageRepository,
-    processing: new Set(),
-    messages: await queue.getMessages(),
   });
 
   const failHandler = new FailHandler(queue, {
@@ -542,8 +429,6 @@ export const createQueue = async (env: any): Promise<IQueue> => {
 
   queue.publishHandler = publishHandler;
   queue.statsService = statsService;
-  queue.pollHandler = pollHandler;
-  queue.completeHandler = completeHandler;
   queue.failHandler = failHandler;
 
   console.log("Simple buffered queue created");
