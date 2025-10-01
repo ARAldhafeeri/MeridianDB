@@ -10,7 +10,7 @@
 		"bindings": [
 			{
 				"name": "SIMPLE_QUEUE",
-				"class_name": "SimpleDurableObjectQueue"
+				"class_name": "BehavioralDurableObjectQueue"
 			}
 		]
 	},
@@ -45,7 +45,7 @@
     {
       "tag": "v1",
       "new_sqlite_classes": [
-        "SimpleDurableObjectQueue"
+        "BehavioralDurableObjectQueue"
       ]
     }
   ]
