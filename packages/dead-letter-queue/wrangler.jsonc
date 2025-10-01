@@ -10,7 +10,7 @@
 		"bindings": [
 			{
 				"name": "SIMPLE_QUEUE",
-				"class_name": "SimpleDurableObjectQueue"
+				"class_name": "DeadLetterQueueDurableObject"
 			}
 		]
 	},
