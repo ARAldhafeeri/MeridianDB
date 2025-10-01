@@ -46,9 +46,5 @@ export interface IErrorHandler {
  * passed to run schedule in queue.
  */
 export interface IConsumeHandler extends IRequestHandler {
-  handle(
-    messages: Message[]
-  ): Promise<
-    FailedResponse | CompleteResponse | PublishResponse | PoolResponse | void
-  >;
+  handle(messages: Message[]): Promise<void>;
 }

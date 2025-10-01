@@ -22,7 +22,6 @@
       "@meridiandb/server": ["packages/server/src"],
       "@meridiandb/client": ["packages/client/src"]
     }
-  },
-  "include": ["src/**/*"],
+  }
 
 }

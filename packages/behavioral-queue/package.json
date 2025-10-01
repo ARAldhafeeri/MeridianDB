@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.19.5",
+    "@meridiandb/shared": "*",
     "hono": "^4.9.9"
   },
   "devDependencies": {
