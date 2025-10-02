@@ -1,9 +1,49 @@
 import { BaseEntity } from "./base";
 
+type IDecayCurve = "exponential" | "hybird" | "polynomial";
+
+/**
+ * Agent Config features
+ */
+
+export interface AgentMemoriesFeaturesConfig {
+  /**
+   * Temporal
+   * protecting consolidated knowledge with thruhold
+   * related to temporal and archieving it's a decay factor 0-1
+   */
+  readonly stabilityThreshold: number;
+  /**
+   * Temporal Features configuration
+   */
+  readonly halfLifeHours: number;
+  readonly timeWeight: number;
+  readonly frequencyWeight: number;
+  readonly decayCurve: IDecayCurve;
+
+  /***
+   * Behavioral
+   * Success rate , memories surpass success rate
+   * will not be included within the results
+   */
+  readonly successRate: number;
+
+  /**
+   * allow the admin from the admin portal to enable
+   * or disable the agent.
+   */
+  readonly isActive: boolean;
+  /**
+   * metadata of the ai agent.
+   */
+  readonly metadata: Record<string, unknown>;
+}
+
+
 /**
  * AI Agent entity
  */
-export interface Agent extends BaseEntity {
+export interface Agent extends BaseEntity, AgentMemoriesFeaturesConfig {
   /**
    * The id of the organization the ai agent is linked to
    * must be created before the agent is created. Used in multi
@@ -23,30 +63,6 @@ export interface Agent extends BaseEntity {
    * Can be described as word or full sentances.
    */
   readonly capabilities: string[];
-
-  /**
-   * Temporal
-   * protecting consolidated knowledge with thruhold
-   * related to temporal and archieving it's a decay factor 0-1
-   */
-  readonly stabilityThreshold: number;
-
-  /***
-   * Behavioral
-   * Success rate , memories surpass success rate
-   * will not be included within the results
-   */
-  readonly successRate: number;
-
-  /**
-   * allow the admin from the admin portal to enable
-   * or disable the agent.
-   */
-  readonly isActive: boolean;
-  /**
-   * metadata of the ai agent.
-   */
-  readonly metadata: Record<string, unknown>;
 
   /**
    * access token

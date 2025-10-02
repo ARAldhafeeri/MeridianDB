@@ -47,10 +47,26 @@ export const agents = sqliteTable(
     organizationId: text("organizationId").notNull(),
     name: text("name").notNull(),
     description: text("description"),
-    accessToken: text("accessToken"),
-    decayFactor: real("decayFactor").default(1.0),
-    failureRate: real("failureRate").default(1.0),
+    capabilities: text("capabilities", { mode: "json" }).$type<string[]>(),
+    // Temporal features
+    stabilityThreshold: real("stabilityThreshold").default(0.15), // Using decayFloor as stabilityThreshold default
+    halfLifeHours: real("halfLifeHours").default(168), // 7 days
+    timeWeight: real("timeWeight").default(0.6),
+    frequencyWeight: real("frequencyWeight").default(0.4),
+    decayCurve: text("decayCurve", {
+      enum: ["exponential", "hybird", "polynomial"],
+    }).default("hybird"),
+    // Behavioral
+    successRate: real("successRate").default(0.85), // Reasonable default success rate
+    // Status
     isActive: integer({ mode: "boolean" }).default(false),
+    // Metadata
+    metadata: text("metadata", { mode: "json" })
+      .$type<Record<string, unknown>>()
+      .default({}),
+    // Access token
+    accessToken: text("accessToken").notNull(),
+    // Base entity fields
     createdAt: text("createdAt").default(sql`CURRENT_TIMESTAMP`),
     updatedAt: text("updatedAt").default(sql`CURRENT_TIMESTAMP`),
     version: integer("version").default(1),

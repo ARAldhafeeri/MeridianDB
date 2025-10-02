@@ -1,3 +1,5 @@
+import { AgentMemoriesFeaturesConfig } from "packages/shared/src/entities/agent";
+
 export type Environment = {
   Bindings: {
     readonly R2_BUCKET: R2Bucket;
@@ -28,6 +30,20 @@ export interface Message {
   size: number;
   isLarge: boolean;
   error?: string;
+}
+
+/**
+ * Temporal queue message
+ */
+export interface TemporalMessage extends Message {
+  data: { memories: string[]; agentId: string };
+}
+
+/**
+ * TODO: Behavioral Queue Message
+ */
+export interface TemporalMessage extends Message {
+  data: { memories: string[]; agentId: string };
 }
 
 export interface QueueLimits {
