@@ -29,6 +29,13 @@
 			"* * * * *"
 		]
 	},
+	"d1_databases": [
+    {
+      "binding": "D1",
+      "database_name": "meridiandb",
+      "database_id": "21b2d4dd-ba84-484f-9e3d-43120a77cac4"
+    }
+	],
 	"vars": {
 		"API_KEY": "your-secret-api-key",
 		"MAX_RETRIES": "3",

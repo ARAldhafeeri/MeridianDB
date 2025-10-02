@@ -5,6 +5,7 @@ export type Environment = {
     readonly DO: DurableObjectState;
     readonly STORAGE: R2Bucket;
     readonly SIMPLE_QUEUE: DurableObjectNamespace;
+    readonly D1: D1Database;
   };
   Variables: {
     MAX_PAYLOAD_SIZE: string;
