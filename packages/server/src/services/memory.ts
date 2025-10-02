@@ -10,8 +10,7 @@ import VectorizeRepository from "@/repositories/vector";
 import { IMemoryService } from "@/entities/interfaces/services/memory";
 import { getAgentRequestContext } from "@/config/context";
 import { PaginatedResponse } from "@/entities/domain/dto";
-import { sql } from "drizzle-orm";
-import { memoryEpisodes } from "@/infrastructure/d1/schema";
+import { temporalQueueClient } from "@/config/queues";
 
 export class MemoryEpisodeService
   extends BaseServiceImpl<MemoryEpisode, MemoryEpisodeFilter>
@@ -181,34 +180,16 @@ export class MemoryEpisodeService
         agentId: filters.agentId,
       });
 
-      // Update access frequency for retrieved memories
+      // Publish memories temporal feature updating events
+      // to temporal queue.
       if (memories?.data?.length > 0) {
-        await this.updateAccessFrequency(
+        await temporalQueueClient.publish(
           memories.data.map((memory) => memory.id)
         );
       }
-
       return memories;
     } catch (error) {
       throw error;
-    }
-  }
-
-  private async updateAccessFrequency(memoryIds: string[]): Promise<void> {
-    if (!memoryIds.length) return;
-
-    try {
-      // Increment accessFrequency by 1 for each accessed memory
-      await this.repository.updateMany(
-        { ids: memoryIds },
-        {
-          accessFrequency:
-            sql`${memoryEpisodes.accessFrequency} + 1` as unknown as number,
-          lastAccessedAt: new Date(),
-        }
-      );
-    } catch (error) {
-      // Don't throw here - failing to update access frequency shouldn't break the search
     }
   }
 }

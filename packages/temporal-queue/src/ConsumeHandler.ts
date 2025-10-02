@@ -1,8 +1,8 @@
-import { Message } from "@meridiandb/shared/src/queue/entities/domain/queue";
 import { IConsumeHandler } from "@meridiandb/shared/src/queue/entities/interfaces/IRequestHandler";
+import { TemporalMessage } from "types";
 
 class ConsumerHandler implements IConsumeHandler {
-  async handle(messages: Message[]): Promise<void> {
+  async handle(messages: TemporalMessage[]): Promise<void> {
     Promise.race([messages]);
   }
 }
