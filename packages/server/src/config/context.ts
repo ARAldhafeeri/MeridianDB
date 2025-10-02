@@ -17,6 +17,11 @@ export type Env = {
     readonly ADMIN_EMAIL: string;
     readonly ADMIN_PASSWORD: string;
     readonly JWT_SECRET: string;
+    // queues
+    TEMPORAL_QUEUE_URL: string;
+    TEMPORAL_QUEUE_API_KEY: string;
+    BEHAVIORAL_QUEUE_URL: string;
+    BEHAVIORAL_QUEUE_API_KEY: string;
   };
   Variables: {
     AGENT_ID: string;
@@ -97,4 +102,23 @@ export const getAdminPassword = (): string => {
 // agent
 export const getAgentRequestContext = (): AgentRequestContext => {
   return getContext<Env>().var.AGENT_REQUEST_CONTEXT;
+};
+
+// queues
+interface QueuesEnvVars {
+  temporalQueueURL: string;
+  temporalQueueApiKey: string;
+  behavioralQueueURL: string;
+  behavioralQueueApiKey: string;
+}
+
+export const getQueuesEnvVariables = (): QueuesEnvVars => {
+  const context = getContext<Env>().env;
+
+  return {
+    temporalQueueURL: context.TEMPORAL_QUEUE_URL,
+    temporalQueueApiKey: context.TEMPORAL_QUEUE_API_KEY,
+    behavioralQueueURL: context.BEHAVIORAL_QUEUE_URL,
+    behavioralQueueApiKey: context.BEHAVIORAL_QUEUE_API_KEY,
+  };
 };
