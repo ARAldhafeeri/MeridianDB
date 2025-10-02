@@ -123,19 +123,21 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
       return;
     }
 
-    const agent = await this.getAgent(batch.data.agentId);
     // most accurate date when all memories where retreived.
     const accessedAt = batch.createdAt || Date.now();
 
-    // Fetch current state of memories in one query
-    const memoriesResult = await this.dependencies.d1
-      .prepare(
-        `SELECT id, accessFrequency, lastAccessedAt 
+    // Fetch current state of memories in one
+    const [agent, memoriesResult] = await Promise.all([
+      this.getAgent(batch.data.agentId),
+      this.dependencies.d1
+        .prepare(
+          `SELECT id, accessFrequency, lastAccessedAt 
          FROM memory_episodes 
          WHERE id IN (${memoryIds}) AND agentId = ?`
-      )
-      .bind(...memoryIds, batch.data.agentId)
-      .all();
+        )
+        .bind(...memoryIds, batch.data.agentId)
+        .all(),
+    ]);
 
     const memories = memoriesResult.results as unknown as MemoryEpisode[];
     // fail the entire batch
@@ -151,7 +153,13 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
         memory.accessFrequency || 0,
         memory.lastAccessedAt
           ? new Date(memory.lastAccessedAt).getTime()
-          : accessedAt
+          : accessedAt,
+        {
+          halfLifeHours: agent?.halfLifeHours || 168,
+          timeWeight: agent?.timeWeight || 0.6,
+          frequencyWeight: agent?.frequencyWeight || 0.4,
+          decayCurve: agent?.decayCurve || "hybrid",
+        }
       );
 
       const stmt = this.dependencies.d1
