@@ -11,6 +11,7 @@ import { IMemoryService } from "@/entities/interfaces/services/memory";
 import { getAgentRequestContext } from "@/config/context";
 import { PaginatedResponse } from "@/entities/domain/dto";
 import { temporalQueueClient } from "@/config/queues";
+import { TemporalMessage } from "@meridiandb/shared/src/queue/entities/domain/queue";
 
 export class MemoryEpisodeService
   extends BaseServiceImpl<MemoryEpisode, MemoryEpisodeFilter>
@@ -180,12 +181,14 @@ export class MemoryEpisodeService
         agentId: filters.agentId,
       });
 
+      const temporalQueueMessage: TemporalMessage["data"] = {
+        memories: memories.data.map((memory) => memory.id),
+        agentId: filters.agentId as string,
+      };
       // Publish memories temporal feature updating events
       // to temporal queue.
       if (memories?.data?.length > 0) {
-        await temporalQueueClient.publish(
-          memories.data.map((memory) => memory.id)
-        );
+        await temporalQueueClient.publish(temporalQueueMessage);
       }
       return memories;
     } catch (error) {
