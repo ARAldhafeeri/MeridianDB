@@ -109,6 +109,8 @@ Development environment run both queues as standalone worker, in deployment as w
 
 We use Exponential Decay with Frequency Boost in temporal features per memory access for your AI agent. Each AI agent has its own configuration that determines how memory access affects retrieval. You can configure these parameters when you create an AI agent.
 
+Please see example <a href="./examples//temporal.ts">Temporal Features Confiugration</a>
+
 ### Configuration Presets
 
 #### Balanced (Default)
