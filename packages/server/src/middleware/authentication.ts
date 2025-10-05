@@ -24,8 +24,8 @@ const authenticationMiddleWare: any = async (
     // Verify the token
     const decoded = container.accessService.verifyToken(token);
 
-    c.set(AppContextKeys.ORG_ID, decoded.organizationId);
-    c.set(AppContextKeys.AGENT_ID, decoded.agentId);
+    c.set(AppContextKeys.ORG_ID, decoded[AppContextKeys.ORG_ID]);
+    c.set(AppContextKeys.AGENT_ID, decoded[AppContextKeys.AGENT_ID]);
 
     return await next();
   } catch (e) {

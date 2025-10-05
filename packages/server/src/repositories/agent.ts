@@ -50,22 +50,8 @@ export class AgentRepository extends DrizzleBaseRepository<Agent, AgentFilter> {
     const results = await query.limit(limit).offset(offset);
     const totalCount = await this.count(filter);
 
-    const mappedResults = results.map((row: any) => ({
-      id: row.id,
-      organizationId: row.organizationId,
-      name: row.name,
-      description: row.description,
-      accessToken: row.accessToken,
-      decayFactor: row.decayFactor,
-      failureRate: row.failureRate,
-      isActive: row.isActive,
-      createdAt: row.createdAt ? new Date(row.createdAt) : null,
-      updatedAt: row.updatedAt ? new Date(row.updatedAt) : null,
-      version: row.version,
-    }));
-
     return {
-      data: mappedResults as unknown as Agent[],
+      data: results as unknown as Agent[],
       pagination: {
         page,
         limit,

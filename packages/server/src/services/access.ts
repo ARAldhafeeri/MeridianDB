@@ -20,12 +20,7 @@ export class AccessService implements IAccessService {
   }
 
   verifyToken(token: string): any {
-    const decoded = jwt.verify(token, getJWTSecret());
-    if (typeof decoded === "string") {
-      return decoded;
-    } else {
-      return false;
-    }
+    return jwt.verify(token, getJWTSecret());
   }
 }
 

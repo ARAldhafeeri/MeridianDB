@@ -99,7 +99,6 @@ export default {
     ctx: ExecutionContext
   ) => {
     const queueDO = await getQueue(env);
-    console.log("scheduler run");
     // Your custom handler for queue messages batch
     const handler = (messages: Message[]) =>
       new ConsumerHandler().handle(messages);

@@ -47,8 +47,8 @@ class AuthService implements IAuthService {
 
     const jwt = this.accessService.generateToken(
       {
-        adminId: admin.id,
-        organizationId: admin.organizationId,
+        [AppContextKeys.ADMIN_ID]: admin.id,
+        [AppContextKeys.ORG_ID]: admin.organizationId,
       },
       "1d"
     );
