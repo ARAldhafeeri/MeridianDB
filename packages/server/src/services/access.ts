@@ -24,12 +24,8 @@ export class AccessService implements IAccessService {
     if (typeof decoded === "string") {
       return decoded;
     } else {
-      return decoded;
+      return false;
     }
-  }
-
-  extractTokenFromAuthorizationHeader(authorizationHeader: string) {
-    return authorizationHeader.split(" ")[1];
   }
 }
 

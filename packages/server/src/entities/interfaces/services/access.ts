@@ -8,6 +8,7 @@ export interface IAccessService {
    * used to generate both access and refresh tokens
    */
   generateToken(payload: any, expiresIn: string): string;
+
   // verify tokens
   verifyToken(token: string): JWTPayload | string;
 }

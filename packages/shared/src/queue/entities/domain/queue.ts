@@ -1,5 +1,3 @@
-import { AgentMemoriesFeaturesConfig } from "packages/shared/src/entities/agent";
-
 export type Environment = {
   Bindings: {
     readonly R2_BUCKET: R2Bucket;

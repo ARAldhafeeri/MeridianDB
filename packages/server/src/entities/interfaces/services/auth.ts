@@ -13,6 +13,20 @@ export interface IAuthService {
    * as well admin parent org is created
    */
   login(eamil: string, password: string): Promise<{ token: string | null }>;
+
+  /**
+   * Send short lived refresh token using access token
+   * return the short-lived refresh token or null if the access token invalid
+   * @param accessToken :
+   */
+  verifyAccessToken(accessToken: string): Promise<string | null>;
+
+  /**
+   * Refresh the short-lived token or send null if the
+   * refresh token is invalid
+   * @param refreshToken
+   */
+  refreshAgentToken(refreshToken: string): Promise<string | null>;
 }
 
 export interface AuthLoginRequest {

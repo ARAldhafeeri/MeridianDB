@@ -132,7 +132,8 @@ export const createContainer = (db: D1Client) => {
           this.adminService,
           this.accessService,
           this.passwordService,
-          this.organizationService
+          this.organizationService,
+          this.agentService
         );
       }
       return _auth_service;
