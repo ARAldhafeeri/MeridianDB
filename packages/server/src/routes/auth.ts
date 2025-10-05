@@ -5,7 +5,10 @@ import { getD1WithDrizzle } from "@/infrastructure/d1/connection";
 import { createContainer } from "@/infrastructure/d1/container";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { loginRequestSchema } from "@/validators/auth";
+import {
+  agentAccessAndRefreshSchema,
+  loginRequestSchema,
+} from "@/validators/auth";
 import superAdminMiddleware from "@/middleware/superAdminMiddleware";
 const authRoutes = new Hono();
 
@@ -28,12 +31,16 @@ authRoutes.get(AUTH_ENDPOINTS.init, superAdminMiddleware, (c) =>
 
 // agent refresh-token flow for client to interact with
 // memory endpoints ( agent scope)
-authRoutes.post(AUTH_ENDPOINTS.agent.access, (c) =>
-  getAuthController().verifyAgentAccessToken(c)
+authRoutes.post(
+  AUTH_ENDPOINTS.agent.access,
+  zValidator("json", agentAccessAndRefreshSchema),
+  (c) => getAuthController().verifyAgentAccessToken(c)
 );
 
-authRoutes.post(AUTH_ENDPOINTS.agent.refresh, (c) =>
-  getAuthController().verifyAgentRefreshToken(c)
+authRoutes.post(
+  AUTH_ENDPOINTS.agent.refresh,
+  zValidator("json", agentAccessAndRefreshSchema),
+  (c) => getAuthController().verifyAgentRefreshToken(c)
 );
 
 export { authRoutes };

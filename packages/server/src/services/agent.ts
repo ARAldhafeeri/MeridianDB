@@ -5,7 +5,7 @@ import { generateAccessToken } from "@/utils/access";
 import { getOrgId } from "@/config/context";
 
 export class AgentService extends BaseServiceImpl<Agent, AgentFilter> {
-  constructor(agentRepository: AgentRepository) {
+  constructor(private agentRepository: AgentRepository) {
     super(agentRepository);
   }
 
@@ -22,5 +22,15 @@ export class AgentService extends BaseServiceImpl<Agent, AgentFilter> {
     request.organizationId = getOrgId();
 
     return super.create(request);
+  }
+
+  async getByAccessToken(accessToken: string): Promise<Agent> {
+    const entity = await this.agentRepository.findOne({
+      accessToken: accessToken,
+    });
+    if (!entity) {
+      throw new Error(`Entity with id ${accessToken} not found`);
+    }
+    return entity;
   }
 }

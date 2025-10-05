@@ -20,6 +20,6 @@ export const AUTH_ENDPOINTS = {
   init: "/init",
   agent: {
     access: "/agents/access",
-    refresh: "agents/refresh",
+    refresh: "/agents/refresh",
   },
 };

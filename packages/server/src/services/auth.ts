@@ -91,8 +91,6 @@ class AuthService implements IAuthService {
       version: 1,
     });
 
-    console.log("org id", org.id);
-
     const created = await this.adminService.create({
       email: email,
       salt: salt,
@@ -120,8 +118,7 @@ class AuthService implements IAuthService {
   }
 
   async verifyAgentAccessToken(accessToken: string): Promise<string | null> {
-    const token = await this.accessService.verifyToken(accessToken);
-    const agent = await this.agentService.getById(token.agentId);
+    const agent = await this.agentService.getByAccessToken(accessToken);
 
     // access token invalid
     if (accessToken !== agent.accessToken) return null;

@@ -39,7 +39,6 @@ export interface AgentMemoriesFeaturesConfig {
   readonly metadata: Record<string, unknown>;
 }
 
-
 /**
  * AI Agent entity
  */
@@ -104,4 +103,5 @@ export interface AgentFilter {
   readonly capabilities?: string[];
   readonly createdAfter?: Date;
   readonly createdBefore?: Date;
+  readonly accessToken?: string;
 }
