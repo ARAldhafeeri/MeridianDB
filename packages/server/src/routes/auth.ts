@@ -24,4 +24,14 @@ authRoutes.get(AUTH_ENDPOINTS.init, (c) =>
   getAuthController().initSuperAdmin(c)
 );
 
+// agent refresh-token flow for client to interact with
+// memory endpoints ( agent scope)
+authRoutes.post(AUTH_ENDPOINTS.agent.access, (c) =>
+  getAuthController().verifyAgentAccessToken(c)
+);
+
+authRoutes.post(AUTH_ENDPOINTS.agent.refresh, (c) =>
+  getAuthController().verifyAgentRefreshToken(c)
+);
+
 export { authRoutes };

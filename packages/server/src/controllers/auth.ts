@@ -1,6 +1,9 @@
 import { IAuthController } from "@/entities/interfaces/controllers/auth";
 import { ControllerContext } from "@/entities/interfaces/controllers/context";
-import { AuthLoginRequest } from "@/entities/interfaces/services/auth";
+import {
+  AgentAccessRequest,
+  AuthLoginRequest,
+} from "@/entities/interfaces/services/auth";
 import AuthService from "@/services/auth";
 
 export class AuthController implements IAuthController {
@@ -56,6 +59,38 @@ export class AuthController implements IAuthController {
       const adminPassword = context.env.ADMIN_PASSWORD;
       await this.service.initSuperAdmin(adminEmail, adminPassword);
       return context.json(true, 201);
+    } catch (error) {
+      return this.handleError(error as Error, context, "create");
+    }
+  }
+
+  async verifyAgentAccessToken(context: ControllerContext): Promise<Response> {
+    try {
+      const validatedData = (context.req.valid as any)(
+        "json"
+      ) as AgentAccessRequest;
+      const refreshToken = await this.service.verifyAgentAccessToken(
+        validatedData.token
+      );
+      if (!refreshToken) return context.json({ token: null }, 401);
+
+      return context.json({ token: refreshToken }, 201);
+    } catch (error) {
+      return this.handleError(error as Error, context, "create");
+    }
+  }
+
+  async verifyAgentRefreshToken(context: ControllerContext): Promise<Response> {
+    try {
+      const validatedData = (context.req.valid as any)(
+        "json"
+      ) as AgentAccessRequest;
+      const refreshToken = await this.service.verifyAgentRefreshToken(
+        validatedData.token
+      );
+      if (!refreshToken) return context.json({ token: null }, 401);
+
+      return context.json({ token: refreshToken }, 201);
     } catch (error) {
       return this.handleError(error as Error, context, "create");
     }

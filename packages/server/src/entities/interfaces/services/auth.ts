@@ -19,17 +19,21 @@ export interface IAuthService {
    * return the short-lived refresh token or null if the access token invalid
    * @param accessToken :
    */
-  verifyAccessToken(accessToken: string): Promise<string | null>;
+  verifyAgentAccessToken(accessToken: string): Promise<string | null>;
 
   /**
    * Refresh the short-lived token or send null if the
    * refresh token is invalid
    * @param refreshToken
    */
-  refreshAgentToken(refreshToken: string): Promise<string | null>;
+  verifyAgentRefreshToken(refreshToken: string): Promise<string | null>;
 }
 
 export interface AuthLoginRequest {
   username: string;
   password: string;
+}
+
+export interface AgentAccessRequest {
+  token: string;
 }

@@ -12,4 +12,14 @@ export interface IAuthController {
    * initialize super admin endpoint , SUPER_ADMIN_TOKEN is required
    */
   initSuperAdmin(context: ControllerContext): Promise<Response>;
+
+  /**
+   * return refresh token to the user
+   */
+  verifyAgentAccessToken(context: ControllerContext): Promise<Response>;
+
+  /**
+   * validate refresh token
+   */
+  verifyAgentRefreshToken(context: ControllerContext): Promise<Response>;
 }

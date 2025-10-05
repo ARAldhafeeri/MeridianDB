@@ -3,7 +3,11 @@ import { AdminService } from "./admin";
 import { AccessService } from "./access";
 import { PasswordService } from "./password";
 import { v4 as uuidv4 } from "uuid";
-import { getAdminEmail, getAdminPassword } from "@/config/context";
+import {
+  AppContextKeys,
+  getAdminEmail,
+  getAdminPassword,
+} from "@/config/context";
 import { OrganizationService } from "./organization";
 import { AgentService } from "./agent";
 
@@ -104,7 +108,7 @@ class AuthService implements IAuthService {
     return created;
   }
 
-  async refreshAgentToken(refreshToken: string): Promise<string | null> {
+  async verifyAgentRefreshToken(refreshToken: string): Promise<string | null> {
     // verify refresh token
     const token = await this.accessService.verifyToken(refreshToken);
 
@@ -115,7 +119,7 @@ class AuthService implements IAuthService {
     return token;
   }
 
-  async verifyAccessToken(accessToken: string): Promise<string | null> {
+  async verifyAgentAccessToken(accessToken: string): Promise<string | null> {
     const token = await this.accessService.verifyToken(accessToken);
     const agent = await this.agentService.getById(token.agentId);
 
@@ -125,7 +129,8 @@ class AuthService implements IAuthService {
     // generate new refresh token 5m live-time
     const newToken = this.accessService.generateToken(
       {
-        agentId: agent.id,
+        [AppContextKeys.AGENT_ID]: agent.id,
+        [AppContextKeys.ORG_ID]: agent.organizationId,
       },
       "5m"
     );

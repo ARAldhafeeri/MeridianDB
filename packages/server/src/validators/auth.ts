@@ -6,3 +6,7 @@ export const loginRequestSchema = z.object({
 });
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
+
+export const agentAccessAndRefresh = z.object({
+  token: z.string("Invalid token"),
+});

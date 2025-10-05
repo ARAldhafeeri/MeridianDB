@@ -18,4 +18,8 @@ export const ENDPOINTS = {
 export const AUTH_ENDPOINTS = {
   login: "/login",
   init: "/init",
+  agent: {
+    access: "/agents/access",
+    refresh: "agents/refresh",
+  },
 };
