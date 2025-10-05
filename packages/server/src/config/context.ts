@@ -17,6 +17,7 @@ export type Env = {
     readonly ADMIN_EMAIL: string;
     readonly ADMIN_PASSWORD: string;
     readonly JWT_SECRET: string;
+    readonly SUPER_ADMIN_INIT_TOKEN: string;
     // queues
     TEMPORAL_QUEUE_URL: string;
     TEMPORAL_QUEUE_API_KEY: string;
@@ -97,6 +98,10 @@ export const getAdminEmail = (): string => {
 
 export const getAdminPassword = (): string => {
   return getContext<Env>().env.ADMIN_PASSWORD;
+};
+
+export const getSuperAdminToken = (): string => {
+  return getContext<Env>().env.SUPER_ADMIN_INIT_TOKEN;
 };
 
 // agent

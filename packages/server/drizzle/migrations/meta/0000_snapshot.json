@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "6ab9da12-9e73-4165-8ab9-a17cbbe3d0ba",
+  "id": "0c4d9545-9b73-41f1-95f8-c03b20f61593",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admins": {
@@ -145,28 +145,60 @@
           "notNull": false,
           "autoincrement": false
         },
-        "accessToken": {
-          "name": "accessToken",
+        "capabilities": {
+          "name": "capabilities",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "decayFactor": {
-          "name": "decayFactor",
+        "stabilityThreshold": {
+          "name": "stabilityThreshold",
           "type": "real",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
-          "default": 1
+          "default": 0.15
         },
-        "failureRate": {
-          "name": "failureRate",
+        "halfLifeHours": {
+          "name": "halfLifeHours",
           "type": "real",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
-          "default": 1
+          "default": 168
+        },
+        "timeWeight": {
+          "name": "timeWeight",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0.6
+        },
+        "frequencyWeight": {
+          "name": "frequencyWeight",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0.4
+        },
+        "decayCurve": {
+          "name": "decayCurve",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'hybird'"
+        },
+        "successRate": {
+          "name": "successRate",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0.85
         },
         "isActive": {
           "name": "isActive",
@@ -175,6 +207,21 @@
           "notNull": false,
           "autoincrement": false,
           "default": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'{}'"
+        },
+        "accessToken": {
+          "name": "accessToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",

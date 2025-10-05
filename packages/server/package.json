@@ -8,7 +8,7 @@
     "deploy": "wrangler deploy",
     "watch": "tsc -b --watch",
     "db:up:local": "drizzle-kit up --config=./drizzle.config.json",
-    "db:migrate:local": "drizzle-kit push --config=drizzle.config.json",
+    "db:migrate:local": "drizzle-kit push --config=./drizzle.config.json",
     "db:generate": "drizzle-kit generate --config=./drizzle.config.json"
   },
   "dependencies": {

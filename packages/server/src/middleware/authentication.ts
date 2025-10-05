@@ -13,7 +13,7 @@ const authenticationMiddleWare: any = async (
     const authorizationHeader = c.req.header("Authorization");
 
     if (!authorizationHeader) {
-      throw new Error("Authorization header missing");
+      return c.json({ message: "user not authenticated" }, 401);
     }
 
     // Extract the token from the header
@@ -27,9 +27,9 @@ const authenticationMiddleWare: any = async (
     c.set(AppContextKeys.ORG_ID, decoded.organizationId);
     c.set(AppContextKeys.AGENT_ID, decoded.agentId);
 
-    await next();
+    return await next();
   } catch (e) {
-    return c.json({ message: "user not authenticated" });
+    return c.json({ message: "user not authenticated" }, 401);
   }
 };
 

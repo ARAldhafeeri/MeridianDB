@@ -277,20 +277,8 @@ Will run watch on all packages. But before hand make sure to create d1, vectoriz
 - https://developers.cloudflare.com/vectorize/
 - https://developers.cloudflare.com/kv/
 
-```bash
-npm run dev
-```
 
-
-## 📦 Testing
-Will run integration tests.
-
-```bash
-npm run test
-```
-
-### Migrations
-7. migrations
+Run migrations 
 
 ```
 npm run server:migrations
@@ -299,6 +287,29 @@ npm run server:migrations
 ```
 npm run server:migrate:local
 ```
+
+```bash
+npm run dev
+```
+Once you run the local environment you need to  initialize the super admin by hiting the following endpoint `/auth/init` don't forget to update environmenet variables for both locally and in deployment for the supoer admin 
+
+```
+// rest of packages/server/wrangler.jsonc
+   "vars": {
+    "ADMIN_EMAIL": "admin@admin.com",
+    "ADMIN_PASSWORD": "admin",
+    "SUPER_ADMIN_INIT_TOKEN": "your-secret-s-admin-init-token", 
+    // rest of env vars.
+  },
+```
+
+## 📦 Testing
+Will run integration tests.
+
+```bash
+npm run test
+```
+
 
 # Deployment 
 ```

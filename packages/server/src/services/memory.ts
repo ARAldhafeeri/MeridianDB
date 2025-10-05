@@ -188,7 +188,7 @@ export class MemoryEpisodeService
       // Publish memories temporal feature updating events
       // to temporal queue.
       if (memories?.data?.length > 0) {
-        await temporalQueueClient.publish(temporalQueueMessage);
+        await temporalQueueClient().publish(temporalQueueMessage);
       }
       return memories;
     } catch (error) {

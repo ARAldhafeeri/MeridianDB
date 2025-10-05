@@ -6,6 +6,7 @@ import { createContainer } from "@/infrastructure/d1/container";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { loginRequestSchema } from "@/validators/auth";
+import superAdminMiddleware from "@/middleware/superAdminMiddleware";
 const authRoutes = new Hono();
 
 const getAuthController = () => {
@@ -20,7 +21,8 @@ authRoutes.post(
   (c) => getAuthController().login(c)
 );
 
-authRoutes.get(AUTH_ENDPOINTS.init, (c) =>
+// init super admin securly with configurable token by the user
+authRoutes.get(AUTH_ENDPOINTS.init, superAdminMiddleware, (c) =>
   getAuthController().initSuperAdmin(c)
 );
 
