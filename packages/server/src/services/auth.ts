@@ -123,11 +123,20 @@ class AuthService implements IAuthService {
     // access token invalid
     if (accessToken !== agent.accessToken) return null;
 
-    // generate new refresh token 5m live-time
+    const {
+      accessToken: _,
+      createdAt,
+      updatedAt,
+      version,
+      ...safeAgentData
+    } = agent; // generate new refresh token 5m live-time
     const newToken = this.accessService.generateToken(
       {
         [AppContextKeys.AGENT_ID]: agent.id,
         [AppContextKeys.ORG_ID]: agent.organizationId,
+        [AppContextKeys.AGENT_REQUEST_CONTEXT]: {
+          ...safeAgentData,
+        },
       },
       "5m"
     );

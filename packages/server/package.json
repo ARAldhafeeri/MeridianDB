@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --experimental-vectorize-bind-to-prod",
     "build": "tsc --build",
     "deploy": "wrangler deploy",
     "watch": "tsc -b --watch",

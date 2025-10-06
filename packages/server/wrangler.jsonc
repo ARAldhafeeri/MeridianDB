@@ -42,10 +42,10 @@
       "database_name": "meridiandb",
       "database_id": "21b2d4dd-ba84-484f-9e3d-43120a77cac4"
     }
-  ]
-  // "ai": {
-  //   "binding": "AI"
-  // },
+  ],
+  "ai": {
+    "binding": "AI"
+  }
   // "observability": {
   //   "enabled": true,
   //   "head_sampling_rate": 1

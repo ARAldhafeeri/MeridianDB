@@ -11,13 +11,15 @@ class AiAdapter implements IAiAdapter {
   async getUpsertVectorizeEmbeddings(
     memories: MemoryEpisode
   ): Promise<EmbeddingResponse> {
-    return this.ai.run(getEmbeddingModelName(), memories);
+    return this.ai.run(getEmbeddingModelName(), {
+      text: [memories.content, memories.context],
+    });
   }
 
   async getUserQueryVectorizeEmbeddings(
     query: string
   ): Promise<EmbeddingResponse> {
-    return this.ai.run(getEmbeddingModelName(), query);
+    return this.ai.run(getEmbeddingModelName(), { text: [query] });
   }
 }
 

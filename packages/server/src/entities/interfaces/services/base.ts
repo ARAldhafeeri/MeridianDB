@@ -33,6 +33,7 @@ export interface BaseService<T extends BaseEntity, TFilter = object> {
    * Delete entity with cascade handling
    */
   delete(id: string): Promise<boolean>;
+
 }
 
 export type {

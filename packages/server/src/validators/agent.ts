@@ -22,6 +22,10 @@ export const AgentSchema = BaseEntitySchema.extend({
   successRate: z.number().min(0).max(1),
   isActive: z.boolean(),
   metadata: z.object(),
+  halfLifeHours: z.number(),
+  timeWeight: z.number(),
+  frequencyWeight: z.number(),
+  decayCurve: z.enum(["exponential", "hybird", "polynomial"]),
 });
 
 /**

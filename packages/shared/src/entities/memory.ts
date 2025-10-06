@@ -6,8 +6,8 @@ import { AccessLevel, MemoryStage } from "./enums";
  */
 export interface MemoryEpisode extends BaseEntity {
   // Basic identification
-  readonly agentId: string;
-  readonly organizationId: string;
+  agentId: string;
+  organizationId: string;
   readonly content: string;
 
   // SEMANTIC FEATURES (derived from Vectorize preprocessing)

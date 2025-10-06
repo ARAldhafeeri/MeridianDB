@@ -3,7 +3,7 @@ import { BaseRepository } from "@/entities/interfaces/repositories/base";
 import { BaseService } from "@/entities/interfaces/services/base";
 import { BaseEntity } from "@meridiandb/shared/src/entities/base";
 
-export abstract class BaseServiceImpl<T extends BaseEntity, TFilter = object>
+export class BaseServiceImpl<T extends BaseEntity, TFilter = object>
   implements BaseService<T, TFilter>
 {
   constructor(protected repository: BaseRepository<T, TFilter>) {}

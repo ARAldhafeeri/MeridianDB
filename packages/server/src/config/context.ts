@@ -53,7 +53,7 @@ export const getR2 = () => {
   return getContext<Env>().env.R2_BUCKET;
 };
 
-export const getVictorize = () => {
+export const getVectorize = () => {
   return getContext<Env>().env.VECTORIZE;
 };
 

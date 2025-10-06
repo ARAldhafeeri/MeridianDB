@@ -54,5 +54,6 @@ export interface IMemoryService extends BaseService<MemoryEpisode> {
    * @param request
    */
   upsert(request: MemoryEpisode): Promise<MemoryEpisode | null>;
+
   // multiMemoryUpsert(request: MemoryRetrievalRequest): Promise<MemoryEpisode[]>;
 }

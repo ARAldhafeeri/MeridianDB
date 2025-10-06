@@ -1,14 +1,17 @@
 import { BaseEntity } from "@meridiandb/shared/src/entities/base";
-import { BaseService } from "@/entities/interfaces/services/base";
 import { PaginationParams } from "@/entities/domain/dto";
 import { BaseController } from "@/entities/interfaces/controllers/base";
 import { ControllerContext } from "@/entities/interfaces/controllers/context";
 import { IdParam, PaginationQuery } from "@/validators/global";
+import { BaseService } from "@/entities/interfaces/services/base";
 
-export abstract class BaseControllerImpl<T extends BaseEntity, TFilter = object>
-  implements BaseController
+export abstract class BaseControllerImpl<
+  T extends BaseEntity,
+  TFilter = object,
+  TService extends BaseService<T, TFilter> = BaseService<T, TFilter>
+> implements BaseController
 {
-  constructor(protected service: BaseService<T, TFilter>) {}
+  constructor(protected service: TService) {}
 
   // Utility methods
   protected convertPaginationParams(query: PaginationQuery): PaginationParams {

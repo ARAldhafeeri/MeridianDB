@@ -8,7 +8,7 @@ import { MemoryEpisodeRepository } from "@/repositories/memory";
 import AiAdapter from "@/adapters/ai";
 import VectorizeRepository from "@/repositories/vector";
 import { IMemoryService } from "@/entities/interfaces/services/memory";
-import { getAgentRequestContext } from "@/config/context";
+import { getAgentId, getAgentRequestContext, getOrgId } from "@/config/context";
 import { PaginatedResponse } from "@/entities/domain/dto";
 import { temporalQueueClient } from "@/config/queues";
 import { TemporalMessage } from "@meridiandb/shared/src/queue/entities/domain/queue";
@@ -28,6 +28,14 @@ export class MemoryEpisodeService
   async upsert(request: MemoryEpisode): Promise<MemoryEpisode | null> {
     let d1RecordId: string | null = null;
 
+    request.organizationId = getOrgId();
+
+    // allow agentId payload if it's defined ( payload from admin portal)
+    // add it if the request coming from agent
+    if (!request.agentId) {
+      request.agentId = getAgentId();
+    }
+
     try {
       // 2. Parallelize embedding generation and D1 upsert
       const [embeddings, created] = await Promise.all([
@@ -43,18 +51,19 @@ export class MemoryEpisodeService
       d1RecordId = created.id;
 
       // 4. Upsert to vectorize with retry logic
-      const vectorizeData = [
-        {
+      let vectors: VectorizeVector[] = [];
+      embeddings.data.forEach((v) => {
+        vectors.push({
           id: created.id,
-          values: embeddings.data,
+          values: v,
           metadata: { agentId: created.agentId },
-        },
-      ];
+        });
+      });
 
       // 5. vectorize with local retry
       // ( should not be needed given vectorize architecture but why not, little-over engineering)
       const upsertedVectorize = await this.retryWithBackoff(
-        () => this.vectorize.insert(vectorizeData),
+        () => this.vectorize.insert(vectors),
         { maxAttempts: 3 }
       );
 
@@ -161,7 +170,7 @@ export class MemoryEpisodeService
       // Search vector database with optional agent filter
       const searchOptions = filters.agentId ? { agentId: filters.agentId } : {};
       const matches = await this.vectorize.search(
-        queryEmbeddings.data,
+        queryEmbeddings.data[0],
         searchOptions
       );
 

@@ -277,7 +277,11 @@ Will run watch on all packages. But before hand make sure to create d1, vectoriz
 - https://developers.cloudflare.com/vectorize/
 - https://developers.cloudflare.com/kv/
 
+if you want to use the current config for dev enviornment create vectorize index 
 
+```Bash
+npx wrangler vectorize create meridiandb --dimensions=768 --metric=cosine
+```
 Run migrations 
 
 ```

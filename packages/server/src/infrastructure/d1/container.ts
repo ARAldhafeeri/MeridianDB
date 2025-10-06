@@ -1,5 +1,5 @@
 import AiAdapter from "@/adapters/ai";
-import { getAi, getVictorize } from "@/config/context";
+import { getAi, getVectorize } from "@/config/context";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { AdminRepository } from "@/repositories/admin";
 import { AgentRepository } from "@/repositories/agent";
@@ -98,7 +98,7 @@ export const createContainer = (db: D1Client) => {
 
     get vectorizeRepository(): VectorizeRepository {
       if (!_vectorize) {
-        _vectorize = new VectorizeRepository(getVictorize());
+        _vectorize = new VectorizeRepository(getVectorize());
       }
       return _vectorize;
     },

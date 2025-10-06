@@ -8,6 +8,7 @@ import { helathCheckController } from "./controllers/health";
 import { organizationRoutes } from "./routes/organization";
 import { authRoutes } from "./routes/auth";
 import { agentRoutes } from "./routes/agent";
+import { memoryAdminPortalRoutes, memoryAgentRoutes } from "./routes/memory";
 
 // main app
 const app = new Hono<Env>();
@@ -33,6 +34,8 @@ app.use(contextStorage());
 app.route(ENDPOINTS.orgs, organizationRoutes);
 app.route(ENDPOINTS.auth, authRoutes);
 app.route(ENDPOINTS.agents, agentRoutes);
+app.route(ENDPOINTS.memoriesAdmin, memoryAdminPortalRoutes);
+app.route(ENDPOINTS.memoriesAgent, memoryAgentRoutes);
 
 // Health check endpoint that tests all databases
 app.get(ENDPOINTS.health, helathCheckController);
