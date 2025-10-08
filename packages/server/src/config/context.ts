@@ -21,8 +21,6 @@ export type Env = {
     // queues
     TEMPORAL_QUEUE_URL: string;
     TEMPORAL_QUEUE_API_KEY: string;
-    BEHAVIORAL_QUEUE_URL: string;
-    BEHAVIORAL_QUEUE_API_KEY: string;
   };
   Variables: {
     AGENT_ID: string;
@@ -114,8 +112,6 @@ export const getAgentRequestContext = (): AgentRequestContext => {
 interface QueuesEnvVars {
   temporalQueueURL: string;
   temporalQueueApiKey: string;
-  behavioralQueueURL: string;
-  behavioralQueueApiKey: string;
 }
 
 export const getQueuesEnvVariables = (): QueuesEnvVars => {
@@ -124,7 +120,5 @@ export const getQueuesEnvVariables = (): QueuesEnvVars => {
   return {
     temporalQueueURL: context.TEMPORAL_QUEUE_URL,
     temporalQueueApiKey: context.TEMPORAL_QUEUE_API_KEY,
-    behavioralQueueURL: context.BEHAVIORAL_QUEUE_URL,
-    behavioralQueueApiKey: context.BEHAVIORAL_QUEUE_API_KEY,
   };
 };

@@ -88,7 +88,7 @@ Human Clients + SDKs
 
 ## 📦 Pre-installation
 
-MeridianDB leverages queues to minimize **write-on-read** overhead when updating both temporal and behavioral feature events.
+MeridianDB leverages queues to minimize **write-on-read** overhead when updating temporal features for each memory.
 We provide a lightweight distributed queue implementation using Cloudflare Workers:
 👉 [cfw-poor-man-queue](https://github.com/ARAldhafeeri/cfw-poor-man-queue)
 
@@ -97,8 +97,12 @@ For maximum scalability, we recommend deploying the queues as **standalone worke
 1. **Temporal Features Queue**
    When the AI retrieves information from MeridianDB, attributes like frequency and recency are updated via messages published to this queue. These updates are then applied to temporal decay filtering.
 
-2. **Behavioral Features Queue**
-   This queue powers behavioral analysis. When you send responses to your users, you can log their feedback through the behavioral logging endpoint. Users may mark a response as a success or failure, which directly influences success rate filtering.
+2. **Behavioral Features**
+   This powers behavioral analysis. When you send responses to your users, you can log their feedback through the behavioral logging endpoint. Users may mark a response as a success or failure, which directly influences success rate filtering.
+
+Note PMQ is used only in temporal queue because it's related to data fetching and searching. 
+
+Nevertheless, the behavioral features is updated based on your users feedback it's not related to the retreival of data like the temporal features so we don't use PMQ in fact updating temporal features is just single rest endpoint.
 
 Both **temporal** and **behavioral threshold filtering** are fully customizable from the **Admin Portal**.
 
