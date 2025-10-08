@@ -27,7 +27,6 @@ app.use("/fail", ValidatePayloadSizeMiddleware);
 app.post("/publish", async (c: Context) => {
   const queueDO = await getQueue(c.env);
   const body = await c.req.json();
-  console.log("publish body", body);
   const result = await (queueDO as any).publish(body);
   return c.json(result);
 });
@@ -95,10 +94,9 @@ export default {
   // Scheduled handler - calls DO method directly
   scheduled: async (event: ScheduledEvent, env: any, ctx: ExecutionContext) => {
     const queueDO = await getQueue(env);
-    console.log("scheduler run");
     // Your custom handler for queue messages batch
     const handler = (messages: Message) =>
-      new ConsumerHandler({ d1: (env as any).d1 }).handle(messages);
+      new ConsumerHandler({ d1: (env as any).D1 }).handle(messages);
 
     ctx.waitUntil((queueDO as any).runScheduledProcessing(handler));
   },

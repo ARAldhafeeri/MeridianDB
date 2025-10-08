@@ -88,7 +88,7 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
     try {
       // Use parameterized query to prevent SQL injection
       const agent = await this.dependencies.d1
-        .prepare(`SELECT agent FROM agents WHERE id = ?;`)
+        .prepare(`SELECT * FROM agents WHERE id = ?;`)
         .bind(agentId)
         .run();
 
@@ -135,20 +135,24 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
       // most accurate date when all memories where retreived.
       const accessedAt = batch.createdAt || Date.now();
 
+      const placeholders = memoryIds.map(() => "?").join(", ");
+
+      const query = `
+        SELECT id, accessFrequency, lastAccessedAt 
+        FROM memory_episodes 
+        WHERE id IN (${placeholders}) AND agentId = ?
+      `;
+
+      const params = [...memoryIds, batch.data.agentId];
+
       // Fetch current state of memories in one
       const [agent, memoriesResult] = await Promise.all([
         this.getAgent(batch.data.agentId),
         this.dependencies.d1
-          .prepare(
-            `SELECT id, accessFrequency, lastAccessedAt 
-           FROM memory_episodes 
-           WHERE id IN (${memoryIds}) AND agentId = ?`
-          )
-          .bind(...memoryIds, batch.data.agentId)
+          .prepare(query)
+          .bind(...params)
           .all(),
       ]);
-
-      console.log("agent, memories result", agent, memoriesResult);
 
       const memories = memoriesResult.results as unknown as MemoryEpisode[];
       // fail the entire batch

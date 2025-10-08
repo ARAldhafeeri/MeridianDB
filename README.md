@@ -282,6 +282,12 @@ if you want to use the current config for dev enviornment create vectorize index
 ```Bash
 npx wrangler vectorize create meridiandb --dimensions=768 --metric=cosine
 ```
+
+meridiandb uses agentId meta data for seperating agents memory storage at single agent search endpoint, you must create the metadata index 
+```Bash
+npx wrangler vectorize create-metadata-index meridiandb --property-name=agentId --type=string
+
+```
 Run migrations 
 
 ```

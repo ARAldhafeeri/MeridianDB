@@ -2,7 +2,7 @@
   "name": "temporal-queue",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev --port 8020 --test-scheduled",
+    "dev": "wrangler dev --port 8020 --test-scheduled --persist-to=../server/.wrangler/state",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
