@@ -41,7 +41,7 @@ export class PublishHandler implements IRequestHandler {
 
     const message: Message = {
       id: crypto.randomUUID(),
-      data: isLarge || willExceedMemory ? null : data,
+      data: data,
       retries: 0,
       nextRetry: 0,
       createdAt: Date.now(),

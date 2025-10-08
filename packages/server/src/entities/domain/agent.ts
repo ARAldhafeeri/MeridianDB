@@ -11,8 +11,8 @@ export type {
  * used in retreival and insertion.
  */
 export interface AgentRequestContext {
-  organizationId: string;
-  agentId: string;
+  ORG_ID: string;
+  AGENT_ID: string;
 
   /**
    * Temporal

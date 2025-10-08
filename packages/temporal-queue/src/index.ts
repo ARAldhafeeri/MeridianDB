@@ -27,7 +27,7 @@ app.use("/fail", ValidatePayloadSizeMiddleware);
 app.post("/publish", async (c: Context) => {
   const queueDO = await getQueue(c.env);
   const body = await c.req.json();
-
+  console.log("publish body", body);
   const result = await (queueDO as any).publish(body);
   return c.json(result);
 });

@@ -138,7 +138,7 @@ export class MemoryEpisodeService
     return this.searchMemories({
       ...request,
       filters: {
-        agentId: getAgentRequestContext().agentId,
+        agentId: getAgentRequestContext().AGENT_ID,
         stabilityThreshold: getAgentRequestContext().stabilityThreshold,
         successRate: getAgentRequestContext().successRate,
       },
@@ -167,8 +167,10 @@ export class MemoryEpisodeService
       const queryEmbeddings =
         await this.aiAdapter.getUserQueryVectorizeEmbeddings(query);
 
+      const agentId = getAgentRequestContext().AGENT_ID;
+
       // Search vector database with optional agent filter
-      const searchOptions = filters.agentId ? { agentId: filters.agentId } : {};
+      const searchOptions = { agentId: agentId };
       const matches = await this.vectorize.search(
         queryEmbeddings.data[0],
         searchOptions
@@ -187,21 +189,24 @@ export class MemoryEpisodeService
         ids: matchedIds,
         stabilityThreshold: filters.stabilityThreshold,
         successRate: filters.successRate,
-        agentId: filters.agentId,
+        agentId: filters.agentId || agentId,
       });
 
       const temporalQueueMessage: TemporalMessage["data"] = {
         memories: memories.data.map((memory) => memory.id),
-        agentId: filters.agentId as string,
+        agentId: agentId,
       };
       // Publish memories temporal feature updating events
       // to temporal queue.
-      if (memories?.data?.length > 0) {
+      if (
+        temporalQueueMessage.memories.length > 0 &&
+        typeof temporalQueueMessage.agentId === "string"
+      ) {
         await temporalQueueClient().publish(temporalQueueMessage);
       }
       return memories;
     } catch (error) {
-      throw error;
+      return null;
     }
   }
 }

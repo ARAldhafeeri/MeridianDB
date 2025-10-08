@@ -117,6 +117,7 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
    */
   async handle(batch: TemporalMessage): Promise<Status> {
     try {
+      console.log("batch", batch);
       if (!batch) return { status: false, error: "message data malformed" };
       if (!batch.data)
         return { status: false, error: "message data malformed" };
@@ -126,6 +127,7 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
 
       const memoryIds = batch.data.memories; // Just array of IDs
 
+      console.log("memoryIds", memoryIds);
       if (!memoryIds || memoryIds.length === 0) {
         return { status: false, error: "messages empty" };
       }
@@ -145,6 +147,8 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
           .bind(...memoryIds, batch.data.agentId)
           .all(),
       ]);
+
+      console.log("agent, memories result", agent, memoriesResult);
 
       const memories = memoriesResult.results as unknown as MemoryEpisode[];
       // fail the entire batch

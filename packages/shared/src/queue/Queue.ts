@@ -332,6 +332,7 @@ export class Queue implements IQueue {
         // Get messages batches
         const messages = await this.messageRepository.popBatch();
 
+        console.log("messages", messages);
         console.log(`Processing batch of ${messages.length} messages`);
 
         const messagePromises = messages.map(async (message) => {

@@ -23,7 +23,6 @@ const agentAuthMiddleware: any = async (c: ControllerContext, next: Next) => {
 
     c.set(AppContextKeys.AGENT_REQUEST_CONTEXT, decoded);
 
-    console.log("agent memory context", decoded);
     return await next();
   } catch (e) {
     return c.json({ message: "user not authenticated" }, 401);
