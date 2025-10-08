@@ -10,7 +10,7 @@ const app = new Hono<Environment>();
 
 // Helper to get Durable Object instance
 async function getQueue(env: any): Promise<DurableObjectStub> {
-  const id = env.SIMPLE_QUEUE.idFromName("behavioral");
+  const id = env.SIMPLE_QUEUE.idFromName("temporal");
   const stub = env.SIMPLE_QUEUE.get(id);
   return stub;
 }
@@ -93,16 +93,12 @@ export default {
   fetch: app.fetch,
 
   // Scheduled handler - calls DO method directly
-  scheduled: async (
-    event: ScheduledEvent,
-    env: Environment,
-    ctx: ExecutionContext
-  ) => {
+  scheduled: async (event: ScheduledEvent, env: any, ctx: ExecutionContext) => {
     const queueDO = await getQueue(env);
     console.log("scheduler run");
     // Your custom handler for queue messages batch
-    const handler = (messages: Message[]) =>
-      new ConsumerHandler().handle(messages);
+    const handler = (messages: Message) =>
+      new ConsumerHandler({ d1: (env as any).d1 }).handle(messages);
 
     ctx.waitUntil((queueDO as any).runScheduledProcessing(handler));
   },

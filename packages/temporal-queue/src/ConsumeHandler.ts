@@ -1,6 +1,9 @@
 import { Agent } from "@meridiandb/shared/src/entities/agent";
 import { TemporalMessage } from "@meridiandb/shared/src/queue/entities/domain/queue";
-import { ITemporalQueueConsumeHandler } from "@meridiandb/shared/src/queue/entities/interfaces/IRequestHandler";
+import {
+  ITemporalQueueConsumeHandler,
+  Status,
+} from "@meridiandb/shared/src/queue/entities/interfaces/IRequestHandler";
 import { MemoryEpisode } from "@meridiandb/shared/src/entities/memory";
 
 class ConsumerHandler implements ITemporalQueueConsumeHandler {
@@ -112,72 +115,74 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
    * in schedule tick operations.
    * @param messages queue messages with temporal feature data
    */
-  async handle(batch: TemporalMessage): Promise<void> {
-    if (!batch.data.agentId || typeof batch.data.agentId !== "string") {
-      throw new Error("agentId is missing or malformed");
-    }
-
-    const memoryIds = batch.data.memories; // Just array of IDs
-
-    if (!memoryIds || memoryIds.length === 0) {
-      return;
-    }
-
-    // most accurate date when all memories where retreived.
-    const accessedAt = batch.createdAt || Date.now();
-
-    // Fetch current state of memories in one
-    const [agent, memoriesResult] = await Promise.all([
-      this.getAgent(batch.data.agentId),
-      this.dependencies.d1
-        .prepare(
-          `SELECT id, accessFrequency, lastAccessedAt 
-         FROM memory_episodes 
-         WHERE id IN (${memoryIds}) AND agentId = ?`
-        )
-        .bind(...memoryIds, batch.data.agentId)
-        .all(),
-    ]);
-
-    const memories = memoriesResult.results as unknown as MemoryEpisode[];
-    // fail the entire batch
-    if (memories.length === 0) {
-      throw new Error("No memories found for update");
-    }
-
-    const statements: D1PreparedStatement[] = [];
-
-    for (const memory of memories) {
-      // Calculate recency with CURRENT DB values
-      const newRecency = this.calculateRecencyScore(
-        memory.accessFrequency || 0,
-        memory.lastAccessedAt
-          ? new Date(memory.lastAccessedAt).getTime()
-          : accessedAt,
-        {
-          halfLifeHours: agent?.halfLifeHours || 168,
-          timeWeight: agent?.timeWeight || 0.6,
-          frequencyWeight: agent?.frequencyWeight || 0.4,
-          decayCurve: agent?.decayCurve || "hybrid",
-        }
-      );
-
-      const stmt = this.dependencies.d1
-        .prepare(
-          `UPDATE memory_episodes 
-           SET recencyScore = ?,
-               accessFrequency = accessFrequency + 1,
-               lastAccessedAt = datetime(?, 'unixepoch', 'subsec'),
-               updatedAt = CURRENT_TIMESTAMP,
-               version = version + 1
-           WHERE id = ? AND agentId = ?`
-        )
-        .bind(newRecency, accessedAt / 1000, memory.id, batch.data.agentId);
-
-      statements.push(stmt);
-    }
-
+  async handle(batch: TemporalMessage): Promise<Status> {
     try {
+      if (!batch) return { status: false, error: "message data malformed" };
+      if (!batch.data)
+        return { status: false, error: "message data malformed" };
+
+      if (!batch.data.agentId || typeof batch.data.agentId !== "string")
+        return { status: false, error: "message data malformed" };
+
+      const memoryIds = batch.data.memories; // Just array of IDs
+
+      if (!memoryIds || memoryIds.length === 0) {
+        return { status: false, error: "messages empty" };
+      }
+
+      // most accurate date when all memories where retreived.
+      const accessedAt = batch.createdAt || Date.now();
+
+      // Fetch current state of memories in one
+      const [agent, memoriesResult] = await Promise.all([
+        this.getAgent(batch.data.agentId),
+        this.dependencies.d1
+          .prepare(
+            `SELECT id, accessFrequency, lastAccessedAt 
+           FROM memory_episodes 
+           WHERE id IN (${memoryIds}) AND agentId = ?`
+          )
+          .bind(...memoryIds, batch.data.agentId)
+          .all(),
+      ]);
+
+      const memories = memoriesResult.results as unknown as MemoryEpisode[];
+      // fail the entire batch
+      if (memories.length === 0) {
+        return { status: false, error: "no messages to process" };
+      }
+
+      const statements: D1PreparedStatement[] = [];
+
+      for (const memory of memories) {
+        // Calculate recency with CURRENT DB values
+        const newRecency = this.calculateRecencyScore(
+          memory.accessFrequency || 0,
+          memory.lastAccessedAt
+            ? new Date(memory.lastAccessedAt).getTime()
+            : accessedAt,
+          {
+            halfLifeHours: agent?.halfLifeHours || 168,
+            timeWeight: agent?.timeWeight || 0.6,
+            frequencyWeight: agent?.frequencyWeight || 0.4,
+            decayCurve: agent?.decayCurve || "hybrid",
+          }
+        );
+
+        const stmt = this.dependencies.d1
+          .prepare(
+            `UPDATE memory_episodes 
+             SET recencyScore = ?,
+                 accessFrequency = accessFrequency + 1,
+                 lastAccessedAt = datetime(?, 'unixepoch', 'subsec'),
+                 updatedAt = CURRENT_TIMESTAMP,
+                 version = version + 1
+             WHERE id = ? AND agentId = ?`
+          )
+          .bind(newRecency, accessedAt / 1000, memory.id, batch.data.agentId);
+
+        statements.push(stmt);
+      }
       const results = await this.dependencies.d1.batch(statements);
 
       for (let i = 0; i < results.length; i++) {
@@ -185,9 +190,10 @@ class ConsumerHandler implements ITemporalQueueConsumeHandler {
           throw new Error(`Failed to update memory at index ${i}`);
         }
       }
-    } catch (error) {
+      return { status: true, error: "" };
+    } catch (error: any) {
       console.error("Batch update failed:", error);
-      throw new Error("Transaction rolled back: failed to update memories");
+      return { status: true, error: error.msg };
     }
   }
 }

@@ -5,6 +5,15 @@ export interface FailedResponse {
   count: number;
 }
 
+export interface Status {
+  status: boolean;
+  error: string;
+}
+
+export interface FailedResponse {
+  count: number;
+}
+
 export interface CompleteResponse {
   success: boolean;
 }
@@ -28,7 +37,12 @@ export interface IRequestHandler {
     data: any,
     startTime: number
   ): Promise<
-    FailedResponse | CompleteResponse | PublishResponse | PoolResponse | void
+    | Status
+    | FailedResponse
+    | CompleteResponse
+    | PublishResponse
+    | PoolResponse
+    | void
   >;
 }
 
@@ -55,5 +69,5 @@ export interface IConsumeHandler extends IRequestHandler {
  * passed to run schedule in queue.
  */
 export interface ITemporalQueueConsumeHandler extends IRequestHandler {
-  handle(batch: TemporalMessage): Promise<void>;
+  handle(batch: TemporalMessage): Promise<Status>;
 }
