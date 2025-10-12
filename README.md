@@ -254,6 +254,129 @@ function calculateRecencyScore(accessCount, lastAccessed, options = {}) {
 ```
 ---
 
+
+## Configuring Behavioral features  
+
+
+Behavioral features can be configured through **agent configurations**, specifically using the `success_rate` parameter.
+In **MeridianDB**, the success rate serves two main purposes:
+
+1. It’s used to calculate the **Wilson score**, which determines the confidence interval for propagation.
+2. It acts as a filtering metric in behavioral evaluations for your agent.
+
+We provide a single endpoint to record **behavioral analysis events**.
+This endpoint expects the following payload:
+
+```json
+{
+  "memories": ["id1", "id2"],
+  "success": true
+}
+```
+
+* **`memoryIds`** represent the memory entries used within your RAG (Retrieval-Augmented Generation) process.
+* **`success`** indicates whether the memory retrieval or decision outcome was successful.
+
+A **zero-sum** mechanism is applied — meaning all referenced memories are either rewarded or penalized together based on the AI’s outcome.
+
+The configured `success_rate` in your agent settings is then used to:
+
+* Filter results based on behavioral metrics, and
+* Feed into the **Wilson score** calculation, implemented as follows:
+
+```typescript
+function wilsonScore(success: number, failure: number, confidence = 0.95) {
+  const total = success + failure;
+  if (total === 0) return 0;
+
+  const p = success / total;
+  const z = confidence; // 95% confidence Z-score
+
+  const denominator = 1 + (z * z) / total;
+  const center = p + (z * z) / (2 * total);
+  const spread = z * Math.sqrt((p * (1 - p) + (z * z) / (4 * total)) / total);
+
+  return Math.max(0, (center - spread) / denominator);
+}
+```
+
+Unlike **temporal features**, which depend on **access frequency**, **behavioral features** rely on **decisions originating from your application logic**.
+
+For example, in a **customer service chatbot**, you could add two feedback buttons — *Like* and *Dislike*.
+If the user clicks *Dislike*, your application would send the following payload to the `/memories/agent/behavioral` endpoint:
+
+```json
+{
+  "memories": ["uuid-1", "uuid-2"],
+  "success": false
+}
+```
+
+This updates the internal counters for success and failure for those memory entries, influencing how they’re used in future **augmented generations**.
+
+
+## Temporal and Behavioral Filtering Strategy
+
+
+MeridianDB follows a **filter-out strategy** for both **Temporal** and **Behavioral** features in AI retrieval.
+
+We recommend configuring your agent to operate in **two phases**:
+
+#### 1. Passive Learning Phase
+
+During this initial phase, your AI agent **should not use** temporal or behavioral features.
+This allows the system to gather sufficient interaction data before applying active filtering.
+
+#### 2. Active Learning Phase
+
+Once your agent has accumulated meaningful experience, you can **activate** both features by setting appropriate values for:
+
+* `successRate` — for behavioral learning
+* `stabilityThreshold` — for temporal stability
+
+MeridianDB will automatically filter out:
+
+* Memories with a **low success rate**, based on your configuration
+* Memories with a **low stability score**, below your defined threshold
+
+Activating these parameters too early may lead to **false positives**, as the system hasn’t yet stabilized.
+
+---
+
+### Behavioral Features: Success Rate Configuration
+
+Since both Temporal and Behavioral features rely on **active learning**, we recommend starting with a **very low `successRate`** for behavioral features.
+This helps prevent false negatives when calculating the **Wilson score** in early agent usage.
+
+For example, if a memory has 2 failures and 1 success (3 total attempts), and you set the success rate to `0.1`:
+
+```typescript
+console.log(wilsonScore(1, 2, 0.01)) // 0.33
+```
+
+This value ensures the memory **is not filtered out**, helping avoid false positives early on.
+
+As your system matures, you can **adjust the success rate** to reflect your desired performance threshold.
+
+For instance, once the same memory reaches 100 successes and 30 failures, with `successRate` configured at `0.5`:
+
+```typescript
+console.log(wilsonScore(100, 30, 0.5)) // 0.75
+```
+
+Now, the memory remains active, as it meets your defined success criteria.
+
+---
+
+### Temporal Features: Stability Threshold Configuration
+
+For temporal learning, start with a **small `stabilityThreshold`** (e.g., `0.01`) during the passive phase.
+This effectively disables temporal filtering until the system becomes well-trained.
+
+Once your agent has reached consistent usage, activate temporal learning by setting the **appropriate `stabilityThreshold`** for your environment.
+Any memory with a recency score below this threshold will then be filtered out automatically.
+
+
 ## 📦 Installation
 
 ```bash

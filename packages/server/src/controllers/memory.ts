@@ -1,4 +1,5 @@
 import {
+  MemoryBehavioralUpdate,
   MemoryEpisode,
   MemoryEpisodeFilter,
 } from "@meridiandb/shared/src/entities/memory";
@@ -52,6 +53,21 @@ export class MemoryController extends BaseControllerImpl<
       const validatedData = (context.req.valid as any)("json");
       const entity = await this.service.searchMultiAgentsMemory(
         validatedData as MemoryRetrievalRequest
+      );
+      if (!entity) return context.json(entity, 400);
+      return context.json(entity, 200);
+    } catch (error) {
+      return this.handleError(error as Error, context, "create");
+    }
+  }
+
+  // behavioral update request
+  async behavioralUpdate(context: ControllerContext): Promise<Response> {
+    try {
+      // Body is already validated by Hono middleware
+      const validatedData = (context.req.valid as any)("json");
+      const entity = await this.service.memoriesBehavioralUpdate(
+        validatedData as MemoryBehavioralUpdate
       );
       if (!entity) return context.json(entity, 400);
       return context.json(entity, 200);

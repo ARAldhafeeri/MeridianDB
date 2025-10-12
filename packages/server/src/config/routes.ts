@@ -7,6 +7,7 @@ export const BULK_ROUTE = "/bulk";
 // memories agent-admin portal split specific endpoints
 export const AGENT_SEARCH_SINGLE = "/search/single";
 export const AGENT_SEARCH_MULTI = "/search/multi";
+export const AGENT_MEMORY_BEHAVIORAL = "/behavioral";
 
 export const ENDPOINTS = {
   auth: apiBase("auth"), // login super admin

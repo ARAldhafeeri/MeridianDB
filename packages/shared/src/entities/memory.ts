@@ -27,8 +27,11 @@ export interface MemoryEpisode extends BaseEntity {
   // BEHAVIORAL FEATURES
   // Simpilfied version of behavioral focusing on
   // the impact of the memory on the success or failure
-  readonly successRate: number; // o-1 updated on behavioral log
-
+  successRate: number; // o-1 updated on behavioral log
+  // the times at which the memory was part of successful operation
+  positive: number;
+  // the time at which the memory was part of failure operation
+  negative: number;
   readonly accessLevel: AccessLevel;
   readonly stage: MemoryStage;
 }
@@ -42,6 +45,23 @@ export interface MemoryRetrievalRequest {
 
 export interface FeatureSearchResult {
   readonly query: string;
+}
+
+/**
+ * Behavioral Memory Update
+ */
+export interface MemoryBehavioralUpdate {
+  /**
+   * Boolean of true or false
+   * marks the behavioral analysis of the memory
+   * if false all the memories success rate penilities
+   * if true all the memories involved sucess rate rewarded
+   */
+  success: boolean;
+  /**
+   * Memory ids involved in the behavioral anlaysis
+   */
+  memories: string[];
 }
 
 /**

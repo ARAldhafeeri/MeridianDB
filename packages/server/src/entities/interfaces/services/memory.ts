@@ -1,4 +1,5 @@
 import {
+  MemoryBehavioralUpdate,
   MemoryEpisode,
   MemoryRetrievalRequest,
 } from "@meridiandb/shared/src/entities/memory";
@@ -55,5 +56,13 @@ export interface IMemoryService extends BaseService<MemoryEpisode> {
    */
   upsert(request: MemoryEpisode): Promise<MemoryEpisode | null>;
 
-  // multiMemoryUpsert(request: MemoryRetrievalRequest): Promise<MemoryEpisode[]>;
-}
+  /**
+   * Service for behavioral anlaysis. 
+   * When feedback received about a set memory used
+   * in semantic search or AI generation 
+   * all memories will be rewarded or penalties. 
+   * @param memoriesBehavioralUpdate 
+   */
+  async memoriesBehavioralUpdate(memoriesBehavioralUpdate: MemoryBehavioralUpdate) : Promise<boolean> {
+
+  }

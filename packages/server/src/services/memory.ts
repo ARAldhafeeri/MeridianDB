@@ -1,4 +1,5 @@
 import {
+  MemoryBehavioralUpdate,
   MemoryEpisode,
   MemoryEpisodeFilter,
   MemoryRetrievalRequest,
@@ -12,13 +13,14 @@ import { getAgentId, getAgentRequestContext, getOrgId } from "@/config/context";
 import { PaginatedResponse } from "@/entities/domain/dto";
 import { temporalQueueClient } from "@/config/queues";
 import { TemporalMessage } from "@meridiandb/shared/src/queue/entities/domain/queue";
+import { IMemoryRepository } from "@/entities/interfaces/repositories/memory";
 
 export class MemoryEpisodeService
   extends BaseServiceImpl<MemoryEpisode, MemoryEpisodeFilter>
   implements IMemoryService
 {
   constructor(
-    private memoryEpisodeRepository: MemoryEpisodeRepository,
+    private memoryEpisodeRepository: IMemoryRepository,
     private aiAdapter: AiAdapter,
     private vectorize: VectorizeRepository
   ) {
@@ -208,5 +210,13 @@ export class MemoryEpisodeService
     } catch (error) {
       return null;
     }
+  }
+
+  async memoriesBehavioralUpdate(
+    memoriesBehavioralUpdate: MemoryBehavioralUpdate
+  ): Promise<boolean> {
+    return this.memoryEpisodeRepository.behavioralUpdate(
+      memoriesBehavioralUpdate
+    );
   }
 }

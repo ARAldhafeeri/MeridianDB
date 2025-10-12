@@ -1,18 +1,21 @@
 import { DrizzleBaseRepository } from "./base";
 import { memoryEpisodes } from "@/infrastructure/d1/schema";
 import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
-import { inArray, count, eq, and, gte, or } from "drizzle-orm";
+import { inArray, count, eq, and, gte, or, sql } from "drizzle-orm";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { BaseEntity } from "@/entities/domain/base";
 import {
+  MemoryBehavioralUpdate,
   MemoryEpisode,
   MemoryEpisodeFilter,
 } from "@meridiandb/shared/src/entities/memory";
+import { getAgentRequestContext } from "@/config/context";
+import { IMemoryRepository } from "@/entities/interfaces/repositories/memory";
 
-export class MemoryEpisodeRepository extends DrizzleBaseRepository<
-  MemoryEpisode,
-  MemoryEpisodeFilter
-> {
+export class MemoryEpisodeRepository
+  extends DrizzleBaseRepository<MemoryEpisode, MemoryEpisodeFilter>
+  implements IMemoryRepository
+{
   constructor(db: D1Client) {
     super(db);
     this.db = db;
@@ -112,6 +115,89 @@ export class MemoryEpisodeRepository extends DrizzleBaseRepository<
       .where(and(...conditions));
 
     return result.results.length;
+  }
+
+  /**
+   * Return lower bound that's more reliable for ranking
+   * in passive and active learning approach for behavioral features.
+   * @param success success times of the memory
+   * @param failure failure times of the memory
+   * @param confidence successRate configuration of the agent
+   * @returns
+   */
+  private getWilsonScore(
+    success: number,
+    failure: number,
+    confidence: number = 0.95
+  ): number {
+    const total = success + failure;
+    if (total === 0) return 0;
+
+    const p = success / total;
+    const z = confidence; // 95% confidence Z-score
+
+    const denominator = 1 + (z * z) / total;
+    const center = p + (z * z) / (2 * total);
+    const spread = z * Math.sqrt((p * (1 - p) + (z * z) / (4 * total)) / total);
+
+    return Math.max(0, (center - spread) / denominator);
+  }
+
+  /**
+   * Update behavioral metrics for memories based on success/failure
+   * @param memoriesBehavioralUpdate - The behavioral update data
+   * @returns Promise<boolean> - Success status
+   */
+  async behavioralUpdate(
+    memoriesBehavioralUpdate: MemoryBehavioralUpdate
+  ): Promise<boolean> {
+    try {
+      // Single atomic update query
+      await this.db
+        .update(this.table)
+        .set({
+          positive: sql`${this.table.positive} + ${
+            memoriesBehavioralUpdate.success === true ? 1 : 0
+          }`,
+          negative: sql`${this.table.negative} + ${
+            memoriesBehavioralUpdate.success === false ? 1 : 0
+          }`,
+          updatedAt: new Date().toISOString(),
+        })
+        .where(inArray(this.table.id, memoriesBehavioralUpdate.memories));
+
+      // For successRate calculation, if it's complex (Wilson Score),
+      // you might need a second query
+      const memories = await this.find({
+        ids: memoriesBehavioralUpdate.memories,
+      });
+
+      // Batch update with case statement for better performance
+      const caseStatements = memories.data
+        .map(
+          (m) =>
+            `WHEN id = '${m.id}' THEN ${this.getWilsonScore(
+              m.positive,
+              m.negative,
+              getAgentRequestContext().successRate
+            )}`
+        )
+        .join(" ");
+
+      await this.db.run(sql`
+        UPDATE memories 
+        SET success_rate = CASE ${sql.raw(caseStatements)} END,
+            updated_at = ${new Date().toISOString()}
+        WHERE id IN (${sql.join(
+          memoriesBehavioralUpdate.memories.map((id) => sql`${id}`),
+          sql`, `
+        )})
+      `);
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async deleteMany(filter: MemoryEpisodeFilter): Promise<number> {

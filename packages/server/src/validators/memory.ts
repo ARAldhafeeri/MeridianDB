@@ -75,6 +75,15 @@ export const CreateMemoryEpisodeRequestSchema = z.object({
 });
 
 /**
+ * Memories Bheavioral update
+ */
+
+export const UpdateMemoriesBehavioralSchema = z.object({
+  status: z.boolean(),
+  memories: z.array(z.string()),
+});
+
+/**
  * Update memory episode payload schema
  */
 export const UpdateMemoryEpisodeRequestSchema = z

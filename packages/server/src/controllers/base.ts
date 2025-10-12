@@ -133,34 +133,4 @@ export abstract class BaseControllerImpl<
       return this.handleError(error as Error, context, "delete");
     }
   }
-
-  // Optional bulk operations
-  async bulkCreate(context: ControllerContext): Promise<Response> {
-    try {
-      const validatedData = (context.req.valid as any)("json");
-      const results: T[] = [];
-      const errors: { index: number; error: string }[] = [];
-
-      for (let i = 0; i < validatedData.length; i++) {
-        try {
-          const entity = await this.service.create(validatedData[i]);
-          results.push(entity);
-        } catch (error) {
-          errors.push({ index: i, error: (error as Error).message });
-        }
-      }
-
-      return context.json({
-        created: results,
-        errors: errors,
-        summary: {
-          total: validatedData.length,
-          successful: results.length,
-          failed: errors.length,
-        },
-      });
-    } catch (error) {
-      return this.handleError(error as Error, context, "bulkCreate");
-    }
-  }
 }

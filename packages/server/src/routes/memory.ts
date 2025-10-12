@@ -1,5 +1,6 @@
 import { getD1 } from "@/config/context";
 import {
+  AGENT_MEMORY_BEHAVIORAL,
   AGENT_SEARCH_MULTI,
   AGENT_SEARCH_SINGLE,
   ID_ROUTE,
@@ -15,6 +16,7 @@ import {
   CreateMemoryEpisodeRequestSchema,
   MemoryFilterSchema,
   MemoryRetrievalRequestSchema,
+  UpdateMemoriesBehavioralSchema,
 } from "@/validators/memory";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
@@ -62,6 +64,13 @@ memoryAgentRoutes.post(
 
 memoryAgentRoutes.delete(ID_ROUTE, zValidator("param", idParamSchema), (c) =>
   getMemoryController().delete(c)
+);
+
+memoryAgentRoutes.post(
+  AGENT_MEMORY_BEHAVIORAL,
+  zValidator("json", UpdateMemoriesBehavioralSchema),
+
+  (c) => getMemoryController().behavioralUpdate(c)
 );
 
 memoryAgentRoutes.post(
