@@ -1,7 +1,7 @@
 import { DrizzleBaseRepository } from "./base";
 import { memoryEpisodes } from "@/infrastructure/d1/schema";
 import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
-import { inArray, count, eq, and, gte, or, sql, SQL } from "drizzle-orm";
+import { inArray, count, eq, and, gte, or } from "drizzle-orm";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { BaseEntity } from "@/entities/domain/base";
 import {

@@ -5,7 +5,6 @@ import {
   MemoryRetrievalRequest,
 } from "@meridiandb/shared/src/entities/memory";
 import { BaseServiceImpl } from "./base";
-import { MemoryEpisodeRepository } from "@/repositories/memory";
 import AiAdapter from "@/adapters/ai";
 import VectorizeRepository from "@/repositories/vector";
 import { IMemoryService } from "@/entities/interfaces/services/memory";

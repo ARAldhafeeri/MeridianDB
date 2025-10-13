@@ -57,12 +57,14 @@ export interface IMemoryService extends BaseService<MemoryEpisode> {
   upsert(request: MemoryEpisode): Promise<MemoryEpisode | null>;
 
   /**
-   * Service for behavioral anlaysis. 
+   * Service for behavioral anlaysis.
    * When feedback received about a set memory used
-   * in semantic search or AI generation 
-   * all memories will be rewarded or penalties. 
-   * @param memoriesBehavioralUpdate 
+   * in semantic search or AI generation
+   * all memories will be rewarded or penalties.
+   * @param memoriesBehavioralUpdate
    */
-  async memoriesBehavioralUpdate(memoriesBehavioralUpdate: MemoryBehavioralUpdate) : Promise<boolean> {
-
-  }
+  memoriesBehavioralUpdate(
+    memoriesBehavioralUpdate: MemoryBehavioralUpdate
+  ): Promise<boolean>;
+  
+}

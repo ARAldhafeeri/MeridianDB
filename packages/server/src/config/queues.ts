@@ -11,15 +11,3 @@ export const temporalQueueClient = () =>
     apiKey: getQueuesEnvVariables().temporalQueueApiKey,
     maxPayloadSize: 1000,
   });
-
-/**
- * Behavioral Queue Client used in publishing behavioral
- * feature to update sucess, fail, and success rate of memories.
- *
- */
-export const behavioralQueueClient = () =>
-  getSimpleQueueClient({
-    baseUrl: getQueuesEnvVariables().behavioralQueueURL,
-    apiKey: getQueuesEnvVariables().behavioralQueueApiKey,
-    maxPayloadSize: 1000,
-  });
