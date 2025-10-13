@@ -10,6 +10,7 @@
 // import { AgentFilter, CreateAgentRequest, UpdateAgentRequest } from "./agent";
 
 import {
+  CreateMemoryEpisodeRequest,
   MemoryBehavioralUpdate,
   MemoryEpisode,
   MemoryRetrievalRequest,
@@ -38,7 +39,7 @@ export interface MeridianDBClientConfig {
  * this should replicate agent, behavior tracking, memory operation, authentication
  * services to allow
  */
-export interface MerdianDBClient {
+export interface IMerdianDBClient {
   // TODO rbac for agents, admins
   // // Agent
   // // create new agent
@@ -55,19 +56,25 @@ export interface MerdianDBClient {
 
   // Agent Memory Management
   // Core operations
-  storeEpisode(data: MemoryEpisode): Promise<ServiceResult<MemoryEpisode>>;
-  retrieveMemories(
+  storeMemory(
+    data: CreateMemoryEpisodeRequest
+  ): Promise<ServiceResult<MemoryEpisode>>;
+  /**
+   * Reterive memory for single agent
+   * @param data search query
+   */
+  retrieveMemoriesSingleAgent(
     data: MemoryRetrievalRequest
   ): Promise<ServiceResult<MemoryRetrievalRequest>>;
 
-  // Auth
   /**
-   * get refresh token based on access token which is linked
-   * to agent and/or organization
+   * Reterive memory for multi agent
+   * @param data search query
    */
-  getToken(token: string): Promise<Response>;
-
+  retrieveMemoriesMultieAgent(
+    data: MemoryRetrievalRequest
+  ): Promise<ServiceResult<MemoryRetrievalRequest>>;
   // Behavior  Tracking and agent feedback
   // Core feedback operations
-  recordFeedback(payload: MemoryBehavioralUpdate): Promise<ServiceResult<void>>;
+  recordFeedback(payload: MemoryBehavioralUpdate): Promise<boolean>;
 }

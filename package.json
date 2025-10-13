@@ -11,7 +11,7 @@
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
     "dev:temporal-queue": "npm run dev -w temporal-queue",
-    "watch": "concurrently \"npm run watch -w client\" \"npm run watch -w server\" \"npm run watch -w shared\"",
+    "watch": "concurrently \"npm run watch -w client\" \"npm run watch -w server\" \"npm run watch -w shared\" \"npm run watch -w sdk\"",
     "build": "npm run build -w @meridiandb/shared && npm run build -w client && npm run build -w server",
     "build:shared": "npm run build -w @meridiandb/shared",
     "deploy": "npm run deploy -w server",
