@@ -325,7 +325,7 @@ We recommend configuring your agent to operate in **two phases**:
 #### 1. Passive Learning Phase
 
 During this initial phase, your AI agent **should not use** temporal or behavioral features.
-This allows the system to gather sufficient interaction data before applying active filtering.
+This allows the system to gather sufficient interaction data before applying active learning filtering for both temporal and behavioral features.
 
 #### 2. Active Learning Phase
 
@@ -345,13 +345,13 @@ Activating these parameters too early may lead to **false positives**, as the sy
 
 ### Behavioral Features: Success Rate Configuration
 
-Since both Temporal and Behavioral features rely on **active learning**, we recommend starting with a **very low `successRate`** for behavioral features.
+Since both Temporal and Behavioral features rely on **active learning**, we recommend starting with a **zero based `successRate`** for behavioral features.
 This helps prevent false negatives when calculating the **Wilson score** in early agent usage.
 
-For example, if a memory has 2 failures and 1 success (3 total attempts), and you set the success rate to `0.1`:
+For example, if a memory has 2 failures and 1 success (3 total attempts), and you set the success rate to `0.0`:
 
 ```typescript
-console.log(wilsonScore(1, 2, 0.01)) // 0.33
+console.log(wilsonScore(1, 2, 0.0)) // 0.33
 ```
 
 This value ensures the memory **is not filtered out**, helping avoid false positives early on.
@@ -370,8 +370,8 @@ Now, the memory remains active, as it meets your defined success criteria.
 
 ### Temporal Features: Stability Threshold Configuration
 
-For temporal learning, start with a **small `stabilityThreshold`** (e.g., `0.01`) during the passive phase.
-This effectively disables temporal filtering until the system becomes well-trained.
+For temporal learning, start with a **small `stabilityThreshold`** (e.g., `0.0`) during the passive phase.
+This effectively disables temporal filtering until the agent data becomes well-trained.
 
 Once your agent has reached consistent usage, activate temporal learning by setting the **appropriate `stabilityThreshold`** for your environment.
 Any memory with a recency score below this threshold will then be filtered out automatically.

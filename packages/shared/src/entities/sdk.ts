@@ -7,18 +7,31 @@
  * should be refactored out as stand-alone library  in the future
  */
 
-import { AgentFilter, CreateAgentRequest, UpdateAgentRequest } from "./agent";
+// import { AgentFilter, CreateAgentRequest, UpdateAgentRequest } from "./agent";
 
-import { MemoryEpisode, MemoryRetrievalRequest } from "./memory";
+import {
+  MemoryBehavioralUpdate,
+  MemoryEpisode,
+  MemoryRetrievalRequest,
+} from "./memory";
 
 import { ServiceResult } from "./base";
 /**
  * sdk config parameters
  */
 export interface MeridianDBClientConfig {
-  // access token for authentication and authorization
-  // it holds agentId and organizationId
+  /**
+   * Access token used in refresh token flow, holds some
+   * context about the agent, note the refresh token
+   * functionality is set to handle store, retreive memories only
+   * you can't hit the admin endpoints with this
+   * use admin credentials flow.
+   */
   accessToken: string;
+  /**
+   * URL of meridianDB backend
+   */
+  url: string;
 }
 
 /**
@@ -56,5 +69,5 @@ export interface MerdianDBClient {
 
   // Behavior  Tracking and agent feedback
   // Core feedback operations
-  recordFeedback(success: boolean): Promise<ServiceResult<void>>;
+  recordFeedback(payload: MemoryBehavioralUpdate): Promise<ServiceResult<void>>;
 }
