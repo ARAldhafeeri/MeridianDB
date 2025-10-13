@@ -26,18 +26,19 @@ export interface MeridianDBClientConfig {
  * services to allow
  */
 export interface MerdianDBClient {
-  // Agent
-  // create new agent
-  create(data: CreateAgentRequest): Promise<Response>;
-  // get agent by id
-  getById(id: string): Promise<Response>;
-  // list agents
-  list(data: AgentFilter): Promise<Response>;
-  // update agent
-  update(data: UpdateAgentRequest): Promise<Response>;
-  // delete agent
-  delete(id: string): Promise<Response>;
-  // intialize agent
+  // TODO rbac for agents, admins
+  // // Agent
+  // // create new agent
+  // create(data: CreateAgentRequest): Promise<Response>;
+  // // get agent by id
+  // getById(id: string): Promise<Response>;
+  // // list agents
+  // list(data: AgentFilter): Promise<Response>;
+  // // update agent
+  // update(data: UpdateAgentRequest): Promise<Response>;
+  // // delete agent
+  // delete(id: string): Promise<Response>;
+  // // intialize agent
 
   // Agent Memory Management
   // Core operations
@@ -45,12 +46,6 @@ export interface MerdianDBClient {
   retrieveMemories(
     data: MemoryRetrievalRequest
   ): Promise<ServiceResult<MemoryRetrievalRequest>>;
-
-  // Cross-agent sharing
-  shareKnowledge(
-    sourceAgentId: string,
-    targetAgentId: string
-  ): Promise<ServiceResult<number>>;
 
   // Auth
   /**

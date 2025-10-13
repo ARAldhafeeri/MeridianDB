@@ -24,8 +24,12 @@ const authenticationMiddleWare: any = async (
     // Verify the token
     const decoded = container.accessService.verifyToken(token);
 
+    // not admin token, agent token
+    if (!decoded[AppContextKeys.ADMIN_ID]) {
+      return c.json({ message: "Can't use agent token" }, 401);
+    }
     c.set(AppContextKeys.ORG_ID, decoded[AppContextKeys.ORG_ID]);
-    c.set(AppContextKeys.AGENT_ID, decoded[AppContextKeys.AGENT_ID]);
+    c.set(AppContextKeys.ADMIN_ID, decoded[AppContextKeys.ADMIN_ID]);
 
     return await next();
   } catch (e) {
