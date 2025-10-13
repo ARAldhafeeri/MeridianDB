@@ -79,7 +79,7 @@ export const CreateMemoryEpisodeRequestSchema = z.object({
  */
 
 export const UpdateMemoriesBehavioralSchema = z.object({
-  status: z.boolean(),
+  success: z.boolean(),
   memories: z.array(z.string()),
 });
 

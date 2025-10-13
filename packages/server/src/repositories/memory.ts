@@ -1,7 +1,7 @@
 import { DrizzleBaseRepository } from "./base";
 import { memoryEpisodes } from "@/infrastructure/d1/schema";
 import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
-import { inArray, count, eq, and, gte, or, sql } from "drizzle-orm";
+import { inArray, count, eq, and, gte, or, sql, SQL } from "drizzle-orm";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { BaseEntity } from "@/entities/domain/base";
 import {
@@ -152,50 +152,49 @@ export class MemoryEpisodeRepository
     memoriesBehavioralUpdate: MemoryBehavioralUpdate
   ): Promise<boolean> {
     try {
-      // Single atomic update query
-      await this.db
-        .update(this.table)
-        .set({
-          positive: sql`${this.table.positive} + ${
-            memoriesBehavioralUpdate.success === true ? 1 : 0
-          }`,
-          negative: sql`${this.table.negative} + ${
-            memoriesBehavioralUpdate.success === false ? 1 : 0
-          }`,
-          updatedAt: new Date().toISOString(),
-        })
-        .where(inArray(this.table.id, memoriesBehavioralUpdate.memories));
-
-      // For successRate calculation, if it's complex (Wilson Score),
-      // you might need a second query
       const memories = await this.find({
         ids: memoriesBehavioralUpdate.memories,
       });
 
-      // Batch update with case statement for better performance
-      const caseStatements = memories.data
-        .map(
-          (m) =>
-            `WHEN id = '${m.id}' THEN ${this.getWilsonScore(
-              m.positive,
-              m.negative,
-              getAgentRequestContext().successRate
-            )}`
-        )
-        .join(" ");
+      if (!memories.data || memories.data.length === 0) {
+        console.debug("No memories found for behavioral update");
+        return true;
+      }
 
-      await this.db.run(sql`
-        UPDATE memories 
-        SET success_rate = CASE ${sql.raw(caseStatements)} END,
-            updated_at = ${new Date().toISOString()}
-        WHERE id IN (${sql.join(
-          memoriesBehavioralUpdate.memories.map((id) => sql`${id}`),
-          sql`, `
-        )})
-      `);
+      const timestamp = new Date().toISOString();
+      const successIncrement =
+        memoriesBehavioralUpdate.success === true ? 1 : 0;
+      const failureIncrement =
+        memoriesBehavioralUpdate.success === false ? 1 : 0;
+
+      // Prepare batch updates
+      const batchUpdates: any = memories.data.map((memory) => {
+        const newPositive = memory.positive + successIncrement;
+        const newNegative = memory.negative + failureIncrement;
+        const successRate = this.getWilsonScore(
+          newPositive,
+          newNegative,
+          getAgentRequestContext().successRate
+        );
+
+        return this.db
+          .update(this.table)
+          .set({
+            positive: newPositive,
+            negative: newNegative,
+            successRate: successRate,
+            updatedAt: timestamp,
+          })
+          .where(eq(this.table.id, memory.id));
+      });
+
+      // Execute all updates in a single batch
+      await this.db.batch(batchUpdates);
 
       return true;
-    } catch {
+    } catch (e: any) {
+      console.error("Error behavioral update", e.message);
+      console.error("Stack:", e.stack);
       return false;
     }
   }
