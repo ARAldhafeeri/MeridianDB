@@ -7,16 +7,17 @@
 
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:temporal-queue\" \"npm run dev:behavioral-queue\"",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:temporal-queue\" ",
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
     "dev:temporal-queue": "npm run dev -w temporal-queue",
-    "watch": "concurrently \"npm run watch -w client\" \"npm run watch -w server\" \"npm run watch -w shared\" \"npm run watch -w sdk\"",
+    "watch": "concurrently \"npm run watch -w client\" \"npm run watch -w server\" \"npm run watch -w shared\" \"npm run watch -w meridiandb-sdk\"",
     "build": "npm run build -w @meridiandb/shared && npm run build -w client && npm run build -w server",
     "build:shared": "npm run build -w @meridiandb/shared",
     "deploy": "npm run deploy -w server",
     "server:migrations": "npm run -w server db:generate",
-    "server:migrate:local": "npm run -w server db:migrate:local"
+    "server:migrate:local": "npm run -w server db:migrate:local",
+    "test:sdk": "npm run test -w meridiandb-sdk"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

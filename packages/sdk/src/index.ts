@@ -8,6 +8,7 @@ import {
 
 import {
   AGENT_MEMORY_BEHAVIORAL,
+  AGENT_SEARCH_MULTI,
   AGENT_SEARCH_SINGLE,
   AUTH_ENDPOINTS,
   ENDPOINTS,
@@ -38,7 +39,10 @@ class MeridianDBClient implements IMerdianDBClient {
   async retrieveMemoriesSingleAgent(
     data: MemoryRetrievalRequest
   ): Promise<ServiceResult<MemoryRetrievalRequest>> {
-    return this.postWithAccessToken(data, ENDPOINTS.memoriesAgent);
+    return this.postWithAccessToken(
+      data,
+      ENDPOINTS.memoriesAgent + AGENT_SEARCH_SINGLE
+    );
   }
 
   /**
@@ -48,7 +52,10 @@ class MeridianDBClient implements IMerdianDBClient {
   async retrieveMemoriesMultieAgent(
     data: MemoryRetrievalRequest
   ): Promise<ServiceResult<MemoryRetrievalRequest>> {
-    return this.postWithAccessToken(data, ENDPOINTS.memoriesAgent);
+    return this.postWithAccessToken(
+      data,
+      ENDPOINTS.memoriesAgent + AGENT_SEARCH_MULTI
+    );
   }
 
   /**
@@ -140,7 +147,7 @@ class MeridianDBClient implements IMerdianDBClient {
    * retrun true if it is expired, false if not
    * @param token refresh token
    */
-  private async isRefreshTokenExpired(token: string): Promise<boolean> {
+  private isRefreshTokenExpired(token: string): boolean {
     const decoded: any = jwt.decode(token);
     if (!decoded && !decoded?.exp) return true;
     const expireTime = decoded.exp * 1000;
