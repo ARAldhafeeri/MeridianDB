@@ -459,8 +459,6 @@ class ChatbotWithMemory {
 // Usage
 const chatbot = new ChatbotWithMemory("your-access-token");
 
-// Set refresh token (you'd typically get this from your auth flow)
-MeridianDBClient.setRefreshToken("your-refresh-token");
 
 // Process a user message
 chatbot.processUserMessage("user-123", "What's the weather like today?")
