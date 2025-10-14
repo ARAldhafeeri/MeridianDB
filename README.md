@@ -92,6 +92,8 @@ MeridianDB leverages queues to minimize **write-on-read** overhead when updating
 We provide a lightweight distributed queue implementation using Cloudflare Workers:
 👉 [cfw-poor-man-queue](https://github.com/ARAldhafeeri/cfw-poor-man-queue)
 
+The PMQ allow you to run MeridianDB on Cloudflare free membership, even though PMQ is well built and scalable, we do recommend using cloudflare queues. Cloudflare built their own queues with APIs we don't have access to, so they would be much more scalable. 
+
 For maximum scalability, we recommend deploying the queues as **standalone workers**. Each can handle 1000 message per miniute easily. Such limit is by "free cloudflare workers plan", we built the queue for that purpose. Beyhond that you can use Cloudflare queues, our enterprise version uses [cloudflare-queues](https://developers.cloudflare.com/queues/). MeridianDB uses two primary queues:
 
 1. **Temporal Features Queue**
