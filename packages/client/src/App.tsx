@@ -2,14 +2,15 @@ import './App.css'
 import {  Suspense } from 'react'
 
 
-import CaludePrototype from "./containers/CaludePrototype";
 import '@ant-design/v5-patch-for-react-19';
+import { RouterProvider } from 'react-router-dom';
+import MainRouter from './routes';
 
 function App() {
 
   return (
     <Suspense fallback={"..loading"}>
-      <CaludePrototype />
+      <RouterProvider router={MainRouter} />
     </Suspense>
    )
 }

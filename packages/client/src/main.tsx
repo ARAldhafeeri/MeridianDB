@@ -10,10 +10,8 @@ const queryClient = new QueryClient()
 hydrateRoot(
   document.getElementById('root') as HTMLElement,
   <React.StrictMode>
-    <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>
-    </BrowserRouter>
   </React.StrictMode>
 )
