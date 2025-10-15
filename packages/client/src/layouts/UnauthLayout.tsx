@@ -7,8 +7,8 @@ interface IUnauthLayoutProps {
 }
 export const UnauthLayout : React.FC<IUnauthLayoutProps> = ({children}) => {
   return (
-    <Layout className=''>
-    <Content className='unauthenticated-content'>
+    <Layout className='unauthenticated-layout'>
+    <Content className='content'>
      {children}
     </Content>
   </Layout>

@@ -4,7 +4,6 @@
   "type": "module",
   "workspaces": [
     "packages/*"
-
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:temporal-queue\" ",
@@ -20,10 +19,12 @@
     "test:sdk": "npm run test -w meridiandb-sdk"
   },
   "devDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.50.2",
     "concurrently": "^8.2.2",
-    "wrangler": "^3.0.0",
-    "@rollup/rollup-win32-x64-msvc": "^4.50.2"
+    "wrangler": "^3.0.0"
   },
   "dependencies": {
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "js-cookie": "^3.0.5"
   }
 }

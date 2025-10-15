@@ -1,17 +1,18 @@
 import './App.css'
-import {  Suspense } from 'react'
-
-
 import '@ant-design/v5-patch-for-react-19';
 import { RouterProvider } from 'react-router-dom';
 import MainRouter from './routes';
+import { ConfigProvider } from 'antd';
+import { THEME } from './config/theme';
 
 function App() {
 
   return (
-    <Suspense fallback={"..loading"}>
-      <RouterProvider router={MainRouter} />
-    </Suspense>
+      <>
+        <ConfigProvider theme={THEME}>
+          <RouterProvider router={MainRouter} />
+        </ConfigProvider>
+      </>
    )
 }
 

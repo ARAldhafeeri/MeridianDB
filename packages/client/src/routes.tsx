@@ -1,8 +1,9 @@
-import { createBrowserRouter, RouteObject } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { ReactNode } from "react";
 import { ROUTES } from "./config/routes";
 import { UnauthLayout } from "./layouts/UnauthLayout";
 import LoginPage from "./pages/LoginPage";
+import { Spin } from "antd";
 
 // Define types for menu items
 interface MenuItem {
@@ -51,7 +52,7 @@ const WithUnauthenticatedLayout = (Component: React.ComponentType): ReactNode =>
 };
 
 // Type-safe route creator
-const GetRoute = (path: string, element: ReactNode): RouteObject => {
+const GetRoute = (path: string, element: ReactNode): any => {
   return {
     path,
     element,

@@ -47,6 +47,8 @@ export class AuthController implements IAuthController {
         validatedData.username,
         validatedData.password
       );
+      if (!entity.token)
+        return context.json({ message: "incorrect username or password" }, 400);
       return context.json(entity, 201);
     } catch (error) {
       return this.handleError(error as Error, context, "create");
