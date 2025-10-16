@@ -5,6 +5,9 @@ export const loginRequestSchema = z.object({
   password: z.string().min(1, "Password is required").trim(),
 });
 
+export const initSuperAdminSchema = z.object({
+  token: z.string("invalid token"),
+});
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
 
 export const agentAccessAndRefreshSchema = z.object({

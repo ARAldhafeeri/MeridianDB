@@ -7,6 +7,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import {
   agentAccessAndRefreshSchema,
+  initSuperAdminSchema,
   loginRequestSchema,
 } from "@/validators/auth";
 
@@ -25,8 +26,10 @@ authRoutes.post(
 );
 
 // init super admin securly with configurable token by the user
-authRoutes.get(AUTH_ENDPOINTS.init, (c) =>
-  getAuthController().initSuperAdmin(c)
+authRoutes.post(
+  AUTH_ENDPOINTS.init,
+  zValidator("json", initSuperAdminSchema),
+  (c) => getAuthController().initSuperAdmin(c)
 );
 
 // agent refresh-token flow for client to interact with

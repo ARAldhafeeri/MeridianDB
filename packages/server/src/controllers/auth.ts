@@ -1,9 +1,15 @@
-import { AUTH_COOKIE_NAME, getDomain, getEnv } from "@/config/context";
+import {
+  AUTH_COOKIE_NAME,
+  getDomain,
+  getEnv,
+  getSuperAdminToken,
+} from "@/config/context";
 import { IAuthController } from "@/entities/interfaces/controllers/auth";
 import { ControllerContext } from "@/entities/interfaces/controllers/context";
 import {
   AgentAccessRequest,
   AuthLoginRequest,
+  InitSuperAdminRequest,
 } from "@/entities/interfaces/services/auth";
 import AuthService from "@/services/auth";
 import { setCookie } from "hono/cookie";
@@ -53,9 +59,9 @@ export class AuthController implements IAuthController {
         return context.json({ message: "incorrect username or password" }, 400);
       setCookie(context, AUTH_COOKIE_NAME, entity.token, {
         httpOnly: true,
-        secure: getEnv() === "production", 
-        sameSite: "lax", 
-        maxAge: 24 * 60 * 60, 
+        secure: getEnv() === "production",
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60,
         path: "/",
         domain: process.env.ENV === "production" ? getDomain() : "localhost",
       });
@@ -67,10 +73,26 @@ export class AuthController implements IAuthController {
 
   async initSuperAdmin(context: ControllerContext): Promise<Response> {
     try {
+      const validatedData = (context.req.valid as any)(
+        "json"
+      ) as InitSuperAdminRequest;
+
+      if (getSuperAdminToken() !== validatedData.token)
+        return context.json(
+          {
+            data: false,
+          },
+          401
+        );
+
       const adminEmail = context.env.ADMIN_EMAIL;
       const adminPassword = context.env.ADMIN_PASSWORD;
-      await this.service.initSuperAdmin(adminEmail, adminPassword);
-      return context.json(true, 201);
+      const superAdmin = await this.service.initSuperAdmin(
+        adminEmail,
+        adminPassword
+      );
+      if (!superAdmin) return context.json({ data: false }, 400);
+      return context.json({ data: true }, 201);
     } catch (error) {
       return this.handleError(error as Error, context, "create");
     }

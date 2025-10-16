@@ -30,4 +30,6 @@ export const AUTH_ENDPOINTS = {
   },
 };
 
+// auth endpoints
 export const LOGIN_ENDPOINT = ENDPOINTS.auth + AUTH_ENDPOINTS.login;
+export const INIT_SUPER_ADMIN_ENDPOINT = ENDPOINTS.auth + AUTH_ENDPOINTS.init;

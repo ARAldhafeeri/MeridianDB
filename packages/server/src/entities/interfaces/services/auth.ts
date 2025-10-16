@@ -34,6 +34,10 @@ export interface AuthLoginRequest {
   password: string;
 }
 
+export interface InitSuperAdminRequest {
+  token: string;
+}
+
 export interface AgentAccessRequest {
   token: string;
 }

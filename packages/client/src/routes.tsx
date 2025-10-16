@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { ROUTES } from "./config/routes";
 import { UnauthLayout } from "./layouts/UnauthLayout";
 import LoginPage from "./pages/LoginPage";
-import { Spin } from "antd";
+import InitSuperAdminPage from "./pages/InitSuperAdminPage";
 
 // Define types for menu items
 interface MenuItem {
@@ -62,6 +62,7 @@ const GetRoute = (path: string, element: ReactNode): any => {
 // Single route example with TypeScript
 const MainRouter : any = createBrowserRouter([
   GetRoute(ROUTES.login, WithUnauthenticatedLayout(LoginPage)),
+  GetRoute(ROUTES.init, WithUnauthenticatedLayout(InitSuperAdminPage))
 ]);
 
 export default MainRouter;

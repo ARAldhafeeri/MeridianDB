@@ -46,3 +46,14 @@
     min-width: 400px;
   }
 }
+
+.init-page {
+  .init-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    min-width: 400px;
+  }
+}
