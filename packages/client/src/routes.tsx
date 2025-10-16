@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { ROUTES } from "./config/routes";
 import { UnauthLayout } from "./layouts/UnauthLayout";
 import LoginPage from "./pages/LoginPage";
 import InitSuperAdminPage from "./pages/InitSuperAdminPage";
+import AuthenticatedLayout from "./layouts/AuthLayout";
 
 // Define types for menu items
-interface MenuItem {
+export interface MenuItem {
   key: string;
   icon: ReactNode;
   label: string;
@@ -34,15 +35,17 @@ const GetItem = (
   };
 };
 
-// Example menu item with TypeScript
-// export const dashboardItem: MenuItem = GetItem(
-//   "Dashboard",
-//   "dashboard",
-//   <></>,
-//   ROUTES.login
-// );
 
-// Layout wrapper with proper typing
+
+export const items = [
+  GetItem(
+    "Dashboard",
+    "dashboard",
+    <>dashboard</>,
+    ROUTES.login
+  ),
+]
+
 const WithUnauthenticatedLayout = (Component: React.ComponentType): ReactNode => {
   return (
     <UnauthLayout>
@@ -50,6 +53,14 @@ const WithUnauthenticatedLayout = (Component: React.ComponentType): ReactNode =>
     </UnauthLayout>
   );
 };
+
+const WithAuthLayout = (Component: React.ComponentType): ReactNode => {
+  return (
+    <AuthenticatedLayout>
+      <Component />
+    </AuthenticatedLayout>
+  )
+}
 
 // Type-safe route creator
 const GetRoute = (path: string, element: ReactNode): any => {
@@ -59,10 +70,15 @@ const GetRoute = (path: string, element: ReactNode): any => {
   };
 };
 
-// Single route example with TypeScript
+const Dash = () => {
+  return (
+    <>hello</>
+  )
+}
 const MainRouter : any = createBrowserRouter([
   GetRoute(ROUTES.login, WithUnauthenticatedLayout(LoginPage)),
-  GetRoute(ROUTES.init, WithUnauthenticatedLayout(InitSuperAdminPage))
+  GetRoute(ROUTES.init, WithUnauthenticatedLayout(InitSuperAdminPage)),
+  GetRoute(ROUTES.home, WithAuthLayout(Dash))
 ]);
 
 export default MainRouter;

@@ -22,4 +22,9 @@ export interface IAuthController {
    * validate refresh token
    */
   verifyAgentRefreshToken(context: ControllerContext): Promise<Response>;
+
+  /**
+   * Clears http-only cookie
+   */
+  logout(context: ControllerContext): Promise<Response>;
 }

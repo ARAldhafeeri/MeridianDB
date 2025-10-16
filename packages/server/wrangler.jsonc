@@ -15,7 +15,7 @@
     "EMBEDDING_MODEL": "@cf/baai/bge-base-en-v1.5",
     "TOPK": 10,
     "TEMPORAL_QUEUE_URL": "http://127.0.0.1:8020",
-    "TEMPORAL_QUEUE_API_KEY": "your-secret-api-key",
+    "TEMPORAL_QUEUE_API_KEY": "your-secret-api-key"
  
   },
   "kv_namespaces": [

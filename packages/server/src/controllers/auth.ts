@@ -12,7 +12,7 @@ import {
   InitSuperAdminRequest,
 } from "@/entities/interfaces/services/auth";
 import AuthService from "@/services/auth";
-import { setCookie } from "hono/cookie";
+import { setCookie, deleteCookie } from "hono/cookie";
 
 export class AuthController implements IAuthController {
   constructor(private service: AuthService) {}
@@ -125,6 +125,15 @@ export class AuthController implements IAuthController {
       if (!refreshToken) return context.json({ token: null }, 401);
 
       return context.json({ token: refreshToken }, 201);
+    } catch (error) {
+      return this.handleError(error as Error, context, "create");
+    }
+  }
+
+  async logout(context: ControllerContext): Promise<Response> {
+    try {
+      deleteCookie(context, AUTH_COOKIE_NAME);
+      return context.json({ data: true }, 200);
     } catch (error) {
       return this.handleError(error as Error, context, "create");
     }

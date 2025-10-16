@@ -4,6 +4,8 @@ import { LOGIN_ENDPOINT } from '../config/endpoints';
 import React, { ChangeEvent, useEffect } from 'react';
 import {api} from '../api/index';
 import { useAuthStore } from '../zustands/auth';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../config/routes';
 
 const layout = {
   labelCol: {
@@ -24,6 +26,8 @@ interface SuccessLoginResponse {
 }
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = React.useState<LoginFormData>({
     email: "",
     password: ""
@@ -31,6 +35,7 @@ export default function LoginForm() {
 
   const [messageApi, contextHolder] = message.useMessage();
  
+  const {  setUserFromToken } = useAuthStore();
 
   // Fixed mutation with proper typing
   const mutation = useMutation({
@@ -38,10 +43,9 @@ export default function LoginForm() {
       api.post(LOGIN_ENDPOINT, data),
     onSuccess : (data : any) =>{
       const res : SuccessLoginResponse = data.data;
-
-      const {  setUserFromToken } = useAuthStore();
+      console.log('data', res)
       setUserFromToken(res.token);
-
+      navigate(ROUTES.home)
     }
   });
 

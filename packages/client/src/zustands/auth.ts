@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import { jwtDecode } from "jwt-decode";
 
-// Define the user type based on your JWT payload
-interface User {
+export interface User {
   id: string;
   email: string;
   name: string;

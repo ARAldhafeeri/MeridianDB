@@ -57,3 +57,88 @@
     min-width: 400px;
   }
 }
+
+/* authenticated layout */
+
+.authenticated-layout {
+  display: flex;
+  min-height: 100vh;
+  
+  .ant-layout-sider {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .center-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+.sider {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  
+  .sider-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .menu-container {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .ant-menu {
+    border-right: none;
+  }
+
+  .profile-container {
+    .avatar {
+
+    }
+  }
+}
+
+.bottom-items {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  margin-top: auto;
+  background-color: #fff;
+}
+
+.content {
+  padding: 1rem;
+  padding-bottom: 2rem;
+  flex: 1;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.toggle-button-container {
+  position: absolute;
+  top: 6rem;
+  right: -99.5%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  z-index: 1000;
+
+
+}
+
+/* Fix for dropdown menu positioning */
+.sidebar-profile-dropdown {
+  position: fixed !important;
+}
+
+.ant-dropdown {
+  position: fixed;
+}
