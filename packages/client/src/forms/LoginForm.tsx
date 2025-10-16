@@ -3,7 +3,7 @@ import { Form, Input, Button, Spin, message, Flex } from 'antd';
 import { LOGIN_ENDPOINT } from '../config/endpoints';
 import React, { ChangeEvent, useEffect } from 'react';
 import {api} from '../api/index';
-import { setAuthToken } from '../utilts/auth';
+import { useAuthStore } from '../zustands/auth';
 
 const layout = {
   labelCol: {
@@ -38,7 +38,10 @@ export default function LoginForm() {
       api.post(LOGIN_ENDPOINT, data),
     onSuccess : (data : any) =>{
       const res : SuccessLoginResponse = data.data;
-      setAuthToken(res.token);
+
+      const {  setUserFromToken } = useAuthStore();
+      setUserFromToken(res.token);
+
     }
   });
 

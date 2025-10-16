@@ -9,7 +9,7 @@ import {
   agentAccessAndRefreshSchema,
   loginRequestSchema,
 } from "@/validators/auth";
-import superAdminMiddleware from "@/middleware/superAdminMiddleware";
+
 const authRoutes = new Hono();
 
 const getAuthController = () => {
@@ -25,7 +25,7 @@ authRoutes.post(
 );
 
 // init super admin securly with configurable token by the user
-authRoutes.get(AUTH_ENDPOINTS.init, superAdminMiddleware, (c) =>
+authRoutes.get(AUTH_ENDPOINTS.init, (c) =>
   getAuthController().initSuperAdmin(c)
 );
 

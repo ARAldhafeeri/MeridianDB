@@ -3,4 +3,5 @@ export const ROUTES = {
   memories: "/memories",
   settings: "/settings",
   login: "/login",
+  home: "/",
 };

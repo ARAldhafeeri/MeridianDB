@@ -21,6 +21,10 @@ export type Env = {
     // queues
     TEMPORAL_QUEUE_URL: string;
     TEMPORAL_QUEUE_API_KEY: string;
+    // env
+    readonly ENV: string;
+    // domain
+    readonly DOMAIN: string;
   };
   Variables: {
     AGENT_ID: string;
@@ -71,8 +75,8 @@ export const getStaticContent = () => {
   return getContext<Env>().env.__STATIC_CONTENT;
 };
 
-export const getEnv = (): Env["Bindings"] => {
-  return getContext<Env>().env;
+export const getEnv = (): string => {
+  return getContext<Env>().env.ENV;
 };
 
 // jwt
@@ -122,3 +126,11 @@ export const getQueuesEnvVariables = (): QueuesEnvVars => {
     temporalQueueApiKey: context.TEMPORAL_QUEUE_API_KEY,
   };
 };
+
+// domain
+export const getDomain = (): string => {
+  return getContext<Env>().env.DOMAIN;
+};
+
+// cookies
+export const AUTH_COOKIE_NAME = "auth-cookie";

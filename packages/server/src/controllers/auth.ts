@@ -1,3 +1,4 @@
+import { AUTH_COOKIE_NAME, getDomain, getEnv } from "@/config/context";
 import { IAuthController } from "@/entities/interfaces/controllers/auth";
 import { ControllerContext } from "@/entities/interfaces/controllers/context";
 import {
@@ -5,6 +6,7 @@ import {
   AuthLoginRequest,
 } from "@/entities/interfaces/services/auth";
 import AuthService from "@/services/auth";
+import { setCookie } from "hono/cookie";
 
 export class AuthController implements IAuthController {
   constructor(private service: AuthService) {}
@@ -49,6 +51,14 @@ export class AuthController implements IAuthController {
       );
       if (!entity.token)
         return context.json({ message: "incorrect username or password" }, 400);
+      setCookie(context, AUTH_COOKIE_NAME, entity.token, {
+        httpOnly: true,
+        secure: getEnv() === "production", 
+        sameSite: "lax", 
+        maxAge: 24 * 60 * 60, 
+        path: "/",
+        domain: process.env.ENV === "production" ? getDomain() : "localhost",
+      });
       return context.json(entity, 201);
     } catch (error) {
       return this.handleError(error as Error, context, "create");
