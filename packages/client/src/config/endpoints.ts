@@ -9,7 +9,9 @@ const apiBase = (path: string) => `/api/${path}`;
 // const AGENT_SEARCH_MULTI = "/search/multi";
 // const AGENT_MEMORY_BEHAVIORAL = "/behavioral";
 
-const ENDPOINTS = {
+const withId = (id: string, base: string) => `${base}/${id}`;
+
+export const ENDPOINTS = {
   auth: apiBase("auth"), // login super admin
   init: apiBase("init"), // init schema or get status of initialized schema
   health: apiBase("health"), // health status
@@ -35,3 +37,6 @@ export const AUTH_ENDPOINTS = {
 export const LOGIN_ENDPOINT = ENDPOINTS.auth + AUTH_ENDPOINTS.login;
 export const INIT_SUPER_ADMIN_ENDPOINT = ENDPOINTS.auth + AUTH_ENDPOINTS.init;
 export const LOGOUT_ENDPOINT = ENDPOINTS.auth + AUTH_ENDPOINTS.logout;
+
+// orgs
+export const UPDATE_ORG_ENDPOINT = (id: string) => withId(id, ENDPOINTS.orgs);

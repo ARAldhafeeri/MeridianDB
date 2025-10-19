@@ -34,7 +34,11 @@ const useAuthenticatedLayout = () => {
     navigate("/login");
   };
 
-  useEffect(() => {}, [collapsed, user]);
+  useEffect(() => {
+    if(!user){
+      navigate("/login");
+    }
+  }, [collapsed, user]);
 
   return {
     auth: user,

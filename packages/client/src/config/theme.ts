@@ -1,24 +1,25 @@
 export const THEME = {
   token: {
-    // Base Colors - Professional Blue
-    colorPrimary: "#2563eb", // Vibrant blue
-    colorSecondary: "#7c3aed", // Purple accent
-    colorSuccess: "#059669", // Emerald green
-    colorWarning: "#d97706", // Amber
-    colorError: "#dc2626", // Red
-    colorInfo: "#0369a1", // Sky blue
+    // Base Colors
+    colorPrimary: "#222831", // Primary color
+    colorSecondary: "#A1D6B2", // Secondary/accent color
+    colorSuccess: "#52c41a", // Success state color
+    colorWarning: "#faad14", // Warning state color
+    colorError: "#f5222d", // Error state color
+    colorInfo: "#1677ff", // Info state color
 
     // Text Colors
-    colorTextBase: "#1e293b",
-    colorTextSecondary: "#475569",
-    colorTextTertiary: "#94a3b8",
-    colorTextPlaceholder: "#cbd5e1",
+    colorTextBase: "#222831", // Default text color
+    colorTextSecondary: "#595959", // Secondary text color
+    colorTextTertiary: "#8c8c8c", // Tertiary text color
+    colorTextPlaceholder: "#bfbfbf",
 
     // Background Colors
-    colorBgBase: "#ffffff",
-    colorBgContainer: "#f8fafc",
-    colorBgElevated: "#ffffff",
-    colorBgLayout: "#f1f5f9",
+    colorBgBase: "#fff", // Base background color
+    colorBgContainer: "#ffffff", // Container background
+    colorBgElevated: "#f5f5f5", // Elevated component background
+    colorBgLayout: "#f0f2f5", // Layout background
+
     // Border Colors
     colorBorder: "#222831", // Default border color
     colorBorderSecondary: "#f0f0f0", // Secondary border
@@ -28,11 +29,6 @@ export const THEME = {
     fontSize: 14, // Base font size
 
     // Heading Sizes
-    fontSizeHeading1: 2.12,
-    fontSizeHeading2: 1.875,
-    fontSizeHeading3: 1.5,
-    fontSizeHeading4: 1.25,
-    fontSizeHeading5: 1,
 
     // Font Weights
     fontWeightRegular: 400,

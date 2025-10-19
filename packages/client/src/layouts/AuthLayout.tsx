@@ -3,21 +3,20 @@ import  React, { useContext } from "react";
 import useAuthenticatedLayout from "../hooks/authenticatedLayout";
 import { items } from "../routes";
 import { Layout, Menu, Tooltip } from "antd";
-import { Navigate } from "react-router-dom";
 import RoutesMenuItems from "../commons/MenuItems";
 import BreadCrumbs from "../commons/BreadCrumbs";
 import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
-import { ROUTES } from "../config/routes";
+
 import { MessageContext } from "../contexts/MessageContext";
 import Footer from "../presentational/Footer"
 const { Content, Sider } = Layout;
+
 interface IAuthLayoutProps {
   children: React.ReactElement
 }
 
 const AuthenticatedLayout : React.FC<IAuthLayoutProps> = ({ children  }) => {
   const {
-    auth,
     collapsed,
     current,
     onToggleSideBar,
@@ -28,9 +27,7 @@ const AuthenticatedLayout : React.FC<IAuthLayoutProps> = ({ children  }) => {
 
   const context = useContext(MessageContext);
 
-  if (!auth) {
-    return <Navigate to={ROUTES.login} />;
-  }
+ 
 
   return (
     <Layout className="authenticated-layout">

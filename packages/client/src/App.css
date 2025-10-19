@@ -84,26 +84,7 @@
   flex-direction: column;
   height: 100vh;
   
-  .sider-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  
-  .menu-container {
-    flex: 1;
-    overflow-y: auto;
-  }
 
-  .ant-menu {
-    border-right: none;
-  }
-
-  .profile-container {
-    .avatar {
-
-    }
-  }
 }
 
 .bottom-items {
@@ -146,7 +127,6 @@
 /* Footer */
 
 .pg-footer {
-  background-color: $white-color; 
   color: #ffffff;
   padding: 10px 0;
   text-align: center;
@@ -169,7 +149,6 @@
 }
 
 .footer a, .footer .ant-typography {
-  color: $secondary-color;
   text-decoration: none;
   margin: 0 5px;
 }

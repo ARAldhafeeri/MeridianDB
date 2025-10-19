@@ -5,7 +5,9 @@ import { UnauthLayout } from "./layouts/UnauthLayout";
 import LoginPage from "./pages/LoginPage";
 import InitSuperAdminPage from "./pages/InitSuperAdminPage";
 import AuthenticatedLayout from "./layouts/AuthLayout";
-import { AiFillPieChart } from "react-icons/ai";
+import {  AiOutlineSetting } from "react-icons/ai";
+import HomePage from "./pages/HomePage";
+import SettingsPage from "./pages/SettingsPage";
 
 // Define types for menu items
 export interface MenuItem {
@@ -37,18 +39,13 @@ const GetItem = (
 };
 
 
-const Dash = () => {
-  return (
-    <>hello</>
-  )
-}
 
 export const items = [
   GetItem(
-    "Dashboard",
-    "dashboard",
-    <AiFillPieChart />,
-    ROUTES.login
+    "Settings",
+    "settings",
+    <AiOutlineSetting />,
+    ROUTES.settings
   ),
 ]
 
@@ -80,7 +77,8 @@ const GetRoute = (path: string, element: React.ReactNode): any => {
 const MainRouter : any = createBrowserRouter([
   GetRoute(ROUTES.login, WithUnauthenticatedLayout(LoginPage)),
   GetRoute(ROUTES.init, WithUnauthenticatedLayout(InitSuperAdminPage)),
-  GetRoute(ROUTES.home, WithAuthLayout(Dash))
+  GetRoute(ROUTES.home, WithAuthLayout(HomePage)),
+  GetRoute(ROUTES.settings, WithAuthLayout(SettingsPage))
 ]);
 
 export default MainRouter;
