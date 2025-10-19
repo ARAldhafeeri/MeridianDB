@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { jwtDecode } from "jwt-decode";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface User {
   id: string;
@@ -15,17 +16,24 @@ interface AuthState {
   setUserFromToken: (token: string) => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  setUser: (user: User | null) => set({ user }),
-  clearUser: () => set({ user: null }),
-  setUserFromToken: (token: string) => {
-    try {
-      const decodedUser = jwtDecode<User>(token);
-      set({ user: decodedUser });
-    } catch (error) {
-      console.error("Invalid token:", error);
-      set({ user: null });
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (user: User | null) => set({ user }),
+      clearUser: () => set({ user: null }),
+      setUserFromToken: (token: string) => {
+        try {
+          const decodedUser = jwtDecode<User>(token);
+          set({ user: decodedUser });
+        } catch (error) {
+          set({ user: null });
+        }
+      },
+    }),
+    {
+      name: "auth-storage",
+      storage: createJSONStorage(() => sessionStorage),
     }
-  },
-}));
+  )
+);
