@@ -9,7 +9,7 @@ import BreadCrumbs from "../commons/BreadCrumbs";
 import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 import { ROUTES } from "../config/routes";
 import { MessageContext } from "../contexts/MessageContext";
-
+import Footer from "../presentational/Footer"
 const { Content, Sider } = Layout;
 interface IAuthLayoutProps {
   children: React.ReactElement
@@ -72,6 +72,7 @@ const AuthenticatedLayout : React.FC<IAuthLayoutProps> = ({ children  }) => {
           <BreadCrumbs />
           {context?.messageContextHolder}
           {children}
+          <Footer />
         </Content>
       </Layout>
     </Layout>
