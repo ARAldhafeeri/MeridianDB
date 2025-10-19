@@ -1,16 +1,16 @@
+import React, {createContext} from "react";
 import { message } from "antd";
-import { createContext, ReactNode } from "react";
 
 interface MessageContextType {
   onInfoMessage: (message: string) => void;
   onErrorMessage: (message: string) => void;
-  messageContextHolder: ReactNode;
+  messageContextHolder: React.ReactNode;
 }
 
 export const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
 interface MessageContextProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const MessageContextProvider = ({ children }: MessageContextProviderProps) => {

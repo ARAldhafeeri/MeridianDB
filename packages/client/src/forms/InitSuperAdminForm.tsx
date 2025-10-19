@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { Form, Input, Button, Spin, message, Flex } from 'antd';
-import { INIT_SUPER_ADMIN_ENDPOINT, LOGIN_ENDPOINT } from '../config/endpoints';
-import React, { ChangeEvent, useEffect } from 'react';
+import { INIT_SUPER_ADMIN_ENDPOINT } from '../config/endpoints';
+import React, { useEffect } from 'react';
 import {api} from '../api/index';
-import { useAuthStore } from '../zustands/auth';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../config/routes';
 
@@ -49,7 +48,7 @@ export default function InitSuperAdminForm() {
     }
   }, [mutation.isError])
   
-  const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setFormData({
       ...formData,

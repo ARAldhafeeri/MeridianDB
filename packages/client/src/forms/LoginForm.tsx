@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { Form, Input, Button, Spin, message, Flex } from 'antd';
 import { LOGIN_ENDPOINT } from '../config/endpoints';
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {api} from '../api/index';
 import { useAuthStore } from '../zustands/auth';
 import { useNavigate } from 'react-router-dom';
@@ -55,7 +55,7 @@ export default function LoginForm() {
     }
   }, [mutation.isError])
   
-  const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setFormData({
       ...formData,

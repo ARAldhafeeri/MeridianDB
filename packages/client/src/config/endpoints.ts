@@ -1,13 +1,13 @@
 const apiBase = (path: string) => `/api/${path}`;
 
-const ROOT_ROUTE = "/";
-const ID_ROUTE = "/:id";
-const BULK_ROUTE = "/bulk";
+// const ROOT_ROUTE = "/";
+// const ID_ROUTE = "/:id";
+// const BULK_ROUTE = "/bulk";
 
-// memories agent-admin portal split specific endpoints
-const AGENT_SEARCH_SINGLE = "/search/single";
-const AGENT_SEARCH_MULTI = "/search/multi";
-const AGENT_MEMORY_BEHAVIORAL = "/behavioral";
+// // memories agent-admin portal split specific endpoints
+// const AGENT_SEARCH_SINGLE = "/search/single";
+// const AGENT_SEARCH_MULTI = "/search/multi";
+// const AGENT_MEMORY_BEHAVIORAL = "/behavioral";
 
 const ENDPOINTS = {
   auth: apiBase("auth"), // login super admin
