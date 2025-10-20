@@ -44,8 +44,12 @@ export const renderActionMenu = <T extends BaseItem>({
         <Popconfirm
           title="Are you sure you want to delete this item?"
           onConfirm={() => onDelete(item.id)}
+          okText="Yes"
+          cancelText="No"
         >
-          <DeleteOutlined /> Delete
+          <span>
+            <DeleteOutlined /> Delete
+          </span>
         </Popconfirm>
       ),
     },
@@ -77,6 +81,7 @@ export const GlobalListView = <T extends BaseItem>({
                 key="actions"
                 overlay={renderActionMenu({ item, onEdit, onDelete })}
                 trigger={["click"]}
+                placement="bottomRight"
               >
                 <Button className="btn" icon={<MoreOutlined />} />
               </Dropdown>,
@@ -93,6 +98,11 @@ export const GlobalListView = <T extends BaseItem>({
         pageSize={pageSize}
         onChange={onPageChange}
         defaultPageSize={pageSize}
+        showSizeChanger
+        showQuickJumper
+        showTotal={(total, range) => 
+          `${range[0]}-${range[1]} of ${total} items`
+        }
       />
     </>
   );

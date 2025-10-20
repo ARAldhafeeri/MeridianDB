@@ -8,7 +8,7 @@ import AuthenticatedLayout from "./layouts/AuthLayout";
 import {  AiFillRobot, AiOutlineSetting } from "react-icons/ai";
 import HomePage from "./pages/HomePage";
 import SettingsPage from "./pages/SettingsPage";
-import AgentContainer from "./containers/AgentContainer";
+import AgentContainer from "./containers/Agent/AgentContainer";
 
 // Define types for menu items
 export interface MenuItem {
