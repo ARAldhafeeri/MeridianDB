@@ -5,9 +5,10 @@ import { UnauthLayout } from "./layouts/UnauthLayout";
 import LoginPage from "./pages/LoginPage";
 import InitSuperAdminPage from "./pages/InitSuperAdminPage";
 import AuthenticatedLayout from "./layouts/AuthLayout";
-import {  AiOutlineSetting } from "react-icons/ai";
+import {  AiFillRobot, AiOutlineSetting } from "react-icons/ai";
 import HomePage from "./pages/HomePage";
 import SettingsPage from "./pages/SettingsPage";
+import AgentContainer from "./containers/AgentContainer";
 
 // Define types for menu items
 export interface MenuItem {
@@ -47,6 +48,7 @@ export const items = [
     <AiOutlineSetting />,
     ROUTES.settings
   ),
+  GetItem("Agents", "agents", <AiFillRobot />, ROUTES.agents)
 ]
 
 const WithUnauthenticatedLayout = (Component: React.ComponentType): React.ReactNode => {
@@ -78,7 +80,8 @@ const MainRouter : any = createBrowserRouter([
   GetRoute(ROUTES.login, WithUnauthenticatedLayout(LoginPage)),
   GetRoute(ROUTES.init, WithUnauthenticatedLayout(InitSuperAdminPage)),
   GetRoute(ROUTES.home, WithAuthLayout(HomePage)),
-  GetRoute(ROUTES.settings, WithAuthLayout(SettingsPage))
+  GetRoute(ROUTES.settings, WithAuthLayout(SettingsPage)),
+  GetRoute(ROUTES.agents, WithAuthLayout(AgentContainer))
 ]);
 
 export default MainRouter;

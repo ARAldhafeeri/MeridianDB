@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Form, Input, Button, Spin, message, Flex } from 'antd';
 import { ENDPOINTS, UPDATE_ORG_ENDPOINT } from '../config/endpoints';
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import { api } from '../api/index';
 
 const layout = {
