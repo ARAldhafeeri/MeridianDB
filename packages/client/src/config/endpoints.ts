@@ -47,3 +47,6 @@ export const UPDATE_ORG_ENDPOINT = (id: string) => withId(id, ENDPOINTS.orgs);
 // agents
 export const FETCH_AGENTS = (page: number, limit: number) =>
   withPagination(page, limit, ENDPOINTS.agents);
+
+export const UPDATE_AGENT_ENDPOINT = (id: string) =>
+  withId(id, ENDPOINTS.agents);

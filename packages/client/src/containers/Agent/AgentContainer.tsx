@@ -1,17 +1,20 @@
 // AgentContainer.tsx
 import GlobalSearchInput from "../../commons/GlobalSearchInput";
 import { GlobalListView } from "../../commons/GlobalListView";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Space, Button, Spin, Flex } from "antd";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { mockAgents } from "./MockData";
 import { renderAgentItem } from "./RenderAgentItem";
 import type { Agent } from "@meridiandb/shared/src/entities/agent";
 import { useBreadCrumbs } from "../../zustands/breadcrumb";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "../../api";
 import {  FETCH_AGENTS } from "../../config/endpoints";
 import { usePagination } from "../../hooks/usePagination";
+import { ModalContext } from "../../contexts/ModalContext";
+import AgentForm from "../../forms/AgentForm";
+import { AGENT_FETCH_QUERY_KEY } from "../../config/queries";
 
 
 
@@ -40,13 +43,11 @@ export default function AgentContainer() {
     onPageChange(1);
   };
 
-  // Handle edit agent (mock function)
-  const onEdit = (agent: typeof mockAgents[0]) => {
-    console.log("Editing agent:", agent);
-    // Implement edit logic here
-  };
+  // Handle delete agent 
+  // TODO mutation
+  const deleteMutation = useMutation({
 
-  // Handle delete agent (mock function)
+  })
   const onDelete = (agentId: string) => {
     console.log("Deleting agent with ID:", agentId);
     // Implement delete logic here
@@ -54,7 +55,7 @@ export default function AgentContainer() {
 
   // fetch agents
   const { data: agentsData, isLoading: isAgentFetchLoading, isSuccess: isAgentFetchSuccess }   = useQuery({
-    queryKey: ["agents-query"],
+    queryKey: [AGENT_FETCH_QUERY_KEY],
     queryFn: () => api.get(FETCH_AGENTS(pagination.page, pagination.limit))
   })
 
@@ -76,12 +77,44 @@ export default function AgentContainer() {
     );
   }
 
+  // modal context 
+  const modalContext = useContext(ModalContext);
 
+  if (!modalContext) {
+    throw new Error("ModalContext must be used within a ModalContextProvider");
+  }
+
+  const { openModal }  = modalContext;
+
+  const onShowCreateAgentForm = () => {
+    openModal({
+      title: "Create New Agent",
+      content: <AgentForm mode={"create"}  />,
+      width: 600,
+      onOk: () => {
+        console.log("Form submitted");
+        // Handle form submission
+      },
+    });
+  };
+
+
+  const onUpdateAgentForm = () => {
+    openModal({
+      title: "Create New Agent",
+      content: <AgentForm mode={"create"}  />,
+      width: 600,
+      onOk: () => {
+        console.log("Form submitted");
+        // Handle form submission
+      },
+    });
+  };
   
   return (
     <Space direction="vertical" style={{ width: '100%' }} size="large">
       <Space direction="horizontal">
-         <Button><AiFillPlusCircle/></Button>
+         <Button onClick={() => onShowCreateAgentForm()}><AiFillPlusCircle/></Button>
       <GlobalSearchInput 
         name="Agent" 
         searchValue={searchValue} 
@@ -95,7 +128,7 @@ export default function AgentContainer() {
         total={agents.length}
         pageSize={pagination.page}
         onPageChange={onPageChange}
-        onEdit={onEdit as any}
+        onEdit={onUpdateAgentForm as any}
         onDelete={onDelete}
         getItem={renderAgentItem}
       />

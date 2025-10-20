@@ -9,6 +9,7 @@ import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 
 import { MessageContext } from "../contexts/MessageContext";
 import Footer from "../presentational/Footer"
+import { ModalContextProvider } from "../contexts/ModalContext";
 const { Content, Sider } = Layout;
 
 interface IAuthLayoutProps {
@@ -68,7 +69,9 @@ const AuthenticatedLayout : React.FC<IAuthLayoutProps> = ({ children  }) => {
         <Content className="content">
           <BreadCrumbs />
           {context?.messageContextHolder}
-          {children}
+          <ModalContextProvider>
+            {children}
+          </ModalContextProvider>
           <Footer />
         </Content>
       </Layout>
