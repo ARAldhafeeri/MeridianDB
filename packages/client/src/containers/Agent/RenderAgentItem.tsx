@@ -11,8 +11,6 @@ export const renderAgentItem = (agent: Agent) => (
       column={{ xs: 1, sm: 2, md: 3 }}
       size="small"
       layout="vertical"
-      labelStyle={{ fontWeight: 'bold', fontSize: '12px' }}
-      contentStyle={{ fontSize: '12px' }}
     >
       {/* First Row: Basic Info */}
       <Descriptions.Item label="Agent Name" span={1}>
@@ -29,7 +27,7 @@ export const renderAgentItem = (agent: Agent) => (
       </Descriptions.Item>
 
       <Descriptions.Item label="Organization">
-        <Tag color="orange">{agent.organizationId}</Tag>
+        <Tag color="orange">{agent.organizationId?.substring(0, 20) + "..."}</Tag>
       </Descriptions.Item>
 
       {/* Second Row: Performance Metrics */}

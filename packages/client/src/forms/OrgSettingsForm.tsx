@@ -73,7 +73,7 @@ export default function OrgSettingsForm() {
 
   if (isLoading) {
     return (
-      <Flex justify='center'>
+      <Flex justify='center' align='center' >
         <Spin size="large" />
       </Flex>
     );

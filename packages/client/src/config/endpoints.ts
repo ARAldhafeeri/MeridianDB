@@ -9,7 +9,10 @@ const apiBase = (path: string) => `/api/${path}`;
 // const AGENT_SEARCH_MULTI = "/search/multi";
 // const AGENT_MEMORY_BEHAVIORAL = "/behavioral";
 
+// reuseable
 const withId = (id: string, base: string) => `${base}/${id}`;
+const withPagination = (page: number, limit: number, base: string) =>
+  `${base}?page=${page}&limit=${limit}`;
 
 export const ENDPOINTS = {
   auth: apiBase("auth"), // login super admin
@@ -40,3 +43,7 @@ export const LOGOUT_ENDPOINT = ENDPOINTS.auth + AUTH_ENDPOINTS.logout;
 
 // orgs
 export const UPDATE_ORG_ENDPOINT = (id: string) => withId(id, ENDPOINTS.orgs);
+
+// agents
+export const FETCH_AGENTS = (page: number, limit: number) =>
+  withPagination(page, limit, ENDPOINTS.agents);
