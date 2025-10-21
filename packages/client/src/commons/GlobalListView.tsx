@@ -68,6 +68,7 @@ export const GlobalListView = <T extends BaseItem>({
   onDelete,
   getItem,
 }: GlobalListViewProps<T>): React.ReactElement => {
+  console.log("pagination", page, pageSize)
   return (
     <>
       <List

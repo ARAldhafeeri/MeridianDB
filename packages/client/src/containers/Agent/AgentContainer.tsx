@@ -49,9 +49,9 @@ export default function AgentContainer() {
       </Space>
       <GlobalListView<Agent>
         data={agents as any}
-        page={pagination.limit}
+        page={pagination.page}
         total={agents.length}
-        pageSize={pagination.page}
+        pageSize={pagination.limit}
         onPageChange={onPageChange}
         onEdit={onUpdateAgentForm as any}
         onDelete={onDelete}
