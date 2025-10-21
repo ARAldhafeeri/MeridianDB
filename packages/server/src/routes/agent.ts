@@ -6,10 +6,9 @@ import { createContainer } from "@/infrastructure/d1/container";
 import authenticationMiddleWare from "@/middleware/authentication";
 import {
   UpdateAgentRequestSchema,
-  AgentFilterSchema,
   CreateAgentRequestSchema,
 } from "@/validators/agent";
-import { idParamSchema } from "@/validators/global";
+import { idParamSchema, paginationSchema } from "@/validators/global";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 
@@ -23,7 +22,7 @@ const getAgentController = (): AgentController => {
 // Auth middleware
 agentRoutes.use(authenticationMiddleWare);
 
-agentRoutes.get(ROOT_ROUTE, zValidator("query", AgentFilterSchema), (c) =>
+agentRoutes.get(ROOT_ROUTE, zValidator("query", paginationSchema), (c) =>
   getAgentController().list(c)
 );
 

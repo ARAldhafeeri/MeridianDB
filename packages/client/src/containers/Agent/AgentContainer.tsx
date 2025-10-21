@@ -11,21 +11,22 @@ import { useAgent } from "../../hooks/useAgent";
 
 export default function AgentContainer() {
   const {
-        // form
-        onUpdateAgentForm,
-        onShowCreateAgentForm,
-        // query 
-        agents, 
-        isAgentFetchLoading,
-        // search
-        searchValue,
-        onSearchChange,
-        onResetSearch,
-        // other actions
-        onDelete,
-        // pagination
-        pagination,
-        onPageChange, 
+    // form
+    onUpdateAgentForm,
+    onShowCreateAgentForm,
+    // query 
+    agents, 
+    total,
+    isAgentFetchLoading,
+    // search
+    searchValue,
+    onSearchChange,
+    onResetSearch,
+    // other actions
+    onDelete,
+    // pagination
+    pagination,
+    onPageChange, 
   } = useAgent();
 
   if (isAgentFetchLoading) {
@@ -50,7 +51,7 @@ export default function AgentContainer() {
       <GlobalListView<Agent>
         data={agents as any}
         page={pagination.page}
-        total={agents.length}
+        total={total}
         pageSize={pagination.limit}
         onPageChange={onPageChange}
         onEdit={onUpdateAgentForm as any}

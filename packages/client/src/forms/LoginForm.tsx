@@ -43,7 +43,6 @@ export default function LoginForm() {
       api.post(LOGIN_ENDPOINT, data),
     onSuccess : (data : any) =>{
       const res : SuccessLoginResponse = data.data;
-      console.log('data', res)
       setUserFromToken(res.token);
       navigate(ROUTES.home)
     }

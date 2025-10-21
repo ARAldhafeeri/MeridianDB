@@ -75,11 +75,10 @@ export const useAgentForm = (agent : Agent | undefined, mode: string) : IUseAgen
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [AGENT_FETCH_QUERY_KEY] });
       messageApi.success('Agent created successfully!');
       form.resetFields();
       closeModal();
-
+      queryClient.invalidateQueries({ queryKey: [AGENT_FETCH_QUERY_KEY] });
     },
     onError: () => {
       messageApi.error('Failed to create agent!');
@@ -148,7 +147,6 @@ export const useAgentForm = (agent : Agent | undefined, mode: string) : IUseAgen
   };
 
   const onFormSubmitFailed = (errorInfo: any) => {
-    console.log('Form submission failed:', errorInfo);
     messageApi.error('Please check the form for errors!');
   };
 

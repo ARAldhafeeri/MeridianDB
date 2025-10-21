@@ -1,5 +1,5 @@
 import { useBreadCrumbs } from "../zustands/breadcrumb";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../api";
 import {  FETCH_AGENTS } from "../config/endpoints";
 import { usePagination } from "../hooks/usePagination";
@@ -14,12 +14,12 @@ import type  { Agent } from "@meridiandb/shared/src/entities/agent";
 export const useAgent = () => {
    // update breadcrumps 
    const {setExtra} = useBreadCrumbs();
+   // query client 
+   const queryClient = useQueryClient();
+
    // pagination 
-   const {pagination, onPageChange} = usePagination();
+   const {pagination, onPageChange : paginationOnPageChange } = usePagination();
    const [searchValue, setSearchValue] = useState("");
- 
- 
-   const [agents, setAgents] = useState<Agent[]>([])
  
  
    // Handle search input change
@@ -33,6 +33,13 @@ export const useAgent = () => {
      setSearchValue("");
      onPageChange(1);
    };
+
+   // custom on page change 
+   const onPageChange = (page: number) => {
+    paginationOnPageChange(page);
+    queryClient.invalidateQueries({queryKey: [AGENT_FETCH_QUERY_KEY, page]})
+
+   }
  
    // Handle delete agent 
    // TODO mutation
@@ -41,25 +48,23 @@ export const useAgent = () => {
    })
 
    const onDelete = (agentId: string) => {
-     console.log("Deleting agent with ID:", agentId);
      // Implement delete logic here
    };
  
    // fetch agents
-   const { data: agentsData, isLoading: isAgentFetchLoading, isSuccess: isAgentFetchSuccess }   = useQuery({
-     queryKey: [AGENT_FETCH_QUERY_KEY],
+   const { data: agentsData, isLoading: isAgentFetchLoading, isSuccess: isAgentFetchSuccess }   = useQuery<{data: {data: Agent[], pagination: {limit: number, page: number, total: number}}}>({
+     queryKey: [AGENT_FETCH_QUERY_KEY,  pagination.page, pagination.limit, searchValue],
      queryFn: () => api.get(FETCH_AGENTS(pagination.page, pagination.limit))
    })
  
  
- 
+   const agents = agentsData?.data?.data ?? [];
+   const total = agentsData?.data.pagination?.total ?? 0;
+
    // setExtra 
    useEffect( () => {
      setExtra(["agents"])
-     if(isAgentFetchSuccess){
-       setAgents(agentsData.data.data)
-     }
-   }, [isAgentFetchSuccess])
+   }, [])
  
    
  
@@ -78,7 +83,6 @@ export const useAgent = () => {
        content: <AgentForm mode={"create"}  />,
        width: 600,
        onOk: () => {
-         console.log("Form submitted");
          // Handle form submission
        },
      });
@@ -91,7 +95,6 @@ export const useAgent = () => {
        content: <AgentForm mode={"create"}  />,
        width: 600,
        onOk: () => {
-         console.log("Form submitted");
          // Handle form submission
        },
      });
@@ -103,6 +106,7 @@ export const useAgent = () => {
     onShowCreateAgentForm,
     // query 
     agents, 
+    total,
     isAgentFetchLoading,
     // search
     searchValue,
