@@ -1,7 +1,7 @@
 import { useBreadCrumbs } from "../zustands/breadcrumb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../api";
-import {  FETCH_AGENTS } from "../config/endpoints";
+import {  DELETE_AGENT_ENDPOINT, FETCH_AGENTS } from "../config/endpoints";
 import { usePagination } from "../hooks/usePagination";
 import { ModalContext } from "../contexts/ModalContext";
 import { AGENT_FETCH_QUERY_KEY } from "../config/queries";
@@ -9,6 +9,7 @@ import { useState, useEffect, useContext } from "react";
 import type  { Agent } from "@meridiandb/shared/src/entities/agent";
 import { CreateAgentForm } from "../forms/Agent/CreateAgentForm";
 import { UpdateAgentForm } from "../forms/Agent/UpdateAgentForm";
+import { message } from "antd";
 
 
 
@@ -17,6 +18,8 @@ export const useAgent = ()  => {
    const {setExtra} = useBreadCrumbs();
    // query client 
    const queryClient = useQueryClient();
+    // at design message :
+    const [messageApi, contextHolder] = message.useMessage();
 
    // pagination 
    const {pagination, onPageChange : paginationOnPageChange } = usePagination();
@@ -44,13 +47,17 @@ export const useAgent = ()  => {
    }
  
    // Handle delete agent 
-   // TODO mutation
    const deleteMutation = useMutation({
- 
+    mutationFn: (data: Partial<Agent>) => api.delete(DELETE_AGENT_ENDPOINT(data.id as string)),
+    onSuccess: () => {
+      messageApi.success("Agent deleted!")
+      queryClient.invalidateQueries({queryKey: [AGENT_FETCH_QUERY_KEY]})
+
+    }
    })
 
    const onDelete = (agentId: string) => {
-     // Implement delete logic here
+    deleteMutation.mutate({id: agentId})
    };
  
    // fetch agents
@@ -116,5 +123,6 @@ export const useAgent = ()  => {
     // pagination 
     pagination,
     onPageChange,
+    deleteMutationContextHolder: contextHolder,
    }
 }

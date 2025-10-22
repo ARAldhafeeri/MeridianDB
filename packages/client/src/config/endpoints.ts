@@ -50,3 +50,6 @@ export const FETCH_AGENTS = (page: number, limit: number) =>
 
 export const UPDATE_AGENT_ENDPOINT = (id: string) =>
   withId(id, ENDPOINTS.agents);
+
+export const DELETE_AGENT_ENDPOINT = (id: string) =>
+  withId(id, ENDPOINTS.agents);

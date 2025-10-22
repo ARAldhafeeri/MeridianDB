@@ -27,6 +27,7 @@ export default function AgentContainer() {
     // pagination
     pagination,
     onPageChange, 
+    deleteMutationContextHolder
   } = useAgent();
 
   if (isAgentFetchLoading) {
@@ -58,6 +59,7 @@ export default function AgentContainer() {
         onDelete={onDelete}
         getItem={renderAgentItem}
       />
+      {deleteMutationContextHolder}
     </Space>
   );
 }
