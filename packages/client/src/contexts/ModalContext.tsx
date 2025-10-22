@@ -73,6 +73,7 @@ export const ModalContextProvider = ({ children }: ModalContextProviderProps) =>
           width={modalConfig.width}
           closable={modalConfig.closable ?? true}
           maskClosable={modalConfig.maskClosable ?? true}
+          footer={null}
         >
           {modalConfig.content}
         </Modal>

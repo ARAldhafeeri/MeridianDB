@@ -5,7 +5,7 @@ import {
 import { DrizzleBaseRepository } from "./base";
 import { organizations } from "@/infrastructure/d1/schema";
 import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
-import { like, count } from "drizzle-orm";
+import { like, count, asc } from "drizzle-orm";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { BaseEntity } from "@/entities/domain/base"; // Make sure to import BaseEntity
 
@@ -37,7 +37,6 @@ export class OrganizationRepository extends DrizzleBaseRepository<
     if (filter.name) {
       query = query.where(like(organizations.name, `%${filter.name}%`));
     }
-
     const page = pagination?.page || 1;
     const limit = pagination?.limit || 10;
     const offset = (page - 1) * limit;

@@ -2,7 +2,7 @@ import { Agent, AgentFilter } from "@meridiandb/shared/src/entities/agent";
 import { DrizzleBaseRepository } from "./base";
 import { agents } from "@/infrastructure/d1/schema";
 import { PaginatedResponse, PaginationParams } from "@/entities/domain/dto";
-import { like, count, eq, and } from "drizzle-orm";
+import { like, count, eq, and, desc } from "drizzle-orm";
 import { D1Client } from "@/infrastructure/d1/connection";
 import { BaseEntity } from "@/entities/domain/base";
 
@@ -42,6 +42,9 @@ export class AgentRepository extends DrizzleBaseRepository<Agent, AgentFilter> {
     if (conditions.length > 0) {
       query = query.where(and(...conditions));
     }
+
+    // sort by dates for ui/ux when mutation happen such as create or update
+    query.orderBy(desc(this.table.createdAt), desc(this.table.updatedAt));
 
     const page = pagination?.page || 1;
     const limit = pagination?.limit || 10;
