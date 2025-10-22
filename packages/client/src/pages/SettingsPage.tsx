@@ -1,5 +1,5 @@
 import { Divider, Space, Typography } from 'antd'
-import OrgSettingsForm from '../forms/OrgSettingsForm'
+import OrgContainer from '../containers/OrgContainer'
 
 export default function SettingsPage() {
   return (
@@ -7,8 +7,7 @@ export default function SettingsPage() {
       <Typography.Title level={2}>Settings</Typography.Title>
       <Divider />
       <div>
-        <Typography.Title level={4}>Organization</Typography.Title>
-        <OrgSettingsForm />
+        <OrgContainer />
       </div>
     </Space>
   )

@@ -1,5 +1,5 @@
 import { Form, Input, Button, Spin, Flex } from 'antd';
-import { useOrgSettingsForm } from '../hooks/useOrgSettingsForm';
+import type { UseOrgSettingsFormProps } from '../types/forms/OrgForm';
 
 const layout = {
   labelCol: {
@@ -12,17 +12,15 @@ const layout = {
 
 
 
-export default function OrgSettingsForm() {
+export default function OrgSettingsForm({
+  form,
+  contextHolder,
+  isError,
+  isLoading,
+  onFormSubmit,
+  mutation,
+} : UseOrgSettingsFormProps) {
   
-  const {    
-    form,
-    contextHolder,
-    isError,
-    isLoading,
-    onFormSubmit,
-    mutation,
-  } = useOrgSettingsForm();
-
   if (isLoading) {
     return (
       <Flex justify='center' align='center' >

@@ -4,38 +4,14 @@ import { ENDPOINTS, UPDATE_ORG_ENDPOINT } from '../config/endpoints';
 import  { useEffect } from 'react';
 import { api } from '../api/index';
 
-// types
-import type { AxiosResponse } from 'axios';
-import type { UseMutationResult} from "@tanstack/react-query";
-import type { FormInstance} from "antd";
 import type { Organization } from '@meridiandb/shared/src/entities/organization';
+import type  {UseOrgSettingsFormProps, SuccessOrgSettingsResponse } from "../types/forms/OrgForm";
 
-interface OrgData {
-  name: string;
-  id: string;
-}
 
-interface SuccessOrgSettingsResponse {
-  data: {
-    data: OrgData[];
-  };
-  pagination: {
-    limit: number;
-    page: number;
-    total: number;
-  };
-}
 
-interface UseOrgSettingsForm {
-  onFormSubmit(values: any) : void;
-  contextHolder: React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
-  mutation: UseMutationResult<AxiosResponse<any, any, {}>, Error, Partial<Organization>, unknown>
-  form: FormInstance<any>;
-  isLoading: boolean;
-  isError: boolean;
-}
 
-export const useOrgSettingsForm = () : UseOrgSettingsForm => {
+
+export const useOrgSettingsForm = () : UseOrgSettingsFormProps => {
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
