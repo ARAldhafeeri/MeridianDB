@@ -1,6 +1,5 @@
 import { Form, Input, Button, Switch, Select, InputNumber, Space, Card } from 'antd';
-import type { Agent } from "@meridiandb/shared/src/entities/agent";
-import { useAgentForm } from '../../hooks/useAgentForm';
+
 import type { IUseAgentFormReturnValue } from '../../types/agent';
 
 const { TextArea } = Input;
@@ -17,12 +16,11 @@ const layout = {
 
 interface AgentFormProps {
   mode: 'create' | 'update';
-  agent?: Agent; // Agent data passed directly for update mode
 }
 
 
 
-export default function AgentForm({ mode, agent,   loadConfigTemplate,
+export default function AgentForm({ mode,   loadConfigTemplate,
   onFormSubmit,
   onFormSubmitFailed,
   contextHolder, 
@@ -30,10 +28,9 @@ export default function AgentForm({ mode, agent,   loadConfigTemplate,
   aggressiveConfig,
   longTermConfig,
   mutation,
-  form,}: AgentFormProps & IUseAgentFormReturnValue) {
-  const {
-  
-  } = useAgentForm(agent, mode);
+  form
+}: AgentFormProps & IUseAgentFormReturnValue) {
+
 
   return (
     <div className='auth-form-container'>

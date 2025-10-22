@@ -5,7 +5,7 @@ import AgentForm from "./AgentForm";
 import type { Agent } from "@meridiandb/shared/src/entities/agent";
 
 export const UpdateAgentForm = ({agent}: {agent: Agent}) => {
-  const formHook =  useAgentForm(agent, "create")
+  const formHook =  useAgentForm(agent, "update")
   return <AgentForm
     mode={"update"} 
     form={formHook.form}   

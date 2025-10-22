@@ -93,7 +93,7 @@ export const useAgent = ()  => {
  
    const onUpdateAgentForm = (agent: Agent) => {
      openModal({
-       title: "Create New Agent",
+       title: "Update Agent",
        content: <UpdateAgentForm agent={agent} />,
        width: 600,
      });
