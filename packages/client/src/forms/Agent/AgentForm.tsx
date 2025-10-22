@@ -1,6 +1,7 @@
 import { Form, Input, Button, Switch, Select, InputNumber, Space, Card } from 'antd';
 import type { Agent } from "@meridiandb/shared/src/entities/agent";
-import { useAgentForm } from '../hooks/useAgentForm';
+import { useAgentForm } from '../../hooks/useAgentForm';
+import type { IUseAgentFormReturnValue } from '../../types/agent';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -21,17 +22,17 @@ interface AgentFormProps {
 
 
 
-export default function AgentForm({ mode, agent }: AgentFormProps) {
+export default function AgentForm({ mode, agent,   loadConfigTemplate,
+  onFormSubmit,
+  onFormSubmitFailed,
+  contextHolder, 
+  balancedConfig, 
+  aggressiveConfig,
+  longTermConfig,
+  mutation,
+  form,}: AgentFormProps & IUseAgentFormReturnValue) {
   const {
-    loadConfigTemplate,
-    onFormSubmit,
-    onFormSubmitFailed,
-    contextHolder, 
-    balancedConfig, 
-    aggressiveConfig,
-    longTermConfig,
-    mutation,
-    form,
+  
   } = useAgentForm(agent, mode);
 
   return (

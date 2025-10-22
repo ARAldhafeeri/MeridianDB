@@ -7,10 +7,9 @@ import { AGENT_FETCH_QUERY_KEY } from '../config/queries';
 import { ModalContext } from '../contexts/ModalContext';
 
 // types 
-import type { Agent } from "@meridiandb/shared/src/entities/agent";
-import type {FormInstance} from "antd";
-import type { AxiosResponse } from 'axios';
-import type {UseMutationResult} from "@tanstack/react-query";
+import type { Agent, IDecayCurve } from "@meridiandb/shared/src/entities/agent";
+import type { IUseAgentFormReturnValue } from '../types/agent';
+
 
 
 // Predefined configuration templates
@@ -19,7 +18,7 @@ const balancedConfig = {
   halfLifeHours: 168,      // 7 days
   timeWeight: 0.6,
   frequencyWeight: 0.4,
-  decayCurve: 'hybrid' as const,
+  decayCurve: 'hybrid' as IDecayCurve,
   successRate: 0.8,
   decayFloor: 0.15
 };
@@ -29,7 +28,7 @@ const aggressiveConfig = {
   halfLifeHours: 72,       // 3 days
   timeWeight: 0.7,
   frequencyWeight: 0.3,
-  decayCurve: 'exponential' as const,
+  decayCurve: 'exponential' as IDecayCurve,
   successRate: 0.7
 };
 
@@ -38,21 +37,10 @@ const longTermConfig = {
   halfLifeHours: 720,      // 30 days
   timeWeight: 0.5,
   frequencyWeight: 0.5,
-  decayCurve: 'polynomial' as const,
+  decayCurve: 'polynomial' as IDecayCurve,
   successRate: 0.9
 };
 
-interface IUseAgentFormReturnValue {
-  loadConfigTemplate(config: typeof balancedConfig | typeof aggressiveConfig | typeof longTermConfig) : void;
-  onFormSubmit(values: any) : void;
-  onFormSubmitFailed(errorInfo: any): void;
-  contextHolder: React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
-  balancedConfig: typeof balancedConfig;
-  longTermConfig: typeof longTermConfig;
-  aggressiveConfig: typeof aggressiveConfig;
-  mutation: UseMutationResult<AxiosResponse<any, any, {}>, Error, Partial<Agent>, unknown>
-  form: FormInstance<any>
-}
 
 export const useAgentForm = (agent : Agent | undefined, mode: string) : IUseAgentFormReturnValue => {
   const [form] = Form.useForm();

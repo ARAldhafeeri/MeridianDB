@@ -1,38 +1,29 @@
-export interface Agent {
-  _id: string;
-  name: string;
-  email: string;
-  isActive: boolean;
-  stabilityThreshold: number;
-  successRate: number;
-  createdAt: Date;
-  updatedAt: Date;
-  ORG_ID?: string;
-  AGENT_ID?: string;
-}
+import type {
+  Agent,
+  AgentMemoriesFeaturesConfig,
+} from "@meridiandb/shared/src/entities/agent";
+import type { FormInstance } from "antd";
+import type { AxiosResponse } from "axios";
+import type { UseMutationResult } from "@tanstack/react-query";
 
-export interface CreateAgentRequest {
-  name: string;
-  email: string;
-  isActive: boolean;
-  stabilityThreshold: number;
-  successRate: number;
-  ORG_ID: string;
-}
+type PartialAgentMemoriesFeaturesConfig = Partial<AgentMemoriesFeaturesConfig>;
 
-export interface UpdateAgentRequest {
-  name?: string;
-  email?: string;
-  isActive?: boolean;
-  stabilityThreshold?: number;
-  successRate?: number;
-}
-
-export interface AgentFilter {
-  search?: string;
-  isActive?: boolean;
-  minStabilityThreshold?: number;
-  minSuccessRate?: number;
-  page?: number;
-  pageSize?: number;
+export interface IUseAgentFormReturnValue {
+  loadConfigTemplate(config: PartialAgentMemoriesFeaturesConfig): void;
+  onFormSubmitFailed(errorInfo: any): void;
+  onFormSubmit(values: Partial<Agent>): void;
+  contextHolder: React.ReactElement<
+    unknown,
+    string | React.JSXElementConstructor<any>
+  >;
+  balancedConfig: PartialAgentMemoriesFeaturesConfig;
+  longTermConfig: PartialAgentMemoriesFeaturesConfig;
+  aggressiveConfig: PartialAgentMemoriesFeaturesConfig;
+  mutation: UseMutationResult<
+    AxiosResponse<any, any, {}>,
+    Error,
+    Partial<Agent>,
+    unknown
+  >;
+  form: FormInstance<any>;
 }

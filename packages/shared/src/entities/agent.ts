@@ -1,6 +1,6 @@
 import { BaseEntity } from "./base";
 
-type IDecayCurve = "exponential" | "hybird" | "polynomial";
+export type IDecayCurve = "exponential" | "hybird" | "polynomial";
 
 /**
  * Agent Config features

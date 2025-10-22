@@ -4,14 +4,15 @@ import { api } from "../api";
 import {  FETCH_AGENTS } from "../config/endpoints";
 import { usePagination } from "../hooks/usePagination";
 import { ModalContext } from "../contexts/ModalContext";
-import AgentForm from "../forms/AgentForm";
 import { AGENT_FETCH_QUERY_KEY } from "../config/queries";
 import { useState, useEffect, useContext } from "react";
 import type  { Agent } from "@meridiandb/shared/src/entities/agent";
+import { CreateAgentForm } from "../forms/Agent/CreateAgentForm";
+import { UpdateAgentForm } from "../forms/Agent/UpdateAgentForm";
 
 
 
-export const useAgent = () => {
+export const useAgent = ()  => {
    // update breadcrumps 
    const {setExtra} = useBreadCrumbs();
    // query client 
@@ -21,6 +22,7 @@ export const useAgent = () => {
    const {pagination, onPageChange : paginationOnPageChange } = usePagination();
    const [searchValue, setSearchValue] = useState("");
  
+   // form 
  
    // Handle search input change
    const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,27 +78,24 @@ export const useAgent = () => {
    }
  
    const { openModal }  = modalContext;
- 
+   
+
+   
+  
    const onShowCreateAgentForm = () => {
      openModal({
        title: "Create New Agent",
-       content: <AgentForm mode={"create"}  />,
+       content: <CreateAgentForm />,
        width: 600,
-       onOk: () => {
-         // Handle form submission
-       },
      });
    };
  
  
-   const onUpdateAgentForm = () => {
+   const onUpdateAgentForm = (agent: Agent) => {
      openModal({
        title: "Create New Agent",
-       content: <AgentForm mode={"create"}  />,
+       content: <UpdateAgentForm agent={agent} />,
        width: 600,
-       onOk: () => {
-         // Handle form submission
-       },
      });
    };
 

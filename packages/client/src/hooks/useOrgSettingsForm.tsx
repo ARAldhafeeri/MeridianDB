@@ -5,10 +5,7 @@ import  { useEffect } from 'react';
 import { api } from '../api/index';
 
 import type { Organization } from '@meridiandb/shared/src/entities/organization';
-import type  {UseOrgSettingsFormProps, SuccessOrgSettingsResponse } from "../types/forms/OrgForm";
-
-
-
+import type  {UseOrgSettingsFormProps, SuccessOrgSettingsResponse } from "../types/organization";
 
 
 export const useOrgSettingsForm = () : UseOrgSettingsFormProps => {

@@ -1,5 +1,5 @@
 import { Form, Input, Button, Spin, Flex } from 'antd';
-import type { UseOrgSettingsFormProps } from '../types/forms/OrgForm';
+import type { UseOrgSettingsFormProps } from '../types/organization';
 
 const layout = {
   labelCol: {
