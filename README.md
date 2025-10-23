@@ -393,6 +393,8 @@ npm run test:sdk
 ```
 example usage :
 ```Typescript
+import { MeridianDBClient } from "meridiandb-sdk";
+
 class ChatbotWithMemory {
   private client: MeridianDBClient;
 
@@ -412,7 +414,7 @@ class ChatbotWithMemory {
 
       // 2. Use past memories to provide better context
       let context = "Previous interactions:\n";
-      pastMemories.data?.forEach((memory, index) => {
+      pastMemories.data?.forEach((memory : any, index : number) => {
         context += `${index + 1}. ${memory.content}\n`;
       });
 
@@ -432,8 +434,8 @@ class ChatbotWithMemory {
         successRate: 1.0,
         positive: 1,
         negative: 0,
-        accessLevel: AccessLevel.PRIVATE,
-        stage: MemoryStage.EPISODIC
+        accessLevel: "private",
+        stage: "episodic"
       });
 
       return response;
