@@ -1,0 +1,4 @@
+mkdocs-material==9.5.18
+mkdocs==1.5.3
+mkdocstrings-typescript
+griffe==0.45.2

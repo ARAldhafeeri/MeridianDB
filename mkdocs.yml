@@ -1,0 +1,84 @@
+site_name: "MeridianDB Documentation"
+theme:
+  name: "material"
+  repo_url: https://github.com/ARAldhafeeri/MeridianDB
+  logo: assets/logo.png
+  favicon: assets/fav.ico
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - content.code.annotate
+    - content.code.highlight
+    - content.code.prettify
+    - content.code.copy
+    - content.tabs.link
+    - header.autohide
+    - header.search
+    - header.title
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - toc.integrate
+
+  language: en
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+
+plugins:
+  - search
+  - mkdocstrings
+
+nav:
+  - "Start Here": index.md
+  - Quick Start Guide:
+      - quick/design.md
+
+  - Releases:
+      - "v1.0.0": releases/v1.0.0.md
+
+# TODO API REF with TS & MDDOCS ?
+#   - API Reference:
+#       - Client:
+#           - Algorithm:
+#               - api/client/algorithm/overview.md
+#               - api/client/algorithm/operations.md
+#               - api/client/algorithm/searcher.md
+#               - api/client/algorithm/updater.md
+
+extra:
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

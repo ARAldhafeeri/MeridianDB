@@ -549,3 +549,30 @@ npx wrangler d1 execute meridiand1 --file=./drizzle/migrations/<your_migration_n
 ```
 wrangler deploy
 ```
+
+# Docs 
+
+MeridianDB uses <a href="https://www.mkdocs.org/getting-started/">MkDocs</a> to manage its documentation.
+
+You can add, edit, or remove documentation pages within the docs folder.
+
+Each page should be comprehensive, concise, and straight to the point.
+
+- Run the documentation locally, navigate to root folder:
+
+- Install requirements:
+
+```
+pip install -r requirements.txt
+```
+
+- Run the docs:
+
+```Bash
+mkdocs serve
+```
+
+docs should be running at http://localhost:8000
+
+
+
