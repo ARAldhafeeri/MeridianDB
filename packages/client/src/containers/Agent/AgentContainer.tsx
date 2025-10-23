@@ -42,12 +42,12 @@ export default function AgentContainer() {
     <Space direction="vertical" style={{ width: '100%' }} size="large">
       <Space direction="horizontal">
          <Button onClick={() => onShowCreateAgentForm()}><AiFillPlusCircle/></Button>
-      <GlobalSearchInput 
+      {/* <GlobalSearchInput 
         name="Agent" 
         searchValue={searchValue} 
         onSearchChange={onSearchChange} 
         onReset={onResetSearch} 
-      />
+      /> */}
       </Space>
       <GlobalListView<Agent>
         data={agents as any}
