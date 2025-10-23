@@ -10,6 +10,7 @@ import type  { Agent } from "@meridiandb/shared/src/entities/agent";
 import { CreateAgentForm } from "../forms/Agent/CreateAgentForm";
 import { UpdateAgentForm } from "../forms/Agent/UpdateAgentForm";
 import { message } from "antd";
+import { DrawerContext } from "../contexts/DrawerContext";
 
 
 
@@ -78,19 +79,19 @@ export const useAgent = ()  => {
    
  
    // modal context 
-   const modalContext = useContext(ModalContext);
+   const drawerContext = useContext(DrawerContext);
  
-   if (!modalContext) {
-     throw new Error("ModalContext must be used within a ModalContextProvider");
+   if (!drawerContext) {
+     throw new Error("DrawerContext must be used within a DrawerContextProvider");
    }
- 
-   const { openModal }  = modalContext;
-   
+
+   const { openDrawer}  = drawerContext;
+
 
    
   
    const onShowCreateAgentForm = () => {
-     openModal({
+     openDrawer({
        title: "Create New Agent",
        content: <CreateAgentForm />,
        width: 600,
@@ -99,7 +100,7 @@ export const useAgent = ()  => {
  
  
    const onUpdateAgentForm = (agent: Agent) => {
-     openModal({
+    openDrawer({
        title: "Update Agent",
        content: <UpdateAgentForm agent={agent} />,
        width: 600,

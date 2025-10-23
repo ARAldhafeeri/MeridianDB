@@ -4,11 +4,11 @@ import { ENDPOINTS, UPDATE_AGENT_ENDPOINT } from '../config/endpoints';
 import { useContext, useEffect } from 'react';
 import { api } from '../api/index';
 import { AGENT_FETCH_QUERY_KEY } from '../config/queries';
-import { ModalContext } from '../contexts/ModalContext';
 
 // types 
 import type { Agent, IDecayCurve } from "@meridiandb/shared/src/entities/agent";
 import type { IUseAgentFormReturnValue } from '../types/agent';
+import { DrawerContext } from '../contexts/DrawerContext';
 
 
 
@@ -47,13 +47,13 @@ export const useAgentForm = (agent : Agent | undefined, mode: string) : IUseAgen
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
     // modal context 
-    const modalContext = useContext(ModalContext);
+    const drawerContext = useContext(DrawerContext);
  
-    if (!modalContext) {
-      throw new Error("ModalContext must be used within a ModalContextProvider");
+    if (!drawerContext) {
+      throw new Error("DrawerContext must be used within a DrawerContextProvider");
     }
   
-    const { closeModal }  = modalContext;
+    const { closeDrawer }  = drawerContext;
 
   // Create agent mutation
   const createMutation = useMutation({
@@ -65,7 +65,7 @@ export const useAgentForm = (agent : Agent | undefined, mode: string) : IUseAgen
     onSuccess: () => {
       messageApi.success('Agent created successfully!');
       form.resetFields();
-      closeModal();
+      closeDrawer();
       queryClient.invalidateQueries({ queryKey: [AGENT_FETCH_QUERY_KEY] });
     },
     onError: () => {
@@ -82,7 +82,7 @@ export const useAgentForm = (agent : Agent | undefined, mode: string) : IUseAgen
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [AGENT_FETCH_QUERY_KEY] });
       messageApi.success('Agent updated successfully!');
-      closeModal();
+      closeDrawer();
     },
     onError: () => {
       messageApi.error('Failed to update agent!');
