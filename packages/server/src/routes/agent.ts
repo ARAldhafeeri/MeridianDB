@@ -30,7 +30,7 @@ agentRoutes.put(
   ID_ROUTE,
   zValidator("param", idParamSchema),
   zValidator("json", UpdateAgentRequestSchema),
-  (c) => getAgentController().create(c)
+  (c) => getAgentController().update(c)
 );
 
 agentRoutes.post(
