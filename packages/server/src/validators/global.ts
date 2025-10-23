@@ -9,7 +9,7 @@ export const paginationSchema = z.object({
   limit: z
     .string()
     .optional()
-    .default("10")
+    .default("5")
     .transform((val) => Math.min(100, Math.max(1, parseInt(val, 10) || 10))),
   sortBy: z.string().optional(),
   sortOrder: z.enum(["asc", "desc"]).optional().default("asc"),

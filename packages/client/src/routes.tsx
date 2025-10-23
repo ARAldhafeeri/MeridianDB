@@ -9,6 +9,9 @@ import {  AiFillRobot, AiOutlineSetting } from "react-icons/ai";
 import HomePage from "./pages/HomePage";
 import SettingsPage from "./pages/SettingsPage";
 import AgentPage from "./pages/AgentPage";
+import { AiOutlineFileSync } from "react-icons/ai";
+import MemoryPage from "./pages/MemoryPage";
+
 
 // Define types for menu items
 export interface MenuItem {
@@ -48,7 +51,8 @@ export const items = [
     <AiOutlineSetting />,
     ROUTES.settings
   ),
-  GetItem("Agents", "agents", <AiFillRobot />, ROUTES.agents)
+  GetItem("Agents", "agents", <AiFillRobot />, ROUTES.agents),
+  GetItem("Memories", "memories", <AiOutlineFileSync />, ROUTES.memories)
 ]
 
 const WithUnauthenticatedLayout = (Component: React.ComponentType): React.ReactNode => {
@@ -81,7 +85,8 @@ const MainRouter : any = createBrowserRouter([
   GetRoute(ROUTES.init, WithUnauthenticatedLayout(InitSuperAdminPage)),
   GetRoute(ROUTES.home, WithAuthLayout(HomePage)),
   GetRoute(ROUTES.settings, WithAuthLayout(SettingsPage)),
-  GetRoute(ROUTES.agents, WithAuthLayout(AgentPage))
+  GetRoute(ROUTES.agents, WithAuthLayout(AgentPage)), 
+  GetRoute(ROUTES.memories, WithAuthLayout(MemoryPage))
 ]);
 
 export default MainRouter;

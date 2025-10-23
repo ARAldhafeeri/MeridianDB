@@ -53,3 +53,7 @@ export const UPDATE_AGENT_ENDPOINT = (id: string) =>
 
 export const DELETE_AGENT_ENDPOINT = (id: string) =>
   withId(id, ENDPOINTS.agents);
+
+// memories
+export const FETCH_MEMORIES = (page: number, limit: number) =>
+  withPagination(page, limit, ENDPOINTS.memoriesAdmin);

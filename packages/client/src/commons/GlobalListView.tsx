@@ -24,6 +24,7 @@ interface GlobalListViewProps<T extends BaseItem> {
   onEdit: (item: T) => void;
   onDelete: (id: string) => void;
   getItem: (item: T) => React.ReactNode;
+  hideActions?: boolean;
 }
 
 export const renderActionMenu = <T extends BaseItem>({
@@ -67,6 +68,7 @@ export const GlobalListView = <T extends BaseItem>({
   onEdit,
   onDelete,
   getItem,
+  hideActions,
 }: GlobalListViewProps<T>): React.ReactElement => {
 
   return (
@@ -77,16 +79,17 @@ export const GlobalListView = <T extends BaseItem>({
         className="data-list"
         renderItem={(item) => (
           <List.Item
-            actions={[
-              <Dropdown
-                key="actions"
-                overlay={renderActionMenu({ item, onEdit, onDelete })}
-                trigger={["click"]}
-                placement="bottomRight"
-              >
-                <Button className="btn" icon={<MoreOutlined />} />
-              </Dropdown>,
-            ]}
+          {...(hideActions ? {} : {actions: [
+            <Dropdown
+              key="actions"
+              overlay={renderActionMenu({ item, onEdit, onDelete })}
+              trigger={["click"]}
+              placement="bottomRight"
+            >
+              <Button className="btn" icon={<MoreOutlined />} />
+            </Dropdown>,
+          ]})}
+            
           >
             {getItem(item)}
           </List.Item>

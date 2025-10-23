@@ -1,23 +1,23 @@
-// AgentContainer.tsx
+// MemoryContainer.tsx
 // import GlobalSearchInput from "../../commons/GlobalSearchInput";
 import { GlobalListView } from "../../commons/GlobalListView";
 import { Space, Button, Spin, Flex } from "antd";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { renderAgentItem } from "./RenderAgentItem";
-import type { Agent } from "@meridiandb/shared/src/entities/agent";
-import { useAgent } from "../../hooks/useAgent";
+import { renderMemoryItem } from "./RenderMemoryItem";
+import type { MemoryEpisode } from "@meridiandb/shared/src/entities/memory";
+import { useMemory } from "../../hooks/useMemory";
 
 
 
-export default function AgentContainer() {
+export default function MemoryContainer() {
   const {
     // form
-    onUpdateAgentForm,
-    onShowCreateAgentForm,
+    onUpdateMemoryForm,
+    onShowCreateMemoryForm,
     // query 
-    agents, 
+    memories, 
     total,
-    isAgentFetchLoading,
+    isMemoryFetchLoading,
     // search
     // searchValue,
     // onSearchChange,
@@ -28,9 +28,9 @@ export default function AgentContainer() {
     pagination,
     onPageChange, 
     deleteMutationContextHolder
-  } = useAgent();
+  } = useMemory();
 
-  if (isAgentFetchLoading) {
+  if (isMemoryFetchLoading) {
     return (
       <Flex justify='center'>
         <Spin size="large" />
@@ -40,24 +40,17 @@ export default function AgentContainer() {
   
   return (
     <Space direction="vertical" style={{ width: '100%' }} size="large">
-      <Space direction="horizontal">
-         <Button onClick={() => onShowCreateAgentForm()}><AiFillPlusCircle/></Button>
-      {/* <GlobalSearchInput 
-        name="Agent" 
-        searchValue={searchValue} 
-        onSearchChange={onSearchChange} 
-        onReset={onResetSearch} 
-      /> */}
-      </Space>
-      <GlobalListView<Agent>
-        data={agents as any}
+ 
+      <GlobalListView<MemoryEpisode>
+        data={memories as any}
         page={pagination.page}
+        hideActions={true}
         total={total}
         pageSize={pagination.limit}
         onPageChange={onPageChange}
-        onEdit={onUpdateAgentForm as any}
+        onEdit={onUpdateMemoryForm as any}
         onDelete={onDelete}
-        getItem={renderAgentItem}
+        getItem={renderMemoryItem}
       />
       {deleteMutationContextHolder}
     </Space>

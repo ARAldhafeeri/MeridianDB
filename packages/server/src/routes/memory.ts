@@ -11,7 +11,7 @@ import { getD1WithDrizzle } from "@/infrastructure/d1/connection";
 import { createContainer } from "@/infrastructure/d1/container";
 import agentAuthMiddleware from "@/middleware/agentAuth";
 import authenticationMiddleWare from "@/middleware/authentication";
-import { idParamSchema } from "@/validators/global";
+import { idParamSchema, paginationSchema } from "@/validators/global";
 import {
   CreateMemoryEpisodeRequestSchema,
   MemoryFilterSchema,
@@ -38,7 +38,7 @@ memoryAgentRoutes.use(agentAuthMiddleware);
 // admin portal routes
 memoryAdminPortalRoutes.get(
   ROOT_ROUTE,
-  zValidator("query", MemoryFilterSchema),
+  zValidator("query", paginationSchema),
   (c) => getMemoryController().list(c)
 );
 
