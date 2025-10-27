@@ -54,7 +54,10 @@ plugins:
 nav:
   - "Start Here": index.md
   - Quick Start Guide:
-      - quick/design.md
+      - "MDB Retreival Mechainsim": quick/retrieval.md
+      - "Consistency Model": quick/consistency.md
+      - "Architecture Deep dive": quick/architecture.md
+      - "NodeJS Software Development Kit": quick/sdk.md
 
   - Releases:
       - "v1.0.0": releases/v1.0.0.md
