@@ -1,14 +1,12 @@
-name: MeridianDB CI pipline
+name: MeridianDB CI/CD pipeline
 
 on:
   release:
     types: [published]
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
     types: [closed]
 
 permissions:
@@ -17,17 +15,25 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # TODO: setup publish sdk to npm if changes planned
-      - name: deploy mkdocs
-        id: cache-mkdocs
+      - uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
         run: |
-          # setup identity 
+          pip install mkdocs mkdocs-material
+
+      - name: Build site
+        run: mkdocs build --strict
+
+      - name: Deploy MkDocs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-
-          # Ensure the repository is up to date
-          git pull 
-          mkdocs gh-deploy
+          mkdocs gh-deploy --force
