@@ -47,10 +47,3 @@ The process is as follow :
 2. MeridianDB backend perform a similarity search on the query, with intentional over-fetching the results ( configurable ) with ( TOP-K) parameter.
 3. Content is fetched from D1.
 4. Data is filtered-out based on agent configuration, global configuration for all semantic, temporal, behavioral, contextual features.
-
-## Quick start
-We wrote quick start section to understand our design choices and answers the why's, how's around MeridianDB.
-- <a href="quick/architecture" >Architecture Dive</a>
-- <a href="quick/retrieval" >Multi-Dimensional Retrieval</a>
-- <a href="quick/consistency" >Consitency Model</a>
-- <a href="quick/devanddep" >Dev environment & Deployment</a>

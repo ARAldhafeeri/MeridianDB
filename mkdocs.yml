@@ -55,7 +55,7 @@ nav:
   - "Start Here": index.md
   - "MDB Retreival Mechainsim": retrieval.md
   - "Consistency Model": consistency.md
-  - "Architecture Deep dive": architecture.md
+  # - "Architecture Deep dive": architecture.md
   - "NodeJS Software Development Kit": sdk.md
   - "Limitations and Considerations": limitations.md
 
