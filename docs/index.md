@@ -1,9 +1,13 @@
 # MeridianDB Overview
 
-AI-first, Auto-RAG, a serverless database that enhances RAG with multi-dimensional retrieval. In addition to semantic search, we added temporal and behavioral awareness as well. NewSQL-inspired eventual consistencykeeps both the vector database and content and features data synced across Cloudflare D1 and Vectorize. 
+AI-first, Auto-RAG, a serverless database that enhances RAG with multi-dimensional retrieval. In addition to semantic search, we added temporal and behavioral awareness as well. NewSQL-inspired eventual consistency keeps all the vector database, content, features data synced across Cloudflare D1 and Vectorize. 
+
+Leverages Cloudflare edge network with the great deal of innovation, the entire RAG pipeline runs near where your users are.
 
 ## Core Problem
+
 Traditional RAG suffers from:
+
 - Catastrophic forgetting
 - Lack of temporal awareness
 - No behavioral learning
@@ -32,15 +36,17 @@ Multi-dimensional retrieval:
 
 
 ## Mostly Tabular Data for Features no Graphs
+
 In MeridianDB we aimed to maximize scalability and performance, there fore we designed to store extra features ( temporal and behavioral ) into SQL columns. 
 
 We gurantee eventual consitency, we provide multiple settings that control the consistency experience to fit your business needs. 
 
 The process is as follow :
+
 1. Agent send a retreival query.
 2. MeridianDB backend perform a similarity search on the query, with intentional over-fetching the results ( configurable ) with ( TOP-K) parameter.
 3. Content is fetched from D1.
-4. Data is filtered-out based on agent configuration.
+4. Data is filtered-out based on agent configuration, global configuration for all semantic, temporal, behavioral, contextual features.
 
 ## Quick start
 We wrote quick start section to understand our design choices and answers the why's, how's around MeridianDB.
