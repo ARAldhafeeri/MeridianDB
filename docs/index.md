@@ -20,7 +20,7 @@ Multi-dimensional retrieval:
 - **Behavioral**: Success-based optimization
 
 ## Architecture
-<img src="assets/arch.png" width="600" height="400" />
+<img src="assets/architecture.png" width="600" height="400" />
 
 - (1), (2) **Human clients**: SDKs is for **Agentic AI developers**  Admin Portal for **DB operators**.
 
