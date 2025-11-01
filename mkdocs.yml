@@ -53,23 +53,14 @@ plugins:
 
 nav:
   - "Start Here": index.md
-  - Quick Start Guide:
-      - "MDB Retreival Mechainsim": quick/retrieval.md
-      - "Consistency Model": quick/consistency.md
-      - "Architecture Deep dive": quick/architecture.md
-      - "NodeJS Software Development Kit": quick/sdk.md
+  - "MDB Retreival Mechainsim": retrieval.md
+  - "Consistency Model": consistency.md
+  - "Architecture Deep dive": architecture.md
+  - "NodeJS Software Development Kit": sdk.md
+  - "Limitations and Considerations": limitations.md
 
   - Releases:
       - "v1.0.0": releases/v1.0.0.md
-
-# TODO API REF with TS & MDDOCS ?
-#   - API Reference:
-#       - Client:
-#           - Algorithm:
-#               - api/client/algorithm/overview.md
-#               - api/client/algorithm/operations.md
-#               - api/client/algorithm/searcher.md
-#               - api/client/algorithm/updater.md
 
 extra:
   generator: false
