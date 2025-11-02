@@ -1,7 +1,8 @@
+import React from "react";
 import { Button, Typography, Space } from 'antd';
 import { CalendarOutlined, FileTextOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
-import React from "react";
+
 const { Title, Paragraph } = Typography;
 
 // Enhanced Animated Background with X-Formation and Multi-dimensional Cubes
@@ -195,9 +196,20 @@ const DimensionWord: React.FC<{ children: string }> = ({ children }) => {
     </motion.span>
   );
 };
-
-// Hero Component
 export const Hero: React.FC = () => {
+  const [windowWidth, setWindowWidth] = React.useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+  const isTablet = windowWidth >= 768 && windowWidth < 1024;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -205,12 +217,12 @@ export const Hero: React.FC = () => {
       transition={{ duration: 1 }}
       style={{
         background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 100%)',
-        padding: '120px 50px',
+        padding: isMobile ? '80px 20px 60px' : isTablet ? '100px 40px 80px' : '120px 50px',
         textAlign: 'center',
         color: '#fff',
         position: 'relative',
         overflow: 'hidden',
-        minHeight: '600px',
+        minHeight: isMobile ? '500px' : isTablet ? '550px' : '600px',
       }}
     >
       <AnimatedBackground />
@@ -225,11 +237,12 @@ export const Hero: React.FC = () => {
             level={1} 
             style={{ 
               color: '#fff', 
-              fontSize: '64px', 
-              marginBottom: '24px', 
+              fontSize: isMobile ? '36px' : isTablet ? '48px' : '64px', 
+              marginBottom: isMobile ? '16px' : '24px', 
               fontWeight: 800,
               lineHeight: '1.1',
-              letterSpacing: '-1px'
+              letterSpacing: '-1px',
+              padding: isMobile ? '0 10px' : '0'
             }}
           >
             AI-First Serverless Database
@@ -242,12 +255,13 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <Paragraph style={{ 
-            fontSize: '20px', 
+            fontSize: isMobile ? '16px' : isTablet ? '18px' : '20px', 
             color: 'rgba(255,255,255,0.75)', 
-            maxWidth: '750px', 
-            margin: '0 auto 56px',
+            maxWidth: isMobile ? '100%' : isTablet ? '600px' : '750px', 
+            margin: isMobile ? '0 auto 32px' : isTablet ? '0 auto 40px' : '0 auto 56px',
             lineHeight: '1.7',
-            fontWeight: 400
+            fontWeight: 400,
+            padding: isMobile ? '0 10px' : '0'
           }}>
             Redefining retrieval for agents with <DimensionWord>temporal</DimensionWord>, <DimensionWord>contextual</DimensionWord>, <DimensionWord>behavioral</DimensionWord>, and <DimensionWord>semantic</DimensionWord> dimensions. Built on Cloudflare's edge network for millisecond latency.
           </Paragraph>
@@ -258,22 +272,24 @@ export const Hero: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Space size="large">
+          <Space size={isMobile ? "middle" : "large"} direction={isMobile ? "vertical" : "horizontal"} style={{ width: isMobile ? '100%' : 'auto' }}>
             <Button 
               type="primary" 
               size="large" 
               icon={<CalendarOutlined />}
               style={{ 
-                height: '56px', 
-                fontSize: '16px',
+                height: isMobile ? '48px' : '56px', 
+                fontSize: isMobile ? '14px' : '16px',
                 fontWeight: 600,
                 background: '#ff6b00',
                 borderColor: '#ff6b00',
-                paddingLeft: '32px',
-                paddingRight: '32px',
+                paddingLeft: isMobile ? '24px' : '32px',
+                paddingRight: isMobile ? '24px' : '32px',
                 boxShadow: '0 4px 20px rgba(255, 107, 0, 0.3)',
+                width: isMobile ? '90%' : 'auto',
+                maxWidth: isMobile ? '300px' : 'none'
               }}
-              href="https://calendly.com" 
+              href="https://calendly.com/ar-aldhafeeri11/meridiandb-q-a" 
               target="_blank"
             >
               Talk to an Engineer
@@ -282,15 +298,17 @@ export const Hero: React.FC = () => {
               size="large" 
               icon={<FileTextOutlined />}
               style={{ 
-                height: '56px', 
-                fontSize: '16px',
+                height: isMobile ? '48px' : '56px', 
+                fontSize: isMobile ? '14px' : '16px',
                 background: 'transparent',
                 color: '#fff',
                 border: '2px solid rgba(255, 255, 255, 0.3)',
                 fontWeight: 600,
-                paddingLeft: '32px',
-                paddingRight: '32px',
+                paddingLeft: isMobile ? '24px' : '32px',
+                paddingRight: isMobile ? '24px' : '32px',
                 backdropFilter: 'blur(10px)',
+                width: isMobile ? '90%' : 'auto',
+                maxWidth: isMobile ? '300px' : 'none'
               }}
               href="https://araldhafeeri.github.io/MeridianDB/" 
               target="_blank"
@@ -300,25 +318,6 @@ export const Hero: React.FC = () => {
           </Space>
         </motion.div>
       </div>
-      
-      {/* Subtle grid overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `
-            linear-gradient(rgba(255, 107, 0, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 107, 0, 0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-          pointerEvents: 'none',
-        }}
-      />
-    </motion.div>
-  );
+      </motion.div>
+  )
 };
-
-export default Hero;

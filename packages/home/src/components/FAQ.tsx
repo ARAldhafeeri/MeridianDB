@@ -1,9 +1,25 @@
+import React from 'react';
 import { Typography, Collapse } from 'antd';
 import { motion } from 'framer-motion';
+import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
+
 const { Title, Paragraph, Text } = Typography;
 
-
 export const FAQ = () => {
+  const [windowWidth, setWindowWidth] = React.useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
+  const [activeKey, setActiveKey] = React.useState<string | string[]>([]);
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+  const isTablet = windowWidth >= 768 && windowWidth < 1024;
+
   const faqs = [
     {
       question: 'What makes MeridianDB different from traditional RAG pipelines?',
@@ -28,27 +44,121 @@ export const FAQ = () => {
   ];
 
   return (
-    <div id="faq" style={{ padding: '100px 50px', background: '#f5f5f5', maxWidth: '900px', margin: '0 auto' }}>
+    <div 
+      id="faq" 
+      style={{ 
+        padding: isMobile ? '60px 20px' : isTablet ? '80px 40px' : '100px 50px', 
+        background: '#000',
+        maxWidth: '900px', 
+        margin: '0 auto' 
+      }}
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <Title level={2} style={{ textAlign: 'center', marginBottom: '48px', fontSize: '42px', color: '#000' }}>
+        <Title 
+          level={2} 
+          style={{ 
+            textAlign: 'center', 
+            marginBottom: isMobile ? '32px' : isTablet ? '40px' : '48px', 
+            fontSize: isMobile ? '28px' : isTablet ? '36px' : '42px', 
+            color: '#fff',
+            fontWeight: 700,
+            padding: isMobile ? '0 10px' : '0'
+          }}
+        >
           Frequently Asked Questions
         </Title>
         <Collapse 
           accordion 
           bordered={false}
-          style={{ background: '#fff' }}
+          activeKey={activeKey}
+          onChange={setActiveKey}
+          style={{ 
+            background: 'transparent',
+            border: 'none'
+          }}
+          expandIcon={({ isActive }) => 
+            isActive ? 
+            <MinusOutlined style={{ color: '#ff6b00', fontSize: '16px', fontWeight: 'bold' }} /> : 
+            <PlusOutlined style={{ color: '#ff6b00', fontSize: '16px', fontWeight: 'bold' }} />
+          }
           items={faqs.map((faq, index) => ({
-            key: index,
-            label: <Text strong style={{ fontSize: '16px', color: '#000' }}>{faq.question}</Text>,
-            children: <Paragraph style={{ fontSize: '15px', color: '#595959', marginBottom: 0 }}>{faq.answer}</Paragraph>
+            key: index.toString(),
+            label: (
+              <Text 
+                strong 
+                style={{ 
+                  fontSize: isMobile ? '15px' : '16px', 
+                  color: '#fff',
+                  fontWeight: 600,
+                  lineHeight: '1.6'
+                }}
+              >
+                {faq.question}
+              </Text>
+            ),
+            children: (
+              <Paragraph 
+                style={{ 
+                  fontSize: isMobile ? '14px' : '15px', 
+                  color: '#595959', 
+                  marginBottom: 0,
+                  lineHeight: '1.8',
+                  paddingRight: isMobile ? '0' : '20px'
+                }}
+              >
+                {faq.answer}
+              </Paragraph>
+            ),
+            style: {
+              marginBottom: '16px',
+              background: '#0a0a0a',
+              border: '1px solid #1a1a1a',
+              borderRadius: '8px',
+              overflow: 'hidden',
+            },
+            className: 'custom-collapse-item'
           }))}
         />
       </motion.div>
+      
+      <style>{`
+        .custom-collapse-item .ant-collapse-header {
+          padding: ${isMobile ? '16px' : '20px'} !important;
+          background: #0a0a0a !important;
+          border: none !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .custom-collapse-item .ant-collapse-header:hover {
+          background: #121212 !important;
+        }
+        
+        .custom-collapse-item.ant-collapse-item-active .ant-collapse-header {
+          background: #121212 !important;
+          border-bottom: 1px solid #1a1a1a !important;
+        }
+        
+        .custom-collapse-item .ant-collapse-content {
+          background: #0a0a0a !important;
+          border: none !important;
+        }
+        
+        .custom-collapse-item .ant-collapse-content-box {
+          padding: ${isMobile ? '16px' : '20px'} !important;
+          padding-top: ${isMobile ? '12px' : '16px'} !important;
+        }
+        
+        .ant-collapse-expand-icon {
+          padding-inline-end: ${isMobile ? '12px' : '16px'} !important;
+        }
+      `}</style>
     </div>
   );
 };
+
+export default FAQ;

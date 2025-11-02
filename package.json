@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@lottiefiles/dotlottie-react": "^0.17.6",
     "js-cookie": "^3.0.5"
   }
 }
