@@ -9,6 +9,7 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:temporal-queue\" ",
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
+    "dev:home": "npm run dev -w home",
     "dev:temporal-queue": "npm run dev -w temporal-queue",
     "watch": "concurrently \"npm run watch -w client\" \"npm run watch -w server\" \"npm run watch -w shared\" \"npm run watch -w meridiandb-sdk\"",
     "build": "npm run build -w @meridiandb/shared && npm run build -w client && npm run build -w server",
