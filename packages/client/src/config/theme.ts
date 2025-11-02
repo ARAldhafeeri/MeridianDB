@@ -1,32 +1,32 @@
 export const THEME = {
   token: {
     // Base Colors
-    colorPrimary: "#ff6b00",
-    colorSuccess: "#ff6b00",
-    colorWarning: "#ff6b00",
-    colorError: "#ff4d4f",
-    colorInfo: "#ff6b00",
-    colorBgContainer: "#ffffff",
-    colorBgLayout: "#000000",
-    colorText: "#000000",
-    colorTextSecondary: "#595959",
-    colorBorder: "#d9d9d9",
-    fontSize: 16,
-    borderRadius: 8,
+    colorPrimary: "#222831", // Primary color
+    colorSecondary: "#A1D6B2", // Secondary/accent color
+    colorSuccess: "#52c41a", // Success state color
+    colorWarning: "#faad14", // Warning state color
+    colorError: "#f5222d", // Error state color
+    colorInfo: "#1677ff", // Info state color
+
     // Text Colors
     colorTextBase: "#222831", // Default text color
+    colorTextSecondary: "#595959", // Secondary text color
     colorTextTertiary: "#8c8c8c", // Tertiary text color
     colorTextPlaceholder: "#bfbfbf",
 
     // Background Colors
     colorBgBase: "#fff", // Base background color
+    colorBgContainer: "#ffffff", // Container background
     colorBgElevated: "#f5f5f5", // Elevated component background
+    colorBgLayout: "#f0f2f5", // Layout background
 
     // Border Colors
+    colorBorder: "#222831", // Default border color
     colorBorderSecondary: "#f0f0f0", // Secondary border
 
     // Font Settings
     fontFamily: "'Robot', Arial, sans-serif",
+    fontSize: 14, // Base font size
 
     // Heading Sizes
 
@@ -51,6 +51,7 @@ export const THEME = {
     paddingXL: 32,
 
     // Border Radius
+    borderRadius: 6,
     borderRadiusSM: 4,
     borderRadiusLG: 8,
     borderRadiusXL: 12,
