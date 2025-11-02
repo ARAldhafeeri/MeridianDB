@@ -1,112 +1,78 @@
 import { Button, Typography, Space } from 'antd';
-import { CalendarOutlined, FileTextOutlined, RocketOutlined, DatabaseOutlined, CloudOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { CalendarOutlined, FileTextOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import React from "react";
 const { Title, Paragraph } = Typography;
 
-
-// Animated Background Component
-interface Node {
-  id: number;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-}
-
-interface Word {
-  id: number;
+// Enhanced Animated Background with X-Formation and Multi-dimensional Cubes
+interface Dimension {
   text: string;
   x: number;
   y: number;
+  targetX: number;
+  targetY: number;
 }
 
-interface MousePosition {
+interface Cube {
+  id: number;
   x: number;
   y: number;
+  z: number;
+  rotationX: number;
+  rotationY: number;
+  rotationZ: number;
+  speed: number;
 }
 
 const AnimatedBackground: React.FC = () => {
-  const [mousePos, setMousePos] = React.useState<MousePosition>({ x: 0, y: 0 });
-  const [nodes, setNodes] = React.useState<Node[]>([]);
-  const [words, setWords] = React.useState<Word[]>([]);
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+  const [cubes, setCubes] = React.useState<Cube[]>([]);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   
-  const dimensions: string[] = ['temporal', 'contextual', 'behavioral', 'semantic'];
 
+  // Initialize cubes across entire background
   React.useEffect(() => {
-    // Initialize nodes
-    const initialNodes = Array.from({ length: 100 }, (_, i) => ({
+    // Initialize floating cubes spanning full background
+    const initialCubes: Cube[] = Array.from({ length: 25 }, (_, i) => ({
       id: i,
       x: Math.random() * window.innerWidth,
-      y: Math.random() * 400,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
+      y: Math.random() * 600,
+      z: Math.random() * 100,
+      rotationX: Math.random() * 360,
+      rotationY: Math.random() * 360,
+      rotationZ: Math.random() * 360,
+      speed: 0.3 + Math.random() * 0.7,
     }));
-    setNodes(initialNodes);
+    setCubes(initialCubes);
   }, []);
 
+
+
+  // Animate cubes
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setNodes(prevNodes => 
-        prevNodes.map(node => {
-          let { x, y, vx, vy } = node;
-          
-          // Move away from cursor
-          const dx = x - mousePos.x;
-          const dy = y - mousePos.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < 150 && dist > 0) {
-            const force = (150 - dist) / 150;
-            vx += (dx / dist) * force * 2;
-            vy += (dy / dist) * force * 2;
-          }
-          
-          // Update position
-          x += vx;
-          y += vy;
-          
-          // Boundaries
-          if (x < 0 || x > window.innerWidth) vx *= -1;
-          if (y < 0 || y > 400) vy *= -1;
-          
-          // Damping
-          vx *= 0.95;
-          vy *= 0.95;
-          
-          return { ...node, x, y, vx, vy };
-        })
-      );
-    }, 30);
+      setCubes(prev => prev.map(cube => ({
+        ...cube,
+        rotationX: (cube.rotationX + cube.speed) % 360,
+        rotationY: (cube.rotationY + cube.speed * 0.7) % 360,
+        rotationZ: (cube.rotationZ + cube.speed * 0.5) % 360,
+      })));
+    }, 50);
     
     return () => clearInterval(interval);
-  }, [mousePos]);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setMousePos({ x, y });
-    
-    // Add floating word
-    const word = dimensions[Math.floor(Math.random() * dimensions.length)];
-    const newWord: Word = {
-      id: Date.now(),
-      text: word,
-      x,
-      y,
-    };
-    
-    setWords(prev => [...prev, newWord]);
-    
-    // Remove word after animation
-    setTimeout(() => {
-      setWords(prev => prev.filter(w => w.id !== newWord.id));
-    }, 1000);
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   };
 
   return (
     <div
+      ref={containerRef}
       onMouseMove={handleMouseMove}
       style={{
         position: 'absolute',
@@ -115,133 +81,244 @@ const AnimatedBackground: React.FC = () => {
         right: 0,
         bottom: 0,
         pointerEvents: 'auto',
+        overflow: 'hidden',
       }}
     >
       <svg width="100%" height="100%" style={{ position: 'absolute' }}>
-        {/* Draw connections */}
-        {nodes.map((node, i) => 
-          nodes.slice(i + 1).map((otherNode, j) => {
-            const dist = Math.sqrt(
-              Math.pow(node.x - otherNode.x, 2) + 
-              Math.pow(node.y - otherNode.y, 2)
-            );
-            if (dist < 120) {
-              return (
-                <line
-                  key={`${i}-${j}`}
-                  x1={node.x}
-                  y1={node.y}
-                  x2={otherNode.x}
-                  y2={otherNode.y}
-                  stroke="rgba(255, 107, 0, 0.15)"
-                  strokeWidth="1"
-                />
-              );
-            }
-            return null;
-          })
-        )}
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
         
-        {/* Draw nodes */}
-        {nodes.map(node => (
-          <circle
-            key={node.id}
-            cx={node.x}
-            cy={node.y}
-            r="3"
-            fill="rgba(255, 107, 0, 0.6)"
-          />
-        ))}
+        {/* 3D Cubes representing multi-dimensional space */}
+        {cubes.map(cube => {
+          const size = 20 + cube.z * 0.2;
+          const opacity = 0.3 + (cube.z / 100) * 0.4;
+          
+          return (
+            <g key={cube.id} opacity={opacity}>
+              {/* Front face */}
+              <rect
+                x={cube.x - size / 2}
+                y={cube.y - size / 2}
+                width={size}
+                height={size}
+                fill="none"
+                stroke="#ff6b00"
+                strokeWidth="1.5"
+                transform={`rotate(${cube.rotationZ} ${cube.x} ${cube.y})`}
+              />
+              {/* Back face (offset for depth) */}
+              <rect
+                x={cube.x - size / 2 + 8}
+                y={cube.y - size / 2 - 8}
+                width={size}
+                height={size}
+                fill="none"
+                stroke="#ff6b00"
+                strokeWidth="1"
+                opacity="0.5"
+                transform={`rotate(${cube.rotationZ} ${cube.x + 8} ${cube.y - 8})`}
+              />
+              {/* Connecting lines for 3D effect */}
+              <line x1={cube.x - size/2} y1={cube.y - size/2} x2={cube.x - size/2 + 8} y2={cube.y - size/2 - 8} stroke="#ff6b00" strokeWidth="1" opacity="0.5" />
+              <line x1={cube.x + size/2} y1={cube.y - size/2} x2={cube.x + size/2 + 8} y2={cube.y - size/2 - 8} stroke="#ff6b00" strokeWidth="1" opacity="0.5" />
+            </g>
+          );
+        })}
       </svg>
       
-      {/* Floating words */}
-      {words.map(word => (
-        <motion.div
-          key={word.id}
-          initial={{ opacity: 1, y: word.y, x: word.x, scale: 0.5 }}
-          animate={{ opacity: 0, y: word.y - 50, scale: 1 }}
-          transition={{ duration: 1 }}
+      {/* Cursor glow effect */}
+      <div
+        style={{
+          position: 'absolute',
+          left: mousePos.x,
+          top: mousePos.y,
+          width: '200px',
+          height: '200px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255, 107, 0, 0.15) 0%, transparent 70%)',
+          transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none',
+          transition: 'all 0.2s ease',
+        }}
+      />
+    </div>
+  );
+};
+
+// Interactive Dimension Word Component
+const DimensionWord: React.FC<{ children: string }> = ({ children }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  return (
+    <motion.span
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      animate={{
+        color: isHovered ? '#ff6b00' : '#ff6b00',
+        scale: isHovered ? 1.05 : 1,
+        textShadow: isHovered 
+          ? '0 0 20px rgba(255, 107, 0, 0.8), 0 0 30px rgba(255, 107, 0, 0.4)'
+          : '0 0 0px rgba(255, 107, 0, 0)',
+      }}
+      transition={{ duration: 0.15 }}
+      style={{
+        display: 'inline-block',
+        fontWeight: 600,
+        cursor: 'pointer',
+        position: 'relative',
+      }}
+    >
+      {children}
+      {isHovered && (
+        <motion.span
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.2 }}
           style={{
             position: 'absolute',
-            fontSize: '12px',
-            color: '#ff6b00',
-            fontWeight: 600,
-            pointerEvents: 'none',
+            bottom: '-2px',
+            left: 0,
+            right: 0,
+            height: '2px',
+            background: '#ff6b00',
+            transformOrigin: 'left',
           }}
-        >
-          {word.text}
-        </motion.div>
-      ))}
-    </div>
+        />
+      )}
+    </motion.span>
   );
 };
 
 // Hero Component
 export const Hero: React.FC = () => {
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
       style={{
-        background: '#000',
+        background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 100%)',
         padding: '120px 50px',
         textAlign: 'center',
         color: '#fff',
         position: 'relative',
         overflow: 'hidden',
-        minHeight: '500px',
+        minHeight: '600px',
       }}
     >
       <AnimatedBackground />
       
       <div style={{ position: 'relative', zIndex: 10 }}>
-        <Title level={1} style={{ color: '#fff', fontSize: '56px', marginBottom: '24px', fontWeight: 700 }}>
-          AI-First Serverless Database
-        </Title>
-        <Paragraph style={{ 
-          fontSize: '20px', 
-          color: 'rgba(255,255,255,0.85)', 
-          maxWidth: '700px', 
-          margin: '0 auto 48px',
-          lineHeight: '1.6'
-        }}>
-          Redefining retrieval for agents with temporal, contextual, and behavioral dimensions. Built on Cloudflare's edge network for millisecond latency.
-        </Paragraph>
-        <Space size="large">
-          <Button 
-            type="primary" 
-            size="large" 
-            icon={<CalendarOutlined />}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <Title 
+            level={1} 
             style={{ 
-              height: '50px', 
-              fontSize: '16px',
-              fontWeight: 600
+              color: '#fff', 
+              fontSize: '64px', 
+              marginBottom: '24px', 
+              fontWeight: 800,
+              lineHeight: '1.1',
+              letterSpacing: '-1px'
             }}
-            href="https://calendly.com" 
-            target="_blank"
           >
-            Talk to an Engineer
-          </Button>
-          <Button 
-            size="large" 
-            icon={<FileTextOutlined />}
-            style={{ 
-              height: '50px', 
-              fontSize: '16px',
-              background: 'transparent',
-              color: '#fff',
-              border: '2px solid #fff',
-              fontWeight: 600
-            }}
-            href="https://araldhafeeri.github.io/MeridianDB/" 
-            target="_blank"
-          >
-            Read the Docs
-          </Button>
-        </Space>
+            AI-First Serverless Database
+          </Title>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <Paragraph style={{ 
+            fontSize: '20px', 
+            color: 'rgba(255,255,255,0.75)', 
+            maxWidth: '750px', 
+            margin: '0 auto 56px',
+            lineHeight: '1.7',
+            fontWeight: 400
+          }}>
+            Redefining retrieval for agents with <DimensionWord>temporal</DimensionWord>, <DimensionWord>contextual</DimensionWord>, <DimensionWord>behavioral</DimensionWord>, and <DimensionWord>semantic</DimensionWord> dimensions. Built on Cloudflare's edge network for millisecond latency.
+          </Paragraph>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <Space size="large">
+            <Button 
+              type="primary" 
+              size="large" 
+              icon={<CalendarOutlined />}
+              style={{ 
+                height: '56px', 
+                fontSize: '16px',
+                fontWeight: 600,
+                background: '#ff6b00',
+                borderColor: '#ff6b00',
+                paddingLeft: '32px',
+                paddingRight: '32px',
+                boxShadow: '0 4px 20px rgba(255, 107, 0, 0.3)',
+              }}
+              href="https://calendly.com" 
+              target="_blank"
+            >
+              Talk to an Engineer
+            </Button>
+            <Button 
+              size="large" 
+              icon={<FileTextOutlined />}
+              style={{ 
+                height: '56px', 
+                fontSize: '16px',
+                background: 'transparent',
+                color: '#fff',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                fontWeight: 600,
+                paddingLeft: '32px',
+                paddingRight: '32px',
+                backdropFilter: 'blur(10px)',
+              }}
+              href="https://araldhafeeri.github.io/MeridianDB/" 
+              target="_blank"
+            >
+              Read the Docs
+            </Button>
+          </Space>
+        </motion.div>
       </div>
+      
+      {/* Subtle grid overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `
+            linear-gradient(rgba(255, 107, 0, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 107, 0, 0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          pointerEvents: 'none',
+        }}
+      />
     </motion.div>
   );
 };
+
+export default Hero;
