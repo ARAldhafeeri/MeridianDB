@@ -5,6 +5,9 @@ It goes beyond traditional RAG pipelines with **temporal, contextual, and behavi
 
 Built on **Cloudflare Workers**, **D1**, **Vectorize**, **KV**, **Queues**, **React**, **Hono**, and **R2** — MeridianDB is scalable, event-driven, and developer-friendly, optimized for the edge, cheap to run, all battries included out of the box.
 
+<a href="https://araldhafeeri.github.io/MeridianDB/">Documentation</a>
+<a href="./MeridianDB_ A Feature-Based Memory System for Continuous AI Learning.pdf">White Paper</a>
+
 ---
 
 ## 🚀 Core Features
