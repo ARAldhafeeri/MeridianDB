@@ -3,7 +3,7 @@
 ## Eventual Consistency Design
 
 **Constraint:** Vectorize operates under an eventually consistent model.
-**Solution:** Queue-based writes maintain consistency and minimize search latency by updating temporal features on access. We provide **PMQ**, a free and open-source queue implementation for Cloudflare Workers.
+**Solution:** Queue-based writes on retreival ( for temporal data as it depends on access frequency ) maintain consistency and minimize search latency by updating temporal features on access. We provide **PMQ**, a free and open-source queue implementation for Cloudflare Workers.
 
 Note: We do not have access to Cloudflare’s low-level APIs, nor are we affiliated with them. However, this solution works well within the limits of Cloudflare’s free plan.
 
@@ -27,7 +27,7 @@ Store → Queue → [Process] → Vectorize + D1
 
 ## Queue Implementation
 ### Temporal Features Queue
-- Updates recency/frequency on access.
+- Updates recency/frequency on access on memories we implemented our queue using cloudflare workers, with Write-ahead log and buffer-flush.
 - Uses PMQ (Poor Man's Queue) for free tier.
 - Configurable processing frequency.
 
