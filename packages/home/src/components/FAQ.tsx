@@ -31,7 +31,7 @@ export const FAQ = () => {
     },
     {
       question: 'What are temporal and behavioral features?',
-      answer: 'Temporal features track how memory decays over time with frequency weighting. Behavioral features track retrieval success rates to continuously improve agent performance. Both use configurable thresholds for active learning phases.'
+      answer: 'Temporal features track how memory decays over time with frequency weighting. Behavioral features track retrieval success rates to continuously improve agent performance. Both use configurable thresholds for active/passive learning phases.'
     },
     {
       question: 'Is MeridianDB suitable for production use?',

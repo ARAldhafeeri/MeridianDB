@@ -24,19 +24,19 @@ export const Features = () => {
     {
       icon: <RocketOutlined style={{ fontSize: isMobile ? '36px' : '48px', color: '#ff6b00' }} />,
       title: 'Multi-Dimensional Retrieval',
-      description: 'Go beyond traditional RAG with semantic, temporal, contextual, and behavioral dimensions. Data decays over time with frequency weighting and factual tagging for intelligent memory management.',
+      description: 'Go beyond traditional RAG with semantic, temporal, contextual, and behavioral dimensions. Data decays over time with frequency weighting and factual tagging for intelligent memory management. With built-in active learning for behavioral signals on your agents memories.',
       asset: 'https://lottie.host/f6df1677-3cd2-415b-a654-5146e9c585da/EdJzCmCCBU.lottie'
     },
     {
       icon: <CloudOutlined style={{ fontSize: isMobile ? '36px' : '48px', color: '#ff6b00' }} />,
       title: 'Cloudflare-Native Scalability',
-      description: 'Built on Cloudflare Workers, D1, Vectorize, and KV. Global low-latency access with automatic retries, failover, and event-driven processing. Cost-efficient and horizontally scalable.',
+      description: 'Built on Cloudflare Workers, D1, Vectorize, and KV. Global low-latency access with automatic retries, failover, and event-driven processing. Cost-efficient and horizontally scalable. Your entire RAG run near where your users are.',
       asset: "https://lottie.host/a2462316-ea89-4465-9bec-4c851da0fd1a/kqR5qu5Tua.lottie"
     },
     {
       icon: <ThunderboltOutlined style={{ fontSize: isMobile ? '36px' : '48px', color: '#ff6b00' }} />,
       title: 'Integrated Consistency Model',
-      description: 'Queue-based writes ensure eventual consistency without manual orchestration. Data is redundantly stored across Vector and D1 to preserve multidimensional context with SQL-based composite scoring.',
+      description: 'Queue-based writes ensure eventual consistency without manual orchestration. Data is redundantly stored across Vector and D1 to preserve multidimensional context with SQL-based composite scoring for features and intelligent algrothims.',
       asset: 'https://lottie.host/45b366cf-998c-43fe-b1b8-926b314fb789/MgsPtuxhId.lottie'
     }
   ];

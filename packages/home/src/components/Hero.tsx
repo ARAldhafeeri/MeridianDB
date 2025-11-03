@@ -263,7 +263,7 @@ export const Hero: React.FC = () => {
             fontWeight: 400,
             padding: isMobile ? '0 10px' : '0'
           }}>
-            Redefining retrieval for agents with <DimensionWord>temporal</DimensionWord>, <DimensionWord>contextual</DimensionWord>, <DimensionWord>behavioral</DimensionWord>, and <DimensionWord>semantic</DimensionWord> dimensions. Built on Cloudflare's edge network for millisecond latency.
+            Auto-RAG that redefines retrieval for agents with <DimensionWord>temporal</DimensionWord>, <DimensionWord>contextual</DimensionWord>, <DimensionWord>behavioral</DimensionWord>, and <DimensionWord>semantic</DimensionWord> dimensions. Built on Cloudflare's edge network for millisecond latency.
           </Paragraph>
         </motion.div>
         
