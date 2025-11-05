@@ -160,7 +160,7 @@ const longTermConfig = {
 
 These parameters balance **stability and plasticity** for your agent's use case. The  `stabilityThreshold` which is configurable from within the admin portal, will determine based on the calculation weather to include or not include the memory. 
 
-Such calculation are happening in SQL. So the AI retreival latency still kept in 1-100ms per retreival.
+Such calculation are happening in SQL. So the AI retreival latency still kept in 300-500ms per retreival.
 
 **Warning:** We advise against changing parameters after agent creation. Choose carefully, as they directly affect memory filtering during AI agent retrieval.
 
