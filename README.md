@@ -392,6 +392,18 @@ run tests
 npm run test:sdk
 ```
 example usage :
+
+Note : The access token is per agent, use headless via our shared collections here:
+1. https://www.postman.com/planetary-station-563547/workspace/meridiandb/collection/19411915-e41b8dae-8830-4f6d-b260-4d26f3d52651?action=share&creator=19411915
+2. https://www.postman.com/planetary-station-563547/workspace/meridiandb/collection/19411915-d835a1de-49c7-48fe-b3c8-6f2d75262c09?action=share&creator=19411915
+
+You need to self-host all : 
+1. core backend packages/server.
+2. temporal queue , dead-letter queue packages/temporal-queue , packages/dead-letter-queue. All of which can be deployed as cloudflare workers.
+3. Client : you can deploy client as react, vite preset on cloudflare pages. 
+
+We don't recommend PMQ for serious production workflow, it has limitaitons, please contact us for the enterprise version which uses cloudflare queues.
+
 ```Typescript
 import { MeridianDBClient } from "meridiandb-sdk";
 
