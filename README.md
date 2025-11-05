@@ -179,7 +179,7 @@ The tick at which you process temporal features matters as well, depending on th
 	},
 ```
 
-This runs the temporal tick every 30 minutes, controlling:
+This runs the temporal tick every 30 second, controlling:
 
 The rate at which data is flushed for temporal feature calculation
 The stability of memory retrieval for your AI agent
